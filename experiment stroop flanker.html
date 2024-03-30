@@ -137,23 +137,74 @@ var stroop_instructions = {
 
 
 timeline.push(stroop_instructions);
+/*instruction check*/
+var i = 0
 
 var stroop_comprehension = {
       type: jsPsychSurveyMultiChoice,
       preamble: `<p style="font-size:20px;"><span style="color: green">yellow</span></p>`,
+name: 'instr_check', 
       questions: [
     {
       prompt: "If the word above appears in the COLORS Task, I am supposed to...", 
-      name: 'stroop_comprehension',
-      options: ['press the letter that matches the word I am reading (Y for yellow)', 
+    options: [  'press the letter that matches the word I am reading (Y for yellow)', 
                 'press the letter that matches the color the word is printed in (G for green)'], 
       required: true,
-      horizontal: false
-      }, 
-    ],
-    };
-   
+    name: 'goal_check'
+    },
+],
+on_finish: function(data){
+    i ++; 
+    console.log("instr test rounds: "+ i); 
+    if (data.response.goal_check == 'press the letter that matches the color the word is printed in (G for green)'){
+        instr_check = "correct"; 
+    } else {
+        instr_check = "incorrect";
+    }; 
+    console.log("result instruction check: "+instr_check); 
+    jsPsych.data.addProperties({instr_tests: i});
+},
+};
+
+/*shown if instruction check incorrect*/
+var instr_check_failed = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: 
+    `
+    <p><b>You did not answer the comprehension check questions correctly. We will therefore show you the instructions again.</b></p>
+    
+    <p>Please click the button below to read the instruction again and repeat the test.</p>
+    `
+    ,
+    choices: ['Back to instructions']
+}
+
+/*check if instruction check correct*/
+var loop_stroop = {
+    timeline: [instr_check_failed, stroop_instructions, stroop_comprehension], 
+    loop_function: function(){
+        if(instr_check == "incorrect"){
+            return true; 
+        } else {
+            return false; 
+        }
+    }
+}
+
+
+var if_node_stroop = {
+    timeline: [loop_stroop], 
+    conditional_function: function(){
+        if(instr_check == "incorrect"){
+            return true;
+        } else {
+           return false;
+        }
+    }
+}
+
 timeline.push(stroop_comprehension);
+timeline.push(if_node_stroop);
 
  var stroop_practice_stimuli = [
  { stimulus:'<p style="font-size:30px; color:blue;"><b>blue</b></p>'}, 
