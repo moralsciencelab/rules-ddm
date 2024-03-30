@@ -996,9 +996,24 @@ var remarks = {
 
 timeline.push(remarks);
 
+/*debrief*/
+var debrief = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `<p style="font-size:20px;">Thanks for taking part in this experiment!<br>
+      <br>
+      In this study, we aim to investigate how response behavior (reaction times and error rates) in the rules task is related to response behavior in the colors and arrows tasks.<br>
+      <br>
+      While the colors and arrows tasks are classical experiments in psychology, the rules task is relatively novel.<br>
+      <br>
+      The goal of the rules task is to find out when people think that a rule has been broken: when it's literal text has been violated or when its purpose has been violated?<br>
+      <br>
+      Press any key to continue to the next page and see some statistics about how you performed in the rules and arrows tasks.
+      </p>`,
+  };
 
+  timeline.push(debrief);
 
-/*defining debriefing block*/
+/*derief with stats*/
 var debrief_block_stats = {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: function() {
