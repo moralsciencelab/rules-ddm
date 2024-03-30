@@ -38,6 +38,26 @@ var jsPsych = initJsPsych({
       session_id: session_id
     });
 
+    /* make subject ID */
+      var subj_code; // a variable that later stores a random subject code
+
+      function makeid(length) {
+          var result           = '';
+          var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+          var charactersLength = characters.length;
+          for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * 
+      charactersLength));
+        }
+        return result;
+      } // this function creates a random subject code using the characters listed above
+
+      subj_code = makeid(12); // generate the actual code (12 strings)
+
+      console.log(subj_code); // give it back to the console
+
+      jsPsych.data.addProperties({subj_code: subj_code}); // add the code to the data
+
 
    // preload images due to presenting them with timeline variables
    var images = ["img/con1.png","img/con2.png","img/inc1.png","img/inc2.png"];
