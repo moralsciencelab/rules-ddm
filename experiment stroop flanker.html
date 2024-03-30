@@ -1009,7 +1009,7 @@ var debrief_block = {
         var stroop_congruent_rt = Math.round(congruent_stroop_trials.select('rt').mean());
         var stroop_incongruent_rt = Math.round(incongruent_stroop_trials.select('rt').mean());
 
-        return "<p>You responded correctly on <strong>"+flanker_accuracy+"%</strong> of the ARROW trials.</p> " +
+        return `Thank you for taking part in this experiment! <br>
         "Previous studies show that we are faster to react when the arrows either side of the middle arrow point in the same direction." +
         "<p>Your average response time for the congruent trials (SAME direction) was <strong>" + flanker_congruent_rt + " milliseconds</strong>.</p>"+
         "<p>Your average response time for incongruent trials (OPPOSITE direction) was <strong>" + flanker_incongruent_rt + " milliseconds</strong>.</p><br>"+
