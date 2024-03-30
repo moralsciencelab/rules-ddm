@@ -987,8 +987,19 @@ var handedness = {
 
     timeline.push(handedness);
 
+var remarks = {
+      type: jsPsychSurveyText,
+      questions: [
+        {prompt: 'Do you have any further comments about this study? (optional)', name: 'comments'}
+      ]
+    };
+
+timeline.push(remarks);
+
+
+
 /*defining debriefing block*/
-var debrief_block = {
+var debrief_block_stats = {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: function() {
         var flanker_trials = jsPsych.data.get().filter({trial_type: 'image-keyboard-response'}).count();
@@ -1010,39 +1021,19 @@ var debrief_block = {
         var stroop_congruent_rt = Math.round(congruent_stroop_trials.select('rt').mean());
         var stroop_incongruent_rt = Math.round(incongruent_stroop_trials.select('rt').mean());
 
-        return `Thank you for taking part in this experiment! <br>
-        <br>
-        The purpose of this study is to investigate whether response behavior (e.g., reponse times, error rates) is similar in the rule task and the colors and arrows tasks.
-        The colors and arrows tasks are classic psychological experiments, and response behavior in those tasks is well understood from past research.
-        The rules task on the other hand is relatively new. The aim of the rules task is to find out whether people place more importance on a rules literal text or on its underlying purpose when deciding whether the rule has been violated or not.<br>
-        <br>
-        Here are some statistics on your performance in the colors and arrows task, in case you're interested:<br>
-        <br>
-        <p>You responded correctly on <strong>"+flanker_accuracy+"%</strong> of the ARROW trials.</p> " +
+        return "<p>You responded correctly on <strong>"+flanker_accuracy+"%</strong> of the ARROW trials.</p> " +
         "Previous studies show that we are faster to react when the arrows either side of the middle arrow point in the same direction." +
         "<p>Your average response time for the congruent trials (SAME direction) was <strong>" + flanker_congruent_rt + " milliseconds</strong>.</p>"+
         "<p>Your average response time for incongruent trials (OPPOSITE direction) was <strong>" + flanker_incongruent_rt + " milliseconds</strong>.</p><br>"+
         "<br><p>You responded correctly on <strong>" +stroop_accuracy+ "%</strong> of the COLOR trials.</p> " +
         "Previous studies show that we are faster to react when color names are printed in their corresponding color." +
         "<p>FLANKER: Your average response time for congruent trials (SAME color) was <strong>" + stroop_congruent_rt + " milliseconds</strong>.</p>"+
-        "<p>FLANKER: Your average response time for incongruent trials (DIFFERENT color) was <strong>" + stroop_incongruent_rt + " milliseconds</strong>.</p>"+<br>
-        "<br>
-        If you have any further questions about this research, feel free to contact us via prolific!<br>
-        <br>
-        <p>Press any key to complete the experiment.</p>`
+        "<p>FLANKER: Your average response time for incongruent trials (DIFFERENT color) was <strong>" + stroop_incongruent_rt + " milliseconds</strong>.</p>"+
+        "<br><p>Press any key to complete the experiment. Thank you for taking part!</p>"
       }
     };
 
-timeline.push(debrief_block);
-
-var remarks = {
-      type: jsPsychSurveyText,
-      questions: [
-        {prompt: 'Do you have any further comments about this study? (optional)', name: 'comments'}
-      ]
-    };
-
-    timeline.push(remarks);
+timeline.push(debrief_block_stats);
 
    /* start the experiment */
   jsPsych.run(timeline);
