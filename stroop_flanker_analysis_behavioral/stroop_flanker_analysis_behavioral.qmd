@@ -8,10 +8,33 @@ editor: visual
 
 ```{r}
 library(here)
-library(tidyr)
+library(tidyverse)
 ```
 
 ```{r}
-data <- here("data", "data.csv")
+data_path <- here("stroop_flanker_raw.csv")
+data <- read.csv(data_path)
+```
+
+# separate by task, clean
+
+## stroop data
+
+```{r}
+stroop <- data |> 
+  filter(task=="stroop_response") |> 
+  select(subj_code,color,text,response,correct_response,correct,rt,trial_index) |> 
+  mutate(congruent = ifelse(color==text,1,0))
+```
+
+correct responses for congruent vs. incongruent trials
+
+```{r}
+stroop |> 
+  mutate(correct=factor(ifelse(correct=="true",1,0))) |> 
+  ggplot(aes(x=factor(congruent),y=1,fill=correct))+
+  geom_bar(position="fill", stat="identity")+
+  theme_minimal()+
+  labs(x="\ncongruent",y="prop correct\n",subtitle="stroop task, proportion correct for congruent vs. incongruent")
 ```
 
