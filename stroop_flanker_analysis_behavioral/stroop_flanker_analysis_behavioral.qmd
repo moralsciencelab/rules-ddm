@@ -1,0 +1,17 @@
+---
+title: "stroop_flanker_analysis_behavioral"
+format: html
+editor: visual
+---
+
+# packages and data
+
+```{r}
+library(here)
+library(tidyr)
+```
+
+```{r}
+data <- here("data", "data.csv")
+```
+
