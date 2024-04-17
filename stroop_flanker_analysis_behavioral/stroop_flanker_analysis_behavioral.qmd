@@ -20,7 +20,7 @@ data_path <- here("stroop_flanker_raw.csv")
 data <- read.csv(data_path)
 ```
 
-# separate by task, clean
+# plots per task
 
 ## stroop data
 
@@ -147,7 +147,7 @@ flanker_rt_medians <- flanker |>
   filter(rt!="null") |> #filter out timed-out trials
   mutate(correct=factor(ifelse(correct==1,"correct responses","incorrect responses")),
          rt=as.numeric(rt)) |>
-  group_by(congruent,correct) |> 
+  group_by(correct,congruent) |> 
   summarize(m = median(rt))
 
 flanker_rt_medians
@@ -162,8 +162,8 @@ p_flanker_rt <- flanker |>
   facet_wrap(~correct)+
   geom_vline(data=flanker_rt_medians,aes(xintercept=m,color=factor(congruent)),linewidth=1)+
   theme_minimal()+
-  scale_fill_manual(values=c("#F5D491","#61A0AF"))+
-  scale_color_manual(values=c("#F5D491","#61A0AF"))+
+  scale_fill_manual(values=c("#61A0AF","#F5D491"))+
+  scale_color_manual(values=c("#61A0AF","#F5D491"))+
   theme(legend.position = "none")+
   labs(x=" ",y="density\n")+
   theme(axis.title.y = element_text(size=10,color="grey20"))
@@ -285,8 +285,198 @@ merge all plots
 ```{r}
 p_all <- ggarrange(p_stroop_merged,p_flanker_merged,p_rules_merged,nrow=3,ncol=1,labels=c("Stroop\n","Flanker\n","Rules\n"),font.label = list(size = 10, color = "black", family = NULL),label.y=1.2)
 
-p_all <- p_all+theme(plot.margin=margin(12,3,3,3,"mm"))
+p_all <- p_all+theme(plot.margin=margin(12,3,3,10,"mm"))
 
-ggsave(p_all,file="plot_behavioral.pdf",width=23,height=15,units="cm")
+p_all <- annotate_figure(p_all,bottom=text_grob(label="Responses and reaction times (vertical lines = medians) for congruent (blue) and incongruent (yellow) trials per task.\n",hjust=0.5))
+
+ggsave(p_all,file="plot_behavioral.pdf",width=24,height=15,units="cm")
 ```
 
+# regressions per task: effects of congruency
+
+## stroop
+
+### logistic regression for binary responses
+
+```{r}
+library(lmtest)
+library(lme4)
+library(nlme)
+library(rcompanion)
+```
+
+```{r}
+stroop <- stroop |> mutate(correct_num = ifelse(correct=="true",1,0))
+```
+
+
+```{r}
+# null model
+null <- glm(correct_num ~ 1, data = stroop,na.action=na.exclude, family=binomial)
+
+# random intercept for participant
+RI_id <- glmer(correct_num ~ 1 + (1|subj_code), data = stroop,na.action=na.exclude, family=binomial)
+
+lrtest(null,RI_id) #better
+
+#main effect congruency?
+RI_id_cong <- glmer(correct_num ~ congruent + (1|subj_code), data = stroop,na.action=na.exclude, family=binomial)
+
+lrtest(RI_id,RI_id_cong) #better
+
+#final model
+m_stroop_judgments <- RI_id_cong
+
+summary(m_stroop_judgments)
+
+#OR
+exp(2.8225)
+
+```
+### regression rt's
+
+```{r}
+stroop <- stroop |> 
+  filter(rt!="null") |> #excluding timed-out trials
+  mutate(rt=as.numeric(rt))
+```
+
+```{r}
+#null
+null <- glm(rt ~ 1, data = stroop,na.action=na.exclude)
+
+#ri id
+ri_id <-lmer(rt ~ 1 + (1|subj_code), data = stroop,na.action=na.exclude)
+
+lrtest(null,ri_id) #better
+
+#main effect congruency?
+ri_id_cong <-lmer(rt ~ congruent + (1|subj_code), data = stroop,na.action=na.exclude) 
+
+lrtest(ri_id,ri_id_cong) #better
+
+m_stroop_rt <- ri_id_cong
+
+summary(m_stroop_rt)
+
+```
+## flanker
+
+### logistic regression for binary responses
+
+```{r}
+# null model
+null <- glm(correct ~ 1, data = flanker,na.action=na.exclude, family=binomial)
+
+# random intercept for participant
+RI_id <- glmer(correct ~ 1 + (1|subj_code), data = flanker,na.action=na.exclude, family=binomial)
+
+lrtest(null,RI_id) #better
+
+#main effect congruency?
+RI_id_cong <- glmer(correct ~ congruent + (1|subj_code), data = flanker,na.action=na.exclude, family=binomial)
+
+lrtest(RI_id,RI_id_cong) #better
+
+#final model
+m_flanker_judgments <- RI_id_cong
+
+summary(m_flanker_judgments)
+
+#OR
+exp(-0.3695)
+
+```
+### regression rt's
+
+```{r}
+flanker <- flanker |> 
+  filter(rt!="null") |> #excluding timed-out trials
+  mutate(rt=as.numeric(rt))
+```
+
+```{r}
+#null
+null <- glm(rt ~ 1, data = flanker,na.action=na.exclude)
+
+#ri id
+ri_id <-lmer(rt ~ 1 + (1|subj_code), data = flanker,na.action=na.exclude)
+
+lrtest(null,ri_id) #better
+
+#main effect congruency?
+ri_id_cong <-lmer(rt ~ congruent + (1|subj_code), data = flanker,na.action=na.exclude) 
+
+lrtest(ri_id,ri_id_cong) #better
+
+m_flanker_rt <- ri_id_cong
+
+summary(m_flanker_rt)
+
+```
+
+## rules
+
+### logistic regression for binary responses
+
+```{r}
+# null model
+null <- glm(correct ~ 1, data = rules,na.action=na.exclude, family=binomial)
+
+# random intercept for participant
+RI_id <- glmer(correct ~ 1 + (1|subj_code), data = rules,na.action=na.exclude, family=binomial)
+
+lrtest(null,RI_id) #better
+
+# random intercept for scenario
+RI_id_scen <- glmer(correct ~ 1 + (1|subj_code) + (1|case), data = rules,na.action=na.exclude, family=binomial)
+
+lrtest(RI_id,RI_id_scen) #better
+
+#main effect congruency?
+RI_id_cong <- glmer(correct ~ congruent + (1|subj_code) + (1|case), data = rules,na.action=na.exclude, family=binomial)
+
+lrtest(RI_id_scen,RI_id_cong) #better
+
+#final model
+m_rules_judgments <- RI_id_cong
+
+summary(m_rules_judgments)
+
+#OR
+exp(2.0790)
+
+```
+
+### regression rt's
+
+```{r}
+rules <- rules |> 
+  filter(rt!="null") |> #excluding timed-out trials
+  mutate(rt=as.numeric(rt))
+```
+
+```{r}
+#null
+null <- glm(rt ~ 1, data = rules,na.action=na.exclude)
+
+#ri id
+ri_id <-lmer(rt ~ 1 + (1|subj_code), data = rules,na.action=na.exclude)
+
+lrtest(null,ri_id) #better
+
+#ri scenario
+ri_id_scen <-lmer(rt ~ 1 + (1|subj_code)+ (1|case), data = rules,na.action=na.exclude)
+
+lrtest(ri_id,ri_id_scen) #better
+
+#main effect congruency?
+ri_id_cong <-lmer(rt ~ congruent + (1|subj_code)+ (1|case), data = rules,na.action=na.exclude) 
+
+lrtest(ri_id_scen,ri_id_cong) #better
+
+m_rules_rt <- ri_id_cong
+
+summary(m_rules_rt)
+
+```
