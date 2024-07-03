@@ -393,13 +393,13 @@
       type: jsPsychHtmlKeyboardResponse,
       stimulus: `<b>A restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
                   To address these concerns, the owner posted a rule: "No dogs allowed in the restaurant".</b><br>
-                  <b>Customers who violate the rule will be reseated outdoors.</b><br>
+                  <b>Customers who violate the rule will be banned from the restaurant.</b><br>
      <br>
      On the following pages, we will show you several examples of behaviours that may or may not violate the rule.<br>
      <br>
      Each action will be presented on a separate page.<br>
      <br>
-     Press the assigned keys to indicate whether or not the person should be reseated outdoors.<br>
+     Press the assigned keys to indicate whether or not the person should be banned from the restaurant.<br>
      <br>
      Remember to answer as quickly as possible.<br>
      <br>
@@ -835,7 +835,7 @@
       type: jsPsychHtmlKeyboardResponse,
       stimulus: jsPsych.timelineVariable("stimulus"),
       choices: ["e", "i"],
-      prompt: "<br>Should this customer be reseated outdoors?<br>" + keys,
+      prompt: "<br>Should this customer be banned from the restaurant?<br>" + keys,
       trial_duration: 8000,
       data: {
         task: "response",
