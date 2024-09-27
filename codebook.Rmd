@@ -1,0 +1,93 @@
+---
+title: "codebook rule enforcement ddm"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## 1. General Information
+- **Dataset Name**: rules_allstudies.csv
+- **Date Created**: 2024-09-25
+- **Date Last Modified**: `r Sys.Date()`
+- **Creator**: Neele Engelmann
+- **Description**: Joint dataset of all six studies contained in this repository for facilitated analysis and comparisons across studies.
+- **Source**: Online Studies (conducted via prolific.com, between 2023-03 and 2024-09)
+
+---
+
+## 2. Variable Overview
+
+| Variable Name | Description  | Type |
+|:--------------|:-------------|:-----|
+| `study` | study name   | string    | 
+| `subj_code`| unique identifier for each participant | string | 
+| `case` | scenario name| string | 
+| `rule`|the relevant rule| string |
+| `behavior`|the relevant behavior| string |
+| `stimulus` |the full stimulus as presented to participants|string|
+| `text` |indicates whether the behavior violates the rule's text|boolean|
+| `purpose` |indicates whether the behavior violates the rule's purpose|boolean|
+| `congruent` |indicates whether the trial is congruent or incongruent|boolean|
+| `condition` |condition label|string|
+| `trial_index` |indicates the order in which trials were seen by participants|numeric|
+| `response` |participants' response to the stimulus|TBA|
+| `rt` |participants' reaction time to the stimulus|numeric|
+---
+
+## 3. Variable Details
+
+### `ID`
+- **Description**: Unique identifier for each participant in the dataset.
+- **Type**: Numeric
+- **Range**: [1, N]
+- **Missing Data**: None
+- **Notes**: Generated automatically during data collection.
+
+### `age`
+- **Description**: Age of the respondent at the time of the survey.
+- **Type**: Numeric
+- **Range**: [18, 99]
+- **Unit**: Years
+- **Missing Data**: Coded as -99 for missing values.
+- **Notes**: N/A
+
+### `gender`
+- **Description**: Gender of the respondent.
+- **Type**: Categorical
+- **Values**: 
+  - 1 = Male
+  - 2 = Female
+  - 3 = Other
+- **Missing Data**: Coded as -99 for missing values.
+- **Notes**: Optional open-ended response for "Other."
+
+### `income`
+- **Description**: Reported annual income of the respondent.
+- **Type**: Numeric
+- **Unit**: US Dollars
+- **Range**: [0, 200000]
+- **Missing Data**: Coded as -99 for missing values.
+- **Notes**: Derived from question [Q5] on the survey form.
+
+### `satisfaction`
+- **Description**: Satisfaction level on a 5-point scale.
+- **Type**: Ordinal
+- **Values**: 
+  - 1 = Very Dissatisfied
+  - 2 = Dissatisfied
+  - 3 = Neutral
+  - 4 = Satisfied
+  - 5 = Very Satisfied
+- **Missing Data**: Coded as -99 for missing values.
+- **Notes**: Self-reported.
+
+---
+
+## 4. Code Snippets (if applicable)
+For reproducibility, here is an example of how we derived the `income_bracket` variable:
+
+```r
+# R code to generate income_bracket
+df$income_bracket <- cut(df$income, 
+                         breaks=c(0, 30000, 60000, 100000, Inf), 
+                         labels=c("Low", "Middle", "High", "Very High"))
+´´´

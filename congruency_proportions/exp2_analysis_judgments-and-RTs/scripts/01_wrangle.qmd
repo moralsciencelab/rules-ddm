@@ -1,0 +1,34 @@
+---
+title: "wrangle"
+format: html
+editor: visual
+execute:
+  warning: false
+  message: false
+---
+
+# packages
+
+```{r}
+library(stringi)
+library(reshape2)
+library(here)
+library(tidyverse)
+```
+
+# raw data
+
+```{r}
+raw_batch1 <- read.csv(here("data","raw_batch1.csv"))
+raw_batch2 <- read.csv(here("data","raw_batch2.csv"))
+```
+
+# merge and save
+
+```{r}
+raw <- rbind(raw_batch1,raw_batch2) 
+
+nlevels(factor(raw$subj_code))
+
+write.csv(raw,here("data","raw_full.csv"),row.names=F)
+```

@@ -1,0 +1,463 @@
+---
+title: "analysis comply full sample"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 3  
+    number_sections: true  
+    theme: united 
+    highlight: tango  
+date: "2023-01-26"
+---
+
+# settings
+
+```{r echo = F, include = F}
+knitr::opts_chunk$set(message=F,warning=F)
+```
+
+# packages and data import
+
+```{r import and cleaning}
+library(tidyverse)
+library(readr)
+library(reshape2)
+
+#raw data
+raw <- read.csv("testdata.csv")
+```
+
+
+# cleaning and reformatting
+
+```{r}
+clean <- raw %>% 
+  select(subj_code,condition,stimulus,task,rt,key_assignment,trial_index,response) %>% 
+  filter(task=="response") %>% 
+  mutate(case = ifelse(str_detect(stimulus,"dog"),"restaurant",
+                       ifelse(str_detect(stimulus,"shoes"),"shoes",
+                              ifelse(str_detect(stimulus,"dormitory"),"noise",
+                                     ifelse(str_detect(stimulus,"train station"),"trainstation",
+                                            ifelse(str_detect(stimulus,"parliament"),"deer",
+                                                   ifelse(str_detect(stimulus,"zero tolerance"),"alcohol",
+                                                          ifelse(str_detect(stimulus,"No cars are allowed"),"cars",
+                                                                 ifelse(str_detect(stimulus,"headmaster"),"phones","lab")))))))),
+         yeskey = ifelse(str_detect(key_assignment,"e for yes"),"e","i"),
+         response_num = ifelse(response==yeskey,1,0)) %>% 
+  select(-response) %>% 
+  rename(response = response_num)
+
+#condition coding and more reformatting
+codingsheet <- read.csv("codingsheet.csv",sep=";") 
+
+library(fuzzyjoin)
+
+clean <- clean %>% 
+  filter(case!="noise") %>% 
+  regex_left_join(codingsheet, by = c(stimulus = "question")) %>% 
+  select(subj_code,condition,scen,trial_index,rule,question,text_violation,purpose_violation,conflict,type,response,rt)
+
+#filter noncompleters
+
+#check number of participants
+nlevels(factor(clean$subj_code))
+
+#check trials per participant
+clean %>% 
+  dplyr::group_by(subj_code) %>% 
+  dplyr::summarize(n = n())
+
+#exclude noncompleters
+noncompleters <- clean %>% 
+  dplyr::group_by(subj_code) %>% 
+  dplyr::summarize(ntrials = n()) %>% 
+  filter(ntrials < 96)
+
+clean <- clean %>% dplyr::filter(!subj_code %in% noncompleters$subj_code)
+
+
+
+#check stimuli: condition 1 should have 4 cases with 10 conflict trials each, then 4 cases with 2 conflict trials each. Condition 2 should be reversed
+
+##code scenario order per participant
+scen_order <- clean %>% 
+  group_by(subj_code,scen) %>% 
+  summarize(m = min(trial_index)) %>% 
+  arrange(subj_code,m) %>% 
+  mutate(scen_number = rep(1:8,length(nlevels(factor(subj_code)))))
+
+##add info to main dataframe
+clean <- left_join(clean,scen_order,by=c("subj_code","scen")) %>% 
+        select(-m)
+
+##check whether conditions have been implemented correctly
+clean %>% 
+  group_by(condition,subj_code,scen_number,scen,conflict) %>% 
+  summarize(n=n()) #looks good
+
+clean %>% 
+  filter(condition==2) %>% 
+  group_by(subj_code,scen_number,scen,conflict) %>% 
+  summarize(n=n()) 
+
+#exclude rts under 200 ms, over 800 ms, and invalid trials (no response given)
+
+clean <- clean %>% 
+  filter(rt!="null") %>% # exclude invalid responses
+  mutate(rt = as.numeric(rt)) %>% # convert to numeric
+  dplyr::filter(rt > 200 & rt < 8000) # exclude very fast and very slow responses
+
+#check distribution of rts after exclusions
+
+summary(clean$rt)
+
+#check new number of participants
+nlevels(factor(clean$subj_code))
+
+#check new number of trials per participant
+clean %>% 
+  dplyr::group_by(subj_code) %>% 
+  dplyr::summarize(ntrials = n()) %>% 
+  summary(ntrials)
+
+#save final file
+write.csv(clean,"clean.csv")
+```
+
+
+# judgments by condition
+
+## plot
+
+```{r}
+mytheme <- theme_classic()+
+           theme(axis.text.x = element_text(color="black",size=8),
+                  axis.title.x = element_text(color="black",size=10,face="bold"),
+                  axis.text.y = element_text(color="black",size=8),
+                  axis.title.y = element_text(color="black",size=10,face="bold"),
+                  strip.text.x = element_text(size = 8),
+                  legend.title = element_text(size = 10),
+                  title = element_text(color="black",size=10,face="bold"),
+                  legend.position = "right")
+```
+
+
+```{r}
+p1 <- clean %>% 
+  mutate(text=case_when(
+    text_violation==0 ~ "no text violation",
+    text_violation==1 ~ "text violation"
+      ),
+    purpose=case_when(
+      purpose_violation==0 ~ "no purpose violation",
+      purpose_violation==1 ~ "purpose violation"
+    ),
+    response=case_when(
+      response==0 ~ "no",
+      response==1 ~ "yes")
+    ) %>% 
+  ggplot(aes(x=response))+
+  geom_bar(stat="count",aes(fill=response))+
+  mytheme+
+  facet_wrap(~purpose+text)+
+  labs(subtitle="Did [agent] comply with the rule?")+
+  scale_fill_manual(values=c("#F8766D","#619CFF"))
+
+p1
+
+#ggsave(p1,file="plot_judgments.png",width=13,height=17,units="cm")
+```
+
+## logistic regression
+
+```{r}
+library(lmtest)
+library(lme4)
+library(nlme)
+library(rcompanion)
+```
+
+
+```{r}
+# null model
+null <- glm(response ~ 1, data = clean,na.action=na.exclude, family=binomial)
+
+# random intercept for participant
+RI_id <- glmer(response ~ 1 + (1|subj_code), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(null,RI_id) #not better
+
+# random intercept for scenario
+RI_scenario <- glmer(response ~ 1 + (1|case), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(null,RI_scenario) # better 
+
+# main effect text
+
+purpose_only <- glmer(response ~ purpose+ (1|case), data = clean,na.action=na.exclude, family=binomial)
+
+purpose_text <- glmer(response ~ purpose + text+ (1|case), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(purpose_only,purpose_text) # better with text
+
+# main effect purpose
+
+text_only <- glmer(response ~ text + (1|case), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(text_only,purpose_text) # better with purpose
+
+# interaction
+
+interaction <- glmer(response ~ purpose * text+ (1|case), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(purpose_text, interaction) # better
+
+# final model
+
+finalmodel_judgments <- interaction
+
+summary(finalmodel_judgments)
+
+# odds ratios from coefficients
+
+# effect of purpose violation when text = 0 (not violated):
+
+exp(-1.53227) # -> less likely that people say yes to comply question
+
+# effect of text violation when purpose = 0 (not violated):
+
+exp(-3.48395) # -> less likely that people say yes to comply question, stronger effect than for purpose
+
+nagelkerke(finalmodel_judgments,null)
+
+```
+
+## plot learning effects
+
+```{r}
+p1_learning <- clean %>% 
+  mutate(text=case_when(
+    text_violation==0 ~ "no text violation",
+    text_violation==1 ~ "text violation"
+      ),
+    purpose=case_when(
+      purpose_violation==0 ~ "no purpose violation",
+      purpose_violation==1 ~ "purpose violation"
+    )) %>% 
+  ggplot(aes(x=trial_index,y=response)) + 
+  geom_smooth(method="lm",aes(group=subj_code),se=F,linewidth=0.5,color="grey65")+
+  geom_smooth(method="lm",se=F,linewidth=0.8,color="black")+
+  facet_wrap(~text+purpose)+
+  mytheme
+
+p1_learning
+
+#ggsave(p1_learning,file="plot_judgments_learning.png",width=13,height=17,units="cm")
+```
+
+## analysis learning effects
+
+linear regression per condition - significant positive slope for trial index?
+
+```{r}
+summary(lm(response~trial_index,data=clean %>% filter(text==0 & purpose == 0))) #no
+
+summary(lm(response~trial_index,data=clean %>% filter(text==1 & purpose == 0))) #no
+
+summary(lm(response~trial_index,data=clean %>% filter(text==0 & purpose == 1))) #yes
+
+summary(lm(response~trial_index,data=clean %>% filter(text==1 & purpose == 1))) #no
+```
+
+
+# reaction times by condition and response (yes vs. no)
+
+## plot
+
+```{r}
+p2 <- clean %>% 
+  mutate(text=case_when(
+    text_violation==0 ~ "no text violation",
+    text_violation==1 ~ "text violation"
+      ),
+    purpose=case_when(
+      purpose_violation==0 ~ "no purpose violation",
+      purpose_violation==1 ~ "purpose violation"
+    ),
+    response=case_when(
+      response==0 ~ "no",
+      response==1 ~ "yes")
+    ) %>% 
+  ggplot(aes(x=rt))+
+  geom_density(aes(fill=response,color=response),alpha=0.5)+
+  facet_wrap(~text+purpose)+
+  mytheme+
+  labs(subtitle="Did [agent] violate the rule?")+
+  scale_fill_manual(values=c("#619CFF","#F8766D"))+
+  scale_color_manual(values=c("#619CFF","#F8766D"))
+
+p2
+
+#median rts for overlaying
+median_rts <- clean %>% 
+  mutate(text=case_when(
+    text_violation==0 ~ "no text violation",
+    text_violation==1 ~ "text violation"
+      ),
+    purpose=case_when(
+      purpose_violation==0 ~ "no purpose violation",
+      purpose_violation==1 ~ "purpose violation"
+    ),
+    response=case_when(
+      response==0 ~ "no",
+      response==1 ~ "yes")
+    ) %>% 
+  group_by(text,purpose,response) %>% 
+  summarize(rt = median(rt))
+
+#overlay medians
+
+p2 <- p2 + geom_vline(data=median_rts,aes(xintercept=rt,color=response),linewidth=1)
+
+p2
+
+#ggsave(p2,file="plot_rts.png",width=13,height=17,units="cm")
+
+```
+
+## linear model
+
+predictions:
+
+- main effect response (no faster than yes)
+
+- interaction text x purpose (longer rts for conflict trials)
+
+```{r}
+#null
+null <- glm(rt ~ 1, data = clean,na.action=na.exclude)
+
+#ri id
+ri_id <-lmer(rt ~ 1 + (1|subj_code), data = clean,na.action=na.exclude)
+
+lrtest(null,ri_id) #better
+
+#ri scenario
+
+ri_id_scen <- lmer(rt ~ 1 + (1|subj_code) + (1|case), data = clean,na.action=na.exclude)
+
+lrtest(ri_id,ri_id_scen) #better
+
+#main effect text
+purpose_response <- lmer(rt ~ purpose + response + (1|subj_code) + (1|case), data = clean,na.action=na.exclude)
+
+full <- lmer(rt ~ purpose + response + text + (1|subj_code) + (1|case), data = clean,na.action=na.exclude)
+
+lrtest(purpose_response,full) #better
+
+#main effect purpose
+
+text_response <- lmer(rt ~ text + response + (1|subj_code) + (1|case), data = clean,na.action=na.exclude)
+
+lrtest(text_response,full) #better
+
+#main effect response
+
+text_purpose <- lmer(rt ~ text + purpose + (1|subj_code) + (1|case), data = clean,na.action=na.exclude)
+
+lrtest(text_purpose,full) #better
+
+#interaction text x purpose
+
+interaction <- lmer(rt ~ purpose * response + text + (1|subj_code) + (1|case), data = clean,na.action=na.exclude)
+
+lrtest(full,interaction) #better
+
+#final model
+
+finalmodel_rts <- interaction
+
+summary(finalmodel_rts)
+
+nagelkerke(finalmodel_rts,null)
+```
+
+## plot learning effects
+
+```{r}
+p2_learning <- clean %>% 
+  mutate(text=case_when(
+    text_violation==0 ~ "no text violation",
+    text_violation==1 ~ "text violation"
+      ),
+    purpose=case_when(
+      purpose_violation==0 ~ "no purpose violation",
+      purpose_violation==1 ~ "purpose violation"),
+    response=case_when(
+      response==0 ~ "no",
+      response==1 ~ "yes")) %>% 
+  ggplot(aes(x=trial_index,y=rt)) + 
+  geom_smooth(method="lm",se=T,linewidth=0.8,aes(group=response,color=response))+
+  facet_wrap(~text+purpose)+
+  mytheme+
+  labs(subtitle="Did [agent] violate the rule?")+
+  scale_fill_manual(values=c("#619CFF","#F8766D"))+
+  scale_color_manual(values=c("#619CFF","#F8766D"))
+
+p2_learning
+
+#ggsave(p2_learning,file="plot_rts_learning.png",width=13,height=17,units="cm")
+```
+
+check responses by block number
+
+condition 1: high conflict proportion first, low conflict proportion second
+
+- reaction times should be generally higher in first block
+
+```{r}
+clean %>% 
+  filter(condition==1) %>% 
+  group_by(scen_number) %>% 
+  summarize(median_rt = median(rt))
+```
+
+
+condition 2: low conflict proportion first, high conflict proportion second
+
+- reaction times should be generally higher in second block
+
+```{r}
+clean %>% 
+  filter(condition==2) %>% 
+  group_by(scen_number) %>% 
+  summarize(median_rt = median(rt))
+```
+
+how many participants were in each condition?
+
+```{r}
+clean %>% 
+  group_by(condition) %>% 
+  summarize(n = nlevels(factor(subj_code)))
+
+binom.test(16,(16+21))
+```
+scen order by condition
+
+```{r}
+clean %>% 
+  #filter(condition==2) %>% 
+  group_by(subj_code,scen) %>% 
+  summarize(m = min(trial_index),
+            median_rt = median(rt),
+            condition=max(condition)) %>% 
+  arrange(subj_code,m) %>% 
+  mutate(scen_number = rep(1:8,length(nlevels(factor(subj_code))))) %>% 
+  ggplot(aes(x=scen_number,y=median_rt)) + 
+  geom_point(aes(color=subj_code))+
+  geom_line(aes(group=subj_code,color=subj_code))+
+  facet_wrap(~condition)+
+  mytheme
+```
+

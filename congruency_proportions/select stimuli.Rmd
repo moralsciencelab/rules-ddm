@@ -1,0 +1,137 @@
+---
+title: "select stimuli"
+output: html_document
+date: "2023-10-17"
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+#data
+stimuli <- read.csv("stimuli.csv",sep=";")
+
+#code text violation, purpose violation, and conflict
+stimuli <- stimuli %>% 
+  mutate(
+    text_violation = ifelse(condition=="core"|condition=="over",1,0),
+    purpose_violation = ifelse(condition=="core"|condition=="under",1,0),
+    conflict = ifelse(text_violation==purpose_violation,0,1)
+  )
+
+#check current numbers of conflict trials
+stimuli %>% 
+  group_by(scen,conflict) %>% 
+  summarize(n=n())
+```
+select cases for the high conflict proportion condition (10 out of 12 are conflict trials)
+
+```{r}
+#make an empty df that will fit 12 trials per scenario
+stimuli_high <- stimuli[FALSE,]
+
+#make a list of scenarios
+scen_list <- levels(factor(stimuli$scen))
+
+
+#for each case: select 5 over cases, 5 under cases, 1 core case, and 1 off case
+
+for (i in scen_list) {
+  
+  over <- stimuli %>% 
+  filter(scen==i & condition=="over") %>% 
+  slice_sample(n=5)
+  
+  under <- stimuli %>% 
+  filter(scen==i & condition=="under") %>% 
+  slice_sample(n=5)
+  
+  core <- stimuli %>% 
+  filter(scen==i & condition=="core") %>% 
+  slice_sample(n=1)
+  
+  off <- stimuli %>% 
+  filter(scen==i & condition=="off") %>% 
+  slice_sample(n=1)
+  
+  selection <- rbind(over,under,core,off)
+  
+  stimuli_high <- rbind(stimuli_high,selection)
+  
+} 
+
+#check current numbers of conflict trials
+stimuli_high %>% 
+  group_by(scen,conflict) %>% 
+  summarize(n=n())
+
+#add condition info
+stimuli_high$prop_conflict <- rep("high",length(stimuli_high$scen))
+```
+
+same procedure for low conflict (2 out of 10)
+
+```{r}
+#make an empty df that will fit 12 trials per scenario
+stimuli_low <- stimuli[FALSE,]
+
+#make a list of scenarios
+scen_list <- levels(factor(stimuli$scen))
+
+#for each case: select 5 core cases, 5 off cases, 1 over case, and 1 under case
+
+for (i in scen_list) {
+  
+  core <- stimuli %>% 
+  filter(scen==i & condition=="core") %>% 
+  slice_sample(n=5)
+  
+  off <- stimuli %>% 
+  filter(scen==i & condition=="off") %>% 
+  slice_sample(n=5)
+  
+  over <- stimuli %>% 
+  filter(scen==i & condition=="over") %>% 
+  slice_sample(n=1)
+  
+  under <- stimuli %>% 
+  filter(scen==i & condition=="under") %>% 
+  slice_sample(n=1)
+  
+  selection <- rbind(over,under,core,off)
+  
+  stimuli_low <- rbind(stimuli_low,selection)
+  
+} 
+
+#check current numbers of conflict trials
+stimuli_low %>% 
+  group_by(scen,conflict) %>% 
+  summarize(n=n())
+
+#add condition info
+stimuli_low$prop_conflict <- rep("low",length(stimuli_low$scen))
+```
+
+join dataframes
+
+```{r}
+stimuli_selected <- rbind(stimuli_high,stimuli_low)
+
+#check
+stimuli_selected %>% 
+  group_by(prop_conflict,scen,conflict) %>% 
+  summarize(n=n())
+
+```
+
+
+make file for jspsych and export
+
+```{r}
+stimuli_jspsych <- stimuli_selected %>% 
+  arrange(scen,prop_conflict,condition) 
+
+write.csv(stimuli_jspsych,file="stimuli_jspsych.csv",row.names = F)
+```

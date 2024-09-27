@@ -1,0 +1,176 @@
+---
+title: "data wrangling time pressure experiment"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 3  
+    number_sections: true  
+    theme: united 
+    highlight: tango  
+date: "2023-01-26"
+---
+
+# settings
+
+```{r echo = F, include = F}
+knitr::opts_chunk$set(message=F,warning=F)
+```
+
+# packages 
+
+```{r}
+library(tidyverse)
+```
+
+# data
+
+```{r}
+raw_batch1 <- read.csv("raw_batch1.csv")
+raw_batch2 <- read.csv("raw_batch2.csv")
+
+#merge
+raw <- rbind(raw_batch1,raw_batch2)
+```
+
+# demographics
+
+```{r}
+#how many started survey?
+nlevels(factor(raw$subj_code))
+
+#extract demographics
+demographics <- raw |> select(subj_code,trial_index,response) |> filter(trial_index > 335 & trial_index < 340)
+#how many?
+nlevels(factor(demographics$subj_code)) #123, did 5 not finish?
+
+#noncompleters
+noncompleters <- raw |> 
+  filter(!subj_code %in% demographics$subj_code) |> 
+  select(subj_code) |> 
+  distinct() # 5 did not finish
+```
+
+# cleaning and reformatting
+
+```{r response trials only}
+clean <- raw %>% 
+  select(subj_code,condition,stimulus,task,block_name,rt,key_assignment,trial_index,response,
+         correct_response,stim_type,wrong_answer) |> 
+  filter(task!="fixation"&task!="feedback") |> #exclude fixation trials and feedback
+  filter(!grepl('^<p style|^<p>|^<div style|<p style="text-align:left;">', stimulus)) |> # exclude instruction etc
+  filter(!subj_code %in% noncompleters$subj_code) |>  #exclude noncompleters
+  filter(trial_index!=1 & trial_index<335) #exclude empty row in trial 1 & demographics
+
+#how many subjects
+nlevels(factor(clean$subj_code)) #123
+
+#how many responses per subject? Should be 108: 9 scenarios (practice trials still included), 12 trials per scenario
+clean |> group_by(subj_code) |> summarize(n_trials = n()) 
+```  
+
+```{r add block and case info where missing}
+
+#separate dataframe with block and case info for all completers
+block_info <- raw |> 
+  filter(subj_code %in% clean$subj_code) |> 
+  select(subj_code,block_name) |> 
+  distinct() |> 
+  mutate(block_number = rep(c(0:8),nlevels(factor(subj_code))),
+          block_name = ifelse(block_number==0,"noise_practice",block_name))
+
+#add to main dataframe
+clean <- clean |> 
+  mutate(block_number = rep(c(rep(0,12),rep(1,12),rep(2,12),rep(3,12),rep(4,12),rep(5,12),rep(6,12),rep(7,12),rep(8,12)),nlevels(factor(subj_code)))) |> 
+  left_join(block_info,by=c("subj_code","block_number")) |> 
+  select(subj_code,condition,block_number,block_name.x,block_name.y,stimulus,trial_index,key_assignment,response,rt,correct_response,wrong_answer,stim_type) 
+
+#exclude practice trials
+clean <- clean |> filter(block_number>0)
+```
+
+```{r labeling and modifying variables for analysis}
+#condition variable
+clean <- clean |> 
+  mutate(condition= ifelse(condition==1,"speed_accuracy","accuracy_speed"))
+
+#mode and case variables 
+clean <- clean |> 
+  mutate(block_name.x = block_name.y) |> 
+  select(-block_name.y) |> 
+  separate(block_name.x,c("case","mode"),remove=T)
+
+#key assignment
+clean <- clean |> 
+  mutate(key_assignment = ifelse(str_detect(key_assignment,"e for yes"),"e","i")) |> 
+  rename(yes_key = key_assignment)
+
+#response
+clean <- clean |> 
+  mutate(response=ifelse(response==yes_key,"yes","no"),
+         response_num = ifelse(response=="yes",1,0))
+
+# rt's numeric
+clean <- clean |> 
+  mutate(rt = as.numeric(rt))
+
+#import codingsheet for text vs purpose coding
+codingsheet <- read.csv("codingsheet.csv")
+
+#check that strings are identical to dataset
+codingsheet |> 
+  filter(!stimulus %in% clean$stimulus) #only practice trials are different
+
+#add text vs purpose info
+clean <- clean |> 
+  left_join(codingsheet,by="stimulus") |> 
+  rename(text_violation = text,
+         purpose_violation = purpose)
+
+#final reordering
+clean <- clean |> 
+  select(subj_code,condition,block_number,case,mode,trial_index,stimulus,text_violation,purpose_violation,stim_type,yes_key,response,response_num,rt,correct_response,wrong_answer)
+
+#complete stimulus type variable
+clean <- clean |> mutate(stim_type=ifelse(text_violation==purpose_violation,"congruent","incongruent"))
+```
+
+```{r some sanity checks}
+#every participant has seen 8 different scenarios
+clean |> group_by(subj_code) |> 
+  summarize(case) |> 
+  summarize(n_distinct_cases = n_distinct(case)) |> 
+  summary(n_distinct_cases)
+
+#with 12 trials each
+clean |> group_by(subj_code,case) |> 
+  summarize(n_trials = n()) |> 
+  summary(n_trials)
+
+#in speed_accuracy, the first 4 were accuracy and the last 4 were speed
+clean %>%
+  ggplot(aes(x = block_number, fill = mode)) +  # Use block_number on x-axis and mode for fill
+  geom_bar(position = "fill", stat = "count") +  # Stack bars and scale to 100%
+  facet_wrap(~condition) +  # Separate plots by condition
+  scale_y_continuous(labels = scales::percent) +  # Convert y-axis to show percentages
+  labs(x = "Block Number", y = "Percentage of Modes", title = "Mode Occurrences by Block Number and Condition (Percentage)") +
+  theme_minimal()
+
+#check that answers and rt's roughly make sense
+clean |> 
+  group_by(text_violation,purpose_violation) |> 
+  summarize(m_rt = median(rt,na.rm=T)) #longer for incongruent trials
+
+clean |> 
+  group_by(mode) |> 
+  summarize(m_rt = median(rt,na.rm=T)) #longer in accuracy mode
+
+```
+
+```{r export}
+write.csv(clean,"clean.csv",row.names = F)
+```
+
+
+
+
+
