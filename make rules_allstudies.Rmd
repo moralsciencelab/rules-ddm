@@ -332,7 +332,7 @@ stroop_flanker <- stroop_flanker |>
 ## merge
 
 ```{r}
-rules_allstudies1 <- bind_rows(rules_allstudies,stroop_flanker)
+rules_allstudies <- bind_rows(rules_allstudies,stroop_flanker)
 ```
 
 # add punishment
@@ -394,9 +394,89 @@ rules_allstudies <- bind_rows(rules_allstudies,punishment)
 
 # final reorganization of dataframe
 
-- create rules and behavior variables from codingsheet or from stimulus
-- task variable should be rules for everything except stroop and flanker tasks in stroop_flanker
-- correct answer: code textualist for rules task, correct/incorrect for stroop and flanker
+delete scen variable
+
+```{r}
+rules_allstudies <- rules_allstudies |> 
+  select(-scen)
+```
+
+
+task variable should be rules for everything except stroop and flanker tasks in stroop_flanker
+
+```{r}
+rules_allstudies <- rules_allstudies |> 
+  mutate(task = ifelse(is.na(response_stroop)==F,"stroop",
+                ifelse(is.na(response_flanker) == F, "flanker","rules")))
+```
+
+
+create rules and behavior variables from codingsheet or from stimulus
+
+```{r}
+rules_allstudies <- rules_allstudies |> 
+  mutate(
+    rule = if_else(task == "rules", 
+                   str_extract(stimulus, '"[^"]*"') %>% str_replace_all('"', ''), 
+                   NA_character_),
+    behavior = if_else(task == "rules", 
+                       str_extract(stimulus, '<b>.*?</b>') %>% str_replace_all('<b>|</b>', ''), 
+                       NA_character_)
+  )
+```
+
+correct answer: code textualist for rules task, correct/incorrect for stroop and flanker
+
+```{r}
+rules_allstudies <- rules_allstudies |> 
+  rename(correct = correct_answer) |> 
+  mutate(correct = case_when(
+    task=="rules"&response==text ~ 1,
+    task=="rules"&response!="text"~0,
+    task!="rules" ~ correct
+  ))
+```
+
+final reordering
+
+```{r}
+rules_allstudies <- rules_allstudies |> 
+  select(study,
+         subj_code,
+         trial_index,
+         task,
+         scen_number,
+         block_number,
+         stimulus,
+         case,
+         rule,
+         behavior,
+         text,
+         purpose,
+         condition,
+         congruent,
+         response,
+         response_stroop,
+         response_flanker,
+         stroopflanker_correct_resp,
+         correct,
+         rt,
+         congprop,
+         congprop_block_order,
+         spd_acc_mode,
+         spd_acc_order)
+```
+
+# checks
+
+participants per study
+
+```{r}
+rules_allstudies |> 
+  group_by(study) |> 
+  summarize(n = n_distinct(subj_code))
+```
+
 
 # export
 
