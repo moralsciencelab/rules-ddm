@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="03_plots and analyses_files/libs/clipboard/clipboard.min.js"></script>
+<script src="03_plots and analyses_files/libs/quarto-html/quarto.js"></script>
+<script src="03_plots and analyses_files/libs/quarto-html/popper.min.js"></script>
+<script src="03_plots and analyses_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="03_plots and analyses_files/libs/quarto-html/anchor.min.js"></script>
+<link href="03_plots and analyses_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="03_plots and analyses_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="03_plots and analyses_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="03_plots and analyses_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="03_plots and analyses_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="packages" class="level1">
+<h1>packages</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data" class="level1">
+<h1>data</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>clean <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>,<span class="st">"clean.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plots" class="level1">
+<h1>plots</h1>
+<section id="theme" class="level2">
+<h2 class="anchored" data-anchor-id="theme">theme</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mytheme <span class="ot">&lt;-</span> <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>           <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"black"</span>,<span class="at">size=</span><span class="dv">8</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"black"</span>,<span class="at">size=</span><span class="dv">10</span>,<span class="at">face=</span><span class="st">"bold"</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"black"</span>,<span class="at">size=</span><span class="dv">8</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"black"</span>,<span class="at">size=</span><span class="dv">10</span>,<span class="at">face=</span><span class="st">"bold"</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">strip.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">title =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"black"</span>,<span class="at">size=</span><span class="dv">10</span>,<span class="at">face=</span><span class="st">"bold"</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="judgments" class="level2">
+<h2 class="anchored" data-anchor-id="judgments">judgments</h2>
+<section id="plot" class="level3">
+<h3 class="anchored" data-anchor-id="plot">plot</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> clean <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">text=</span><span class="fu">case_when</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    text<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no text violation"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    text<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"text violation"</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">purpose=</span><span class="fu">case_when</span>(</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      purpose<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no purpose violation"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      purpose<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"purpose violation"</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">response=</span><span class="fu">case_when</span>(</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>      response<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      response<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"yes"</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ggplot(aes(x=response))+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_bar(stat="count",aes(fill=response))+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>conflict_prop,<span class="at">fill=</span>response))<span class="sc">+</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position=</span><span class="st">"fill"</span>)<span class="sc">+</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  mytheme<span class="sc">+</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>purpose<span class="sc">+</span>text)<span class="sc">+</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle=</span><span class="st">"Did this person violate the rule?"</span>)<span class="sc">+</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"#619CFF"</span>,<span class="st">"#F8766D"</span>))</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="03_plots-and-analyses_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make dataframe to get confidence intervals</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>judgments_CI <span class="ot">&lt;-</span> clean <span class="sc">|&gt;</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">text=</span><span class="fu">case_when</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    text<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no text violation"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    text<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"text violation"</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">purpose=</span><span class="fu">case_when</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>      purpose<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no purpose violation"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>      purpose<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"purpose violation"</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">response=</span><span class="fu">case_when</span>(</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      response<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no"</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      response<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"yes"</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(purpose,text,conflict_prop,response) <span class="sc">|&gt;</span> </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> <span class="fu">round</span>(n<span class="sc">/</span><span class="fu">sum</span>(n),<span class="dv">2</span>),</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">se =</span> <span class="fu">sqrt</span>(prop<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>prop)<span class="sc">/</span>n),</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI_lower =</span> <span class="fu">round</span>(prop <span class="sc">-</span> <span class="fl">1.96</span><span class="sc">*</span>se,<span class="dv">2</span>),</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI_upper =</span> <span class="fu">round</span>(prop <span class="sc">+</span> <span class="fl">1.96</span><span class="sc">*</span>se,<span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(response<span class="sc">==</span><span class="st">"yes"</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># add to plot</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> p1 <span class="sc">+</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_linerange</span>(<span class="at">data=</span>judgments_CI,<span class="fu">aes</span>(<span class="at">ymin=</span>CI_lower,<span class="at">ymax=</span>CI_upper))<span class="sc">+</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>()<span class="sc">+</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"</span><span class="sc">\n</span><span class="st">proportion of conflict trials"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="save" class="level3">
+<h3 class="anchored" data-anchor-id="save">save</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(p1,<span class="at">file=</span><span class="fu">here</span>(<span class="st">"figures"</span>,<span class="st">"judgments.png"</span>),<span class="at">width=</span><span class="dv">13</span>,<span class="at">height=</span><span class="dv">17</span>,<span class="at">units=</span><span class="st">"cm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="rts" class="level2">
+<h2 class="anchored" data-anchor-id="rts">rts</h2>
+<section id="plot-1" class="level3">
+<h3 class="anchored" data-anchor-id="plot-1">plot</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> clean <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">text=</span><span class="fu">case_when</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    text<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no text violation"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    text<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"text violation"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">purpose=</span><span class="fu">case_when</span>(</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      purpose<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no purpose violation"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      purpose<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"purpose violation"</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">response=</span><span class="fu">case_when</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      response<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      response<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"yes"</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>rt))<span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">fill=</span>response,<span class="at">color=</span>response),<span class="at">alpha=</span><span class="fl">0.5</span>)<span class="sc">+</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>text<span class="sc">+</span>purpose<span class="sc">+</span>conflict_prop)<span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  mytheme<span class="sc">+</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle=</span><span class="st">"Did this person violate the rule?"</span>)<span class="sc">+</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"#619CFF"</span>,<span class="st">"#F8766D"</span>))<span class="sc">+</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"#619CFF"</span>,<span class="st">"#F8766D"</span>))</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="03_plots-and-analyses_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#median rts for overlaying</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>median_rts <span class="ot">&lt;-</span> clean <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">text=</span><span class="fu">case_when</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    text<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no text violation"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    text<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"text violation"</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">purpose=</span><span class="fu">case_when</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      purpose<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no purpose violation"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      purpose<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"purpose violation"</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">response=</span><span class="fu">case_when</span>(</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      response<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"no"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      response<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">"yes"</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(text,purpose,response,conflict_prop) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">rt =</span> <span class="fu">median</span>(rt))</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#overlay medians</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> p2 <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">data=</span>median_rts,<span class="fu">aes</span>(<span class="at">xintercept=</span>rt,<span class="at">color=</span>response),<span class="at">linewidth=</span><span class="dv">1</span>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="03_plots-and-analyses_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="save-1" class="level3">
+<h3 class="anchored" data-anchor-id="save-1">save</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(p2,<span class="at">file=</span><span class="fu">here</span>(<span class="st">"figures"</span>,<span class="st">"rts.png"</span>),<span class="at">width=</span><span class="dv">13</span>,<span class="at">height=</span><span class="dv">17</span>,<span class="at">units=</span><span class="st">"cm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="preregistered-analyses" class="level1">
+<h1>preregistered analyses</h1>
+<section id="judgments-1" class="level2">
+<h2 class="anchored" data-anchor-id="judgments-1">judgments</h2>
+<section id="descriptives" class="level3">
+<h3 class="anchored" data-anchor-id="descriptives">descriptives</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>clean <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(condition,conflict_prop,response) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> <span class="fu">round</span>(n<span class="sc">/</span><span class="fu">sum</span>(n),<span class="dv">2</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">se =</span> <span class="fu">sqrt</span>(prop<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>prop)<span class="sc">/</span>n),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI_lower =</span> <span class="fu">round</span>(prop <span class="sc">-</span> <span class="fl">1.96</span><span class="sc">*</span>se,<span class="dv">2</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI_upper =</span> <span class="fu">round</span>(prop <span class="sc">+</span> <span class="fl">1.96</span><span class="sc">*</span>se,<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 16 × 8
+# Groups:   condition, conflict_prop [8]
+   condition        conflict_prop response     n  prop      se CI_lower CI_upper
+   &lt;chr&gt;            &lt;chr&gt;            &lt;int&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+ 1 full violation   high                 0    30  0.06 0.0434     -0.02     0.14
+ 2 full violation   high                 1   448  0.94 0.0112      0.92     0.96
+ 3 full violation   low                  0   111  0.05 0.0207      0.01     0.09
+ 4 full violation   low                  1  2290  0.95 0.00455     0.94     0.96
+ 5 no violation     high                 0   450  0.93 0.0120      0.91     0.95
+ 6 no violation     high                 1    33  0.07 0.0444     -0.02     0.16
+ 7 no violation     low                  0  2313  0.96 0.00407     0.95     0.97
+ 8 no violation     low                  1    88  0.04 0.0209      0        0.08
+ 9 purpose violati… high                 0  1967  0.82 0.00866     0.8      0.84
+10 purpose violati… high                 1   422  0.18 0.0187      0.14     0.22
+11 purpose violati… low                  0   391  0.81 0.0198      0.77     0.85
+12 purpose violati… low                  1    89  0.19 0.0416      0.11     0.27
+13 text violation   high                 0   840  0.35 0.0165      0.32     0.38
+14 text violation   high                 1  1533  0.65 0.0122      0.63     0.67
+15 text violation   low                  0   157  0.33 0.0375      0.26     0.4 
+16 text violation   low                  1   320  0.67 0.0263      0.62     0.72</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>clean <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(condition,response) <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> <span class="fu">round</span>(n<span class="sc">/</span><span class="fu">sum</span>(n),<span class="dv">2</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">se =</span> <span class="fu">sqrt</span>(prop<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>prop)<span class="sc">/</span>n),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI_lower =</span> <span class="fu">round</span>(prop <span class="sc">-</span> <span class="fl">1.96</span><span class="sc">*</span>se,<span class="dv">2</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI_upper =</span> <span class="fu">round</span>(prop <span class="sc">+</span> <span class="fl">1.96</span><span class="sc">*</span>se,<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 7
+# Groups:   condition [4]
+  condition         response     n  prop      se CI_lower CI_upper
+  &lt;chr&gt;                &lt;int&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 full violation           0   141  0.05 0.0184      0.01     0.09
+2 full violation           1  2738  0.95 0.00417     0.94     0.96
+3 no violation             0  2763  0.96 0.00373     0.95     0.97
+4 no violation             1   121  0.04 0.0178      0.01     0.07
+5 purpose violation        0  2358  0.82 0.00791     0.8      0.84
+6 purpose violation        1   511  0.18 0.0170      0.15     0.21
+7 text violation           0   997  0.35 0.0151      0.32     0.38
+8 text violation           1  1853  0.65 0.0111      0.63     0.67</code></pre>
+</div>
+</div>
+</section>
+<section id="logistic-regression" class="level3">
+<h3 class="anchored" data-anchor-id="logistic-regression">logistic regression</h3>
+<p>“1) We will conduct a mixed-effects logistic regression of rule violation judgments, with proportion, text, purpose and every two- and three-way interaction as fixed effects (and scenarios and participants as crossed, random effects). We predict main (i.e., positive) effects of text and purpose.”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># null model</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>null <span class="ot">&lt;-</span> <span class="fu">glmer</span>(response <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude, <span class="at">family=</span>binomial)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># main effect text</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>purpose_only <span class="ot">&lt;-</span> <span class="fu">glmer</span>(response <span class="sc">~</span> purpose <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude, <span class="at">family=</span>binomial)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>purpose_text <span class="ot">&lt;-</span> <span class="fu">glmer</span>(response <span class="sc">~</span> purpose <span class="sc">+</span> text <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude, <span class="at">family=</span>binomial)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(null,purpose_only)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: response ~ 1 + (1 | subj_code) + (1 | scen)
+Model 2: response ~ purpose + (1 | subj_code) + (1 | scen)
+  #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+1   3 -7887.3                         
+2   4 -7599.7  1 575.17  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(null,purpose_text) <span class="co"># either model better than null</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: response ~ 1 + (1 | subj_code) + (1 | scen)
+Model 2: response ~ purpose + text + (1 | subj_code) + (1 | scen)
+  #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+1   3 -7887.3                         
+2   5 -4170.9  2 7432.8  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(purpose_only,purpose_text) <span class="co"># better with text compared to purpose alone (main effect)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: response ~ purpose + (1 | subj_code) + (1 | scen)
+Model 2: response ~ purpose + text + (1 | subj_code) + (1 | scen)
+  #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+1   4 -7599.7                         
+2   5 -4170.9  1 6857.6  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># main effect purpose</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>text_only <span class="ot">&lt;-</span> <span class="fu">glmer</span>(response <span class="sc">~</span> text <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude, <span class="at">family=</span>binomial)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(text_only,purpose_text) <span class="co"># better with purpose</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: response ~ text + (1 | subj_code) + (1 | scen)
+Model 2: response ~ purpose + text + (1 | subj_code) + (1 | scen)
+  #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+1   4 -4762.4                         
+2   5 -4170.9  1 1183.2  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># main effect proportion congruency</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>text_purpose_prop <span class="ot">&lt;-</span> <span class="fu">glmer</span>(response <span class="sc">~</span> purpose <span class="sc">+</span> text <span class="sc">+</span> conflict_prop <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude, <span class="at">family=</span>binomial)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(purpose_text,text_purpose_prop) <span class="co"># better - this is unexpected!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: response ~ purpose + text + (1 | subj_code) + (1 | scen)
+Model 2: response ~ purpose + text + conflict_prop + (1 | subj_code) + 
+    (1 | scen)
+  #Df  LogLik Df  Chisq Pr(&gt;Chisq)   
+1   5 -4170.9                        
+2   6 -4166.4  1 9.0087   0.002687 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># interaction text x purpose</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>interaction_textXpurpose <span class="ot">&lt;-</span> <span class="fu">glmer</span>(response <span class="sc">~</span> purpose <span class="sc">*</span> text <span class="sc">+</span> conflict_prop <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude, <span class="at">family=</span>binomial)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(text_purpose_prop, interaction_textXpurpose) <span class="co"># better</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: response ~ purpose + text + conflict_prop + (1 | subj_code) + 
+    (1 | scen)
+Model 2: response ~ purpose * text + conflict_prop + (1 | subj_code) + 
+    (1 | scen)
+  #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+1   6 -4166.4                         
+2   7 -4157.7  1 17.211  3.345e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># interaction text x prop</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>interaction_textXpurpose_textXprop <span class="ot">&lt;-</span> <span class="fu">glmer</span>(response <span class="sc">~</span> purpose <span class="sc">*</span> text <span class="sc">+</span> conflict_prop <span class="sc">*</span> text <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude, <span class="at">family=</span>binomial)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(interaction_textXpurpose,interaction_textXpurpose_textXprop) <span class="co"># not better</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: response ~ purpose * text + conflict_prop + (1 | subj_code) + 
+    (1 | scen)
+Model 2: response ~ purpose * text + conflict_prop * text + (1 | subj_code) + 
+    (1 | scen)
+  #Df  LogLik Df Chisq Pr(&gt;Chisq)  
+1   7 -4157.7                      
+2   8 -4156.0  1 3.401    0.06516 .
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># interaction purpose x prop</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>interaction_textXpurpose_purposeXprop <span class="ot">&lt;-</span> <span class="fu">glmer</span>(response <span class="sc">~</span> purpose <span class="sc">*</span> text <span class="sc">+</span> conflict_prop <span class="sc">*</span> purpose <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude, <span class="at">family=</span>binomial)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(interaction_textXpurpose,interaction_textXpurpose_purposeXprop) <span class="co"># not better</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: response ~ purpose * text + conflict_prop + (1 | subj_code) + 
+    (1 | scen)
+Model 2: response ~ purpose * text + conflict_prop * purpose + (1 | subj_code) + 
+    (1 | scen)
+  #Df  LogLik Df  Chisq Pr(&gt;Chisq)
+1   7 -4157.7                     
+2   8 -4157.2  1 1.1608     0.2813</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># three-way interaction</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>interaction_threeway <span class="ot">&lt;-</span> <span class="fu">glmer</span>(response <span class="sc">~</span> purpose <span class="sc">*</span> text <span class="sc">+</span> conflict_prop<span class="sc">*</span>purpose<span class="sc">*</span>text <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude, <span class="at">family=</span>binomial)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(interaction_textXpurpose,interaction_threeway) <span class="co"># better</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: response ~ purpose * text + conflict_prop + (1 | subj_code) + 
+    (1 | scen)
+Model 2: response ~ purpose * text + conflict_prop * purpose * text + 
+    (1 | subj_code) + (1 | scen)
+  #Df  LogLik Df  Chisq Pr(&gt;Chisq)   
+1   7 -4157.7                        
+2  10 -4151.7  3 12.111   0.007014 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># final model</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>finalmodel_judgments <span class="ot">&lt;-</span> interaction_threeway </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(finalmodel_judgments)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: response ~ purpose * text + conflict_prop * purpose * text +  
+    (1 | subj_code) + (1 | scen)
+   Data: clean
+
+     AIC      BIC   logLik deviance df.resid 
+  8323.4   8396.9  -4151.7   8303.4    11472 
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-13.0214  -0.3837  -0.1534   0.2725   7.1323 
+
+Random effects:
+ Groups    Name        Variance Std.Dev.
+ subj_code (Intercept) 0.1621   0.4026  
+ scen      (Intercept) 0.1084   0.3292  
+Number of obs: 11482, groups:  subj_code, 121; scen, 8
+
+Fixed effects:
+                              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                    -2.7163     0.2197 -12.361  &lt; 2e-16 ***
+purpose                         1.1077     0.1903   5.820 5.87e-09 ***
+text                            3.3722     0.1885  17.891  &lt; 2e-16 ***
+conflict_proplow               -0.6945     0.2126  -3.266  0.00109 ** 
+purpose:text                    1.0664     0.2727   3.911 9.19e-05 ***
+purpose:conflict_proplow        0.7273     0.2500   2.909  0.00362 ** 
+text:conflict_proplow           0.7787     0.2391   3.257  0.00113 ** 
+purpose:text:conflict_proplow  -0.5157     0.3467  -1.487  0.13692    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) purpos text   cnflc_ prps:t prps:_ txt:c_
+purpose     -0.795                                          
+text        -0.808  0.928                                   
+cnflct_prpl -0.710  0.820  0.827                            
+purpose:txt  0.553 -0.697 -0.683 -0.573                     
+prps:cnflc_  0.604 -0.761 -0.704 -0.849  0.531              
+txt:cnflct_  0.632 -0.729 -0.779 -0.889  0.539  0.755       
+prps:txt:c_ -0.435  0.548  0.537  0.612 -0.786 -0.721 -0.689</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nagelkerke</span>(finalmodel_judgments,null)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$Models
+                                                                                                                                      
+Model: "glmer, response ~ purpose * text + conflict_prop * purpose * text + (1 | subj_code) + (1 | scen), clean, binomial, na.exclude"
+Null:  "glmer, response ~ 1 + (1 | subj_code) + (1 | scen), clean, binomial, na.exclude"                                              
+
+$Pseudo.R.squared.for.model.vs.null
+                             Pseudo.R.squared
+McFadden                             0.473620
+Cox and Snell (ML)                   0.478310
+Nagelkerke (Cragg and Uhler)         0.640421
+
+$Likelihood.ratio.test
+ Df.diff LogLik.diff  Chisq p.value
+      -7     -3735.6 7471.1       0
+
+$Number.of.observations
+            
+Model: 11482
+Null:  11482
+
+$Messages
+[1] "Note: For models fit with REML, these statistics are based on refitting with ML"
+
+$Warnings
+[1] "None"</code></pre>
+</div>
+</div>
+<p>explore main effect of conflict prop</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>clean <span class="sc">|&gt;</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(conflict_prop,response) <span class="sc">|&gt;</span> </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n<span class="sc">/</span><span class="fu">sum</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+# Groups:   conflict_prop [2]
+  conflict_prop response     n  prop
+  &lt;chr&gt;            &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
+1 high                 0  3287 0.574
+2 high                 1  2436 0.426
+3 low                  0  2972 0.516
+4 low                  1  2787 0.484</code></pre>
+</div>
+</div>
+<p>When there are few conflict trials: Most cases are clear, half of them are clear violations, and the other half are clear cases of compliance. Only few conflict trials where there is wiggle room. So we see an almost exact 50/50 split between no and yes responses in these conditions:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>clean <span class="sc">|&gt;</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(condition,response) <span class="sc">|&gt;</span> </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n=</span><span class="fu">n</span>())<span class="sc">|&gt;</span> </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n<span class="sc">/</span><span class="fu">sum</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 4
+# Groups:   condition [4]
+  condition         response     n   prop
+  &lt;chr&gt;                &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;
+1 full violation           0   141 0.0490
+2 full violation           1  2738 0.951 
+3 no violation             0  2763 0.958 
+4 no violation             1   121 0.0420
+5 purpose violation        0  2358 0.822 
+6 purpose violation        1   511 0.178 
+7 text violation           0   997 0.350 
+8 text violation           1  1853 0.650 </code></pre>
+</div>
+</div>
+<p>When there are many conflict trials: Only few cases are clear violations or clear cases of compliance. Most cases are either purpose violations or text violations, to an equal proportion. Text violations elicit mostly “yes” responses. Purpose violations elicit mostly “no” responses. It’s around 80% no’s for purpose violations though, and only around 65% yes’s for text violations. So combined with our knowledge about the frequency of types of trials, we’d expect overall more “no” responses in the high conflict proportion conditions.</p>
+<p>BUT these are effects of the levels of text and purpose and their combinations. They should disappear once text and purpose are accounted for in the model…</p>
+<p>What’s the direction of the main effect of conflict proportion?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(text_purpose_prop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: response ~ purpose + text + conflict_prop + (1 | subj_code) +  
+    (1 | scen)
+   Data: clean
+
+     AIC      BIC   logLik deviance df.resid 
+  8344.7   8388.8  -4166.4   8332.7    11476 
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-11.9033  -0.3912  -0.1413   0.2944   8.6392 
+
+Random effects:
+ Groups    Name        Variance Std.Dev.
+ subj_code (Intercept) 0.1614   0.4017  
+ scen      (Intercept) 0.1074   0.3278  
+Number of obs: 11482, groups:  subj_code, 121; scen, 8
+
+Fixed effects:
+                 Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)      -3.65020    0.14325 -25.481  &lt; 2e-16 ***
+purpose           2.07199    0.07205  28.757  &lt; 2e-16 ***
+text              4.32804    0.07555  57.285  &lt; 2e-16 ***
+conflict_proplow  0.18718    0.06225   3.007  0.00264 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) purpos text  
+purpose     -0.402              
+text        -0.445  0.610       
+cnflct_prpl -0.083 -0.123 -0.059</code></pre>
+</div>
+</div>
+<p>Do we see such an effect after accounting for the levels of text and purpose?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>clean <span class="sc">|&gt;</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(condition,conflict_prop,response) <span class="sc">|&gt;</span> </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n=</span><span class="fu">n</span>())<span class="sc">|&gt;</span> </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n<span class="sc">/</span><span class="fu">sum</span>(n)) <span class="sc">|&gt;</span> </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(response<span class="sc">==</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 5
+# Groups:   condition, conflict_prop [8]
+  condition         conflict_prop response     n   prop
+  &lt;chr&gt;             &lt;chr&gt;            &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;
+1 full violation    high                 1   448 0.937 
+2 full violation    low                  1  2290 0.954 
+3 no violation      high                 1    33 0.0683
+4 no violation      low                  1    88 0.0367
+5 purpose violation high                 1   422 0.177 
+6 purpose violation low                  1    89 0.185 
+7 text violation    high                 1  1533 0.646 
+8 text violation    low                  1   320 0.671 </code></pre>
+</div>
+</div>
+<p>We do in all conditions except no violation, but it’s tiny… So it’s probably an issue of very high power because of all the repeated measures</p>
+<p>calculate ORs</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>clean <span class="sc">|&gt;</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(condition,conflict_prop,response) <span class="sc">|&gt;</span> </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n=</span><span class="fu">n</span>())<span class="sc">|&gt;</span> </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n<span class="sc">/</span><span class="fu">sum</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 16 × 5
+# Groups:   condition, conflict_prop [8]
+   condition         conflict_prop response     n   prop
+   &lt;chr&gt;             &lt;chr&gt;            &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;
+ 1 full violation    high                 0    30 0.0628
+ 2 full violation    high                 1   448 0.937 
+ 3 full violation    low                  0   111 0.0462
+ 4 full violation    low                  1  2290 0.954 
+ 5 no violation      high                 0   450 0.932 
+ 6 no violation      high                 1    33 0.0683
+ 7 no violation      low                  0  2313 0.963 
+ 8 no violation      low                  1    88 0.0367
+ 9 purpose violation high                 0  1967 0.823 
+10 purpose violation high                 1   422 0.177 
+11 purpose violation low                  0   391 0.815 
+12 purpose violation low                  1    89 0.185 
+13 text violation    high                 0   840 0.354 
+14 text violation    high                 1  1533 0.646 
+15 text violation    low                  0   157 0.329 
+16 text violation    low                  1   320 0.671 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#OR for yes response, full violation, low/high congruency condition</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>(<span class="dv">2290</span><span class="sc">/</span><span class="dv">111</span>)<span class="sc">/</span>(<span class="dv">448</span><span class="sc">/</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.381515</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">#OR for yes response, no violation, low/high congruency condition</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>(<span class="dv">88</span><span class="sc">/</span><span class="dv">2313</span>)<span class="sc">/</span>(<span class="dv">33</span><span class="sc">/</span><span class="dv">450</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5188067</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">#OR for yes response, purpose violation, low/high congruency condition</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>(<span class="dv">89</span><span class="sc">/</span><span class="dv">391</span>)<span class="sc">/</span>(<span class="dv">422</span><span class="sc">/</span><span class="dv">1967</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.060975</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co">#OR for yes response, text violation, low/high congruency condition</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>(<span class="dv">320</span><span class="sc">/</span><span class="dv">157</span>)<span class="sc">/</span>(<span class="dv">1533</span><span class="sc">/</span><span class="dv">840</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.116831</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="rts-1" class="level2">
+<h2 class="anchored" data-anchor-id="rts-1">rts</h2>
+<p>“2) We will run a mixed-effects regression of response times, with proportion, congruency and the proportion*congruency interaction as fixed effects (and scenario and participant as crossed random effects).”</p>
+<section id="descriptives-1" class="level3">
+<h3 class="anchored" data-anchor-id="descriptives-1">descriptives</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>clean <span class="sc">|&gt;</span> </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(conflict_prop,congruent) <span class="sc">|&gt;</span> </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median =</span> <span class="fu">median</span>(rt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+# Groups:   conflict_prop [2]
+  conflict_prop congruent median
+  &lt;chr&gt;             &lt;int&gt;  &lt;dbl&gt;
+1 high                  0  2711 
+2 high                  1  2316 
+3 low                   0  2902 
+4 low                   1  2080.</code></pre>
+</div>
+</div>
+</section>
+<section id="linear-model" class="level3">
+<h3 class="anchored" data-anchor-id="linear-model">linear model</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># null model</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>null <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rt <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="co"># main effect congruency</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>prop <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rt <span class="sc">~</span> conflict_prop <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude)</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>congruency_prop <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rt <span class="sc">~</span> congruent <span class="sc">+</span> conflict_prop <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude)</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(prop,congruency_prop) <span class="co"># better with congruency</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: rt ~ conflict_prop + (1 | subj_code) + (1 | scen)
+Model 2: rt ~ congruent + conflict_prop + (1 | subj_code) + (1 | scen)
+  #Df LogLik Df  Chisq Pr(&gt;Chisq)    
+1   5 -96957                         
+2   6 -96719  1 476.37  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># main effect proportion</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>congruency <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rt <span class="sc">~</span> congruent <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(congruency, congruency_prop) <span class="co"># better with proportion</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: rt ~ congruent + (1 | subj_code) + (1 | scen)
+Model 2: rt ~ congruent + conflict_prop + (1 | subj_code) + (1 | scen)
+  #Df LogLik Df  Chisq Pr(&gt;Chisq)   
+1   5 -96724                        
+2   6 -96719  1 10.566   0.001152 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># interaction</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>congruencyXprop <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rt <span class="sc">~</span> congruent <span class="sc">*</span> conflict_prop <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude)</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(congruency_prop,congruencyXprop) <span class="co"># better</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: rt ~ congruent + conflict_prop + (1 | subj_code) + (1 | scen)
+Model 2: rt ~ congruent * conflict_prop + (1 | subj_code) + (1 | scen)
+  #Df LogLik Df  Chisq Pr(&gt;Chisq)    
+1   6 -96719                         
+2   7 -96687  1 63.055   2.01e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="supplementary-analyses" class="level1">
+<h1>supplementary analyses</h1>
+<section id="rts-2" class="level2">
+<h2 class="anchored" data-anchor-id="rts-2">rts</h2>
+<section id="descriptives-2" class="level3">
+<h3 class="anchored" data-anchor-id="descriptives-2">descriptives</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>clean <span class="sc">|&gt;</span> </span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(condition) <span class="sc">|&gt;</span> </span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median =</span> <span class="fu">median</span>(rt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  condition         median
+  &lt;chr&gt;              &lt;dbl&gt;
+1 full violation     2139 
+2 no violation       2092.
+3 purpose violation  2632 
+4 text violation     2846 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>clean <span class="sc">|&gt;</span> </span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(response) <span class="sc">|&gt;</span> </span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median =</span> <span class="fu">median</span>(rt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  response median
+     &lt;int&gt;  &lt;int&gt;
+1        0   2424
+2        1   2353</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>clean <span class="sc">|&gt;</span> </span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(conflict_prop) <span class="sc">|&gt;</span> </span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median =</span> <span class="fu">median</span>(rt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  conflict_prop median
+  &lt;chr&gt;          &lt;int&gt;
+1 high            2647
+2 low             2185</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>clean <span class="sc">|&gt;</span> </span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(condition,response, conflict_prop) <span class="sc">|&gt;</span> </span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median =</span> <span class="fu">median</span>(rt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 16 × 4
+# Groups:   condition, response [8]
+   condition         response conflict_prop median
+   &lt;chr&gt;                &lt;int&gt; &lt;chr&gt;          &lt;dbl&gt;
+ 1 full violation           0 high           2746.
+ 2 full violation           0 low            2896 
+ 3 full violation           1 high           2354 
+ 4 full violation           1 low            2088.
+ 5 no violation             0 high           2266.
+ 6 no violation             0 low            2065 
+ 7 no violation             1 high           2343 
+ 8 no violation             1 low            2054.
+ 9 purpose violation        0 high           2564 
+10 purpose violation        0 low            2985 
+11 purpose violation        1 high           2728.
+12 purpose violation        1 low            2716 
+13 text violation           0 high           3197 
+14 text violation           0 low            3121 
+15 text violation           1 high           2684 
+16 text violation           1 low            2752.</code></pre>
+</div>
+</div>
+</section>
+<section id="linear-model-1" class="level3">
+<h3 class="anchored" data-anchor-id="linear-model-1">linear model</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># null model</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>null <span class="ot">&lt;-</span> <span class="fu">glmer</span>(rt <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="co"># main effect text</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>purpose_only <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rt <span class="sc">~</span> purpose <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude)</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>purpose_text <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rt <span class="sc">~</span> purpose <span class="sc">+</span> text <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude)</span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(purpose_only,purpose_text) <span class="co"># better with text</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: rt ~ purpose + (1 | subj_code) + (1 | scen)
+Model 2: rt ~ purpose + text + (1 | subj_code) + (1 | scen)
+  #Df LogLik Df  Chisq Pr(&gt;Chisq)    
+1   5 -97163                         
+2   6 -97134  1 57.855  2.822e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># main effect purpose</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>text_only <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rt <span class="sc">~</span> text <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude)</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(text_only,purpose_text) <span class="co"># better with purpose</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: rt ~ text + (1 | subj_code) + (1 | scen)
+Model 2: rt ~ purpose + text + (1 | subj_code) + (1 | scen)
+  #Df LogLik Df  Chisq Pr(&gt;Chisq)    
+1   5 -97146                         
+2   6 -97134  1 24.134  8.986e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># main effect response</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rt <span class="sc">~</span> purpose <span class="sc">+</span> text <span class="sc">+</span> response <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude)</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(purpose_text, response) <span class="co">#better</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: rt ~ purpose + text + (1 | subj_code) + (1 | scen)
+Model 2: rt ~ purpose + text + response + (1 | subj_code) + (1 | scen)
+  #Df LogLik Df  Chisq Pr(&gt;Chisq)    
+1   6 -97134                         
+2   7 -97084  1 101.37  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># interaction text x purpose</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>interaction <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rt <span class="sc">~</span> purpose<span class="sc">*</span>text <span class="sc">+</span> response <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subj_code) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>scen), <span class="at">data =</span> clean,<span class="at">na.action=</span>na.exclude)</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(response,interaction) <span class="co"># better</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio test
+
+Model 1: rt ~ purpose + text + response + (1 | subj_code) + (1 | scen)
+Model 2: rt ~ purpose * text + response + (1 | subj_code) + (1 | scen)
+  #Df LogLik Df  Chisq Pr(&gt;Chisq)    
+1   7 -97084                         
+2   8 -96655  1 858.17  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

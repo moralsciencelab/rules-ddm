@@ -1,0 +1,423 @@
+---
+title: "analysis"
+format: html
+editor: visual
+execute:
+  warning: false
+  message: false
+---
+
+# packages
+
+```{r}
+library(lmtest)
+library(lme4)
+library(nlme)
+library(rcompanion)
+library(reshape2)
+library(here)
+library(tidyverse)
+```
+
+# data
+
+```{r}
+clean <- read.csv(here("data","clean.csv"))
+```
+
+# plots
+
+## theme
+
+```{r}
+mytheme <- theme_classic()+
+           theme(axis.text.x = element_text(color="black",size=8),
+                  axis.title.x = element_text(color="black",size=10,face="bold"),
+                  axis.text.y = element_text(color="black",size=8),
+                  axis.title.y = element_text(color="black",size=10,face="bold"),
+                  strip.text.x = element_text(size = 8),
+                  legend.title = element_text(size = 10),
+                  title = element_text(color="black",size=10,face="bold"),
+                  legend.position = "right")
+```
+
+## judgments
+
+### plot
+
+```{r}
+p1 <- clean %>% 
+  mutate(text=case_when(
+    text==0 ~ "no text violation",
+    text==1 ~ "text violation"
+      ),
+    purpose=case_when(
+      purpose==0 ~ "no purpose violation",
+      purpose==1 ~ "purpose violation"
+    ),
+    response=case_when(
+      response==0 ~ "no",
+      response==1 ~ "yes")
+    ) %>% 
+  #ggplot(aes(x=response))+
+  #geom_bar(stat="count",aes(fill=response))+
+  ggplot(aes(x=conflict_prop,fill=response))+
+  geom_bar(position="fill")+
+  mytheme+
+  facet_wrap(~purpose+text)+
+  labs(subtitle="Did this person violate the rule?")+
+  scale_fill_manual(values=c("#619CFF","#F8766D"))
+  
+
+p1
+
+# make dataframe to get confidence intervals
+
+judgments_CI <- clean |> 
+  mutate(text=case_when(
+    text==0 ~ "no text violation",
+    text==1 ~ "text violation"
+      ),
+    purpose=case_when(
+      purpose==0 ~ "no purpose violation",
+      purpose==1 ~ "purpose violation"
+    ),
+    response=case_when(
+      response==0 ~ "no",
+      response==1 ~ "yes")
+    ) %>%
+  group_by(purpose,text,conflict_prop,response) |> 
+  summarize(n = n()) |> 
+  mutate(prop = round(n/sum(n),2),
+         se = sqrt(prop*(1-prop)/n),
+         CI_lower = round(prop - 1.96*se,2),
+         CI_upper = round(prop + 1.96*se,2)) |> 
+  filter(response=="yes")
+
+# add to plot
+
+p1 <- p1 +
+  geom_linerange(data=judgments_CI,aes(ymin=CI_lower,ymax=CI_upper))+
+  coord_cartesian()+
+  labs(x="\nproportion of conflict trials")
+
+```
+
+### save
+
+```{r}
+ggsave(p1,file=here("figures","judgments.png"),width=13,height=17,units="cm")
+```
+
+## rts
+
+### plot
+
+```{r}
+p2 <- clean %>% 
+  mutate(text=case_when(
+    text==0 ~ "no text violation",
+    text==1 ~ "text violation"
+      ),
+    purpose=case_when(
+      purpose==0 ~ "no purpose violation",
+      purpose==1 ~ "purpose violation"
+    ),
+    response=case_when(
+      response==0 ~ "no",
+      response==1 ~ "yes")
+    ) %>% 
+  ggplot(aes(x=rt))+
+  geom_density(aes(fill=response,color=response),alpha=0.5)+
+  facet_wrap(~text+purpose+conflict_prop)+
+  mytheme+
+  labs(subtitle="Did this person violate the rule?")+
+  scale_fill_manual(values=c("#619CFF","#F8766D"))+
+  scale_color_manual(values=c("#619CFF","#F8766D"))
+
+p2
+
+#median rts for overlaying
+median_rts <- clean %>% 
+  mutate(text=case_when(
+    text==0 ~ "no text violation",
+    text==1 ~ "text violation"
+      ),
+    purpose=case_when(
+      purpose==0 ~ "no purpose violation",
+      purpose==1 ~ "purpose violation"
+    ),
+    response=case_when(
+      response==0 ~ "no",
+      response==1 ~ "yes")
+    ) %>% 
+  group_by(text,purpose,response,conflict_prop) %>% 
+  summarize(rt = median(rt))
+
+#overlay medians
+
+p2 <- p2 + geom_vline(data=median_rts,aes(xintercept=rt,color=response),linewidth=1)
+
+p2
+```
+
+### save
+
+```{r}
+ggsave(p2,file=here("figures","rts.png"),width=13,height=17,units="cm")
+```
+
+# preregistered analyses
+
+## judgments
+
+### descriptives
+
+```{r}
+clean |> 
+  group_by(condition,conflict_prop,response) |> 
+  summarize(n = n()) |> 
+  mutate(prop = round(n/sum(n),2),
+         se = sqrt(prop*(1-prop)/n),
+         CI_lower = round(prop - 1.96*se,2),
+         CI_upper = round(prop + 1.96*se,2))
+
+clean |> 
+  group_by(condition,response) |> 
+  summarize(n = n()) |> 
+  mutate(prop = round(n/sum(n),2),
+         se = sqrt(prop*(1-prop)/n),
+         CI_lower = round(prop - 1.96*se,2),
+         CI_upper = round(prop + 1.96*se,2))
+```
+
+### logistic regression
+
+"1) We will conduct a mixed-effects logistic regression of rule violation judgments, with proportion, text, purpose and every two- and three-way interaction as fixed effects (and scenarios and participants as crossed, random effects). We predict main (i.e., positive) effects of text and purpose."
+
+```{r}
+# null model
+null <- glmer(response ~ 1 + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude, family=binomial)
+
+# main effect text
+
+purpose_only <- glmer(response ~ purpose + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude, family=binomial)
+
+purpose_text <- glmer(response ~ purpose + text + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(null,purpose_only)
+lrtest(null,purpose_text) # either model better than null
+lrtest(purpose_only,purpose_text) # better with text compared to purpose alone (main effect)
+
+# main effect purpose
+
+text_only <- glmer(response ~ text + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(text_only,purpose_text) # better with purpose
+
+# main effect proportion congruency
+
+text_purpose_prop <- glmer(response ~ purpose + text + conflict_prop + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(purpose_text,text_purpose_prop) # better - this is unexpected!
+
+# interaction text x purpose
+
+interaction_textXpurpose <- glmer(response ~ purpose * text + conflict_prop + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(text_purpose_prop, interaction_textXpurpose) # better
+
+# interaction text x prop
+
+interaction_textXpurpose_textXprop <- glmer(response ~ purpose * text + conflict_prop * text + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(interaction_textXpurpose,interaction_textXpurpose_textXprop) # not better
+
+# interaction purpose x prop
+
+interaction_textXpurpose_purposeXprop <- glmer(response ~ purpose * text + conflict_prop * purpose + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(interaction_textXpurpose,interaction_textXpurpose_purposeXprop) # not better
+
+# three-way interaction
+
+interaction_threeway <- glmer(response ~ purpose * text + conflict_prop*purpose*text + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude, family=binomial)
+
+lrtest(interaction_textXpurpose,interaction_threeway) # better
+
+# final model
+
+finalmodel_judgments <- interaction_threeway 
+
+summary(finalmodel_judgments)
+
+nagelkerke(finalmodel_judgments,null)
+```
+
+explore main effect of conflict prop
+
+```{r}
+clean |> 
+  group_by(conflict_prop,response) |> 
+  summarize(n=n()) |> 
+  mutate(prop = n/sum(n))
+```
+
+When there are few conflict trials: Most cases are clear, half of them are clear violations, and the other half are clear cases of compliance. Only few conflict trials where there is wiggle room. So we see an almost exact 50/50 split between no and yes responses in these conditions:
+
+```{r}
+clean |> 
+  group_by(condition,response) |> 
+  summarize(n=n())|> 
+  mutate(prop = n/sum(n))
+
+```
+
+When there are many conflict trials: Only few cases are clear violations or clear cases of compliance. Most cases are either purpose violations or text violations, to an equal proportion. Text violations elicit mostly "yes" responses. Purpose violations elicit mostly "no" responses. It's around 80% no's for purpose violations though, and only around 65% yes's for text violations. So combined with our knowledge about the frequency of types of trials, we'd expect overall more "no" responses in the high conflict proportion conditions.
+
+BUT these are effects of the levels of text and purpose and their combinations. They should disappear once text and purpose are accounted for in the model...
+
+What's the direction of the main effect of conflict proportion?
+
+```{r}
+summary(text_purpose_prop)
+```
+
+Do we see such an effect after accounting for the levels of text and purpose?
+
+```{r}
+clean |> 
+  group_by(condition,conflict_prop,response) |> 
+  summarize(n=n())|> 
+  mutate(prop = n/sum(n)) |> 
+  filter(response==1)
+```
+
+We do in all conditions except no violation, but it's tiny... So it's probably an issue of very high power because of all the repeated measures
+
+calculate ORs
+
+```{r}
+clean |> 
+  group_by(condition,conflict_prop,response) |> 
+  summarize(n=n())|> 
+  mutate(prop = n/sum(n))
+```
+```{r}
+
+#OR for yes response, full violation, low/high congruency condition
+(2290/111)/(448/30)
+
+#OR for yes response, no violation, low/high congruency condition
+(88/2313)/(33/450)
+
+#OR for yes response, purpose violation, low/high congruency condition
+(89/391)/(422/1967)
+
+#OR for yes response, text violation, low/high congruency condition
+(320/157)/(1533/840)
+
+```
+
+
+## rts
+
+"2) We will run a mixed-effects regression of response times, with proportion, congruency and the proportion\*congruency interaction as fixed effects (and scenario and participant as crossed random effects)."
+
+### descriptives
+
+```{r}
+clean |> 
+  group_by(conflict_prop,congruent) |> 
+  summarize(median = median(rt))
+```
+
+### linear model
+
+```{r}
+# null model
+null <- lmer(rt ~ 1 + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude)
+
+# main effect congruency
+prop <- lmer(rt ~ conflict_prop + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude)
+
+congruency_prop <- lmer(rt ~ congruent + conflict_prop + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude)
+
+lrtest(prop,congruency_prop) # better with congruency
+
+# main effect proportion
+
+congruency <- lmer(rt ~ congruent + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude)
+
+lrtest(congruency, congruency_prop) # better with proportion
+
+# interaction
+
+congruencyXprop <- lmer(rt ~ congruent * conflict_prop + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude)
+
+lrtest(congruency_prop,congruencyXprop) # better
+```
+
+# supplementary analyses
+
+## rts
+
+### descriptives
+
+```{r}
+clean |> 
+  group_by(condition) |> 
+  summarize(median = median(rt))
+```
+
+```{r}
+clean |> 
+  group_by(response) |> 
+  summarize(median = median(rt))
+```
+
+```{r}
+clean |> 
+  group_by(conflict_prop) |> 
+  summarize(median = median(rt))
+```
+
+```{r}
+clean |> 
+  group_by(condition,response, conflict_prop) |> 
+  summarize(median = median(rt))
+```
+
+### linear model
+
+```{r}
+# null model
+null <- glmer(rt ~ 1 + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude)
+
+# main effect text
+
+purpose_only <- lmer(rt ~ purpose + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude)
+
+purpose_text <- lmer(rt ~ purpose + text + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude)
+
+lrtest(purpose_only,purpose_text) # better with text
+
+# main effect purpose
+
+text_only <- lmer(rt ~ text + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude)
+
+lrtest(text_only,purpose_text) # better with purpose
+
+# main effect response
+
+response <- lmer(rt ~ purpose + text + response + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude)
+
+lrtest(purpose_text, response) #better
+
+# interaction text x purpose
+
+interaction <- lmer(rt ~ purpose*text + response + (1|subj_code) + (1|scen), data = clean,na.action=na.exclude)
+
+lrtest(response,interaction) # better
+
+```

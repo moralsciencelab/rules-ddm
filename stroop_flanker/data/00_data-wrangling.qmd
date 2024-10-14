@@ -10,16 +10,80 @@ opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
 ```{r packages}
-library(here)
 library(tidyverse)
 ```
 
 ```{r data}
-raw <- read.csv(here("stroop_flanker_raw.csv"))
+raw1 <- read.csv("strata1.csv")
+raw2 <- read.csv("strata2.csv")
+raw3 <- read.csv("strata3.csv")
+raw4 <- read.csv("strata4.csv")
+raw5 <- read.csv("strata5.csv")
+raw6 <- read.csv("strata6.csv")
+```
+
+```{r add strata info}
+dfs <- list(raw1, raw2, raw3, raw4, raw5, raw6)
+
+strata_values <- c("strata1", "strata2", "strata3", "strata4", "strata5", "strata6")
+
+# Add "strata" column with the appropriate value to each data frame
+for (i in 1:length(dfs)) {
+  dfs[[i]]$strata <- strata_values[i]
+}
+
+# Assign modified data frames back to the original variable names
+raw1 <- dfs[[1]]
+raw2 <- dfs[[2]]
+raw3 <- dfs[[3]]
+raw4 <- dfs[[4]]
+raw5 <- dfs[[5]]
+raw6 <- dfs[[6]]
+```
+
+```{r joint df}
+raw <- rbind(raw1,raw2,raw3,raw4,raw5,raw6)
 ```
 
 ```{r demographics}
+demographics <- raw |> 
+  filter(str_detect(response,"age")|str_detect(response,"gender")|str_detect(response,"handedness")|str_detect(response,"comments")) |> 
+  select(subj_code,response)
 
+```
+
+```{r save post questions to separate df to be merged again later}
+theory <- raw |> 
+  filter(str_detect(response,"theory")) |> 
+  select(subj_code,response)
+
+#extract content
+theory$question_type <- sub('.*"([^"]+)":.*', '\\1', theory$response)
+theory$response_value <- ifelse(theory$question_type=="theory_question",sub('.*:"([^"]+)"}', '\\1', theory$response),
+                                ifelse(theory$question_type=="theory_question_bipolar",sub('.*:([0-9]+)}', '\\1', theory$response),NA
+))
+
+theory <- theory |> select(-response)
+
+theory <- theory %>%
+  pivot_wider(names_from = question_type, values_from = response_value)
+
+theory <- theory |> 
+  mutate(theory_question = ifelse(str_detect(theory_question,"spirit"),"spirit","letter")) |> 
+  rename(theory_question_binary = theory_question) |> 
+  mutate(
+    theory_question_bipolar_num = theory_question_bipolar,
+    theory_question_bipolar = case_when(
+    theory_question_bipolar==0 ~ "only letter",
+    theory_question_bipolar==1 ~ "mostly letter",
+    theory_question_bipolar==2 ~ "more letter than spirit",
+    theory_question_bipolar==3 ~ "both equally",
+    theory_question_bipolar==4 ~ "more spirit than letter",
+    theory_question_bipolar==5 ~ "mostly spirit",
+    theory_question_bipolar==6 ~ "only spirit"
+  ))
+
+write.csv(theory,"theory_question.csv",row.names = F)
 ```
 
 ```{r response trials only}
@@ -34,7 +98,8 @@ clean <- raw |>
 #check that each subj saw all three tasks
 clean |> 
   group_by(subj_code) |> 
-  summarize(n_tasks = n_distinct(task)) 
+  summarize(n_tasks = n_distinct(task)) |> 
+  filter(n_tasks!=3)
 
 #check trials per task
 clean |> 
@@ -73,15 +138,12 @@ clean <- clean |>
 
 ```{r select and order columns}
 clean <- clean |> 
-  select(subj_code,trial_index,task,stimulus,scen,rule,question,text_violation,purpose_violation,conflict,type,rules_yeskey,response_input,rules_response_verbal,rules_response_num,rt,correct_response,color,text,correct,flanker_stim_type,direction)
+  select(subj_code,strata,trial_index,task,stimulus,text_violation,purpose_violation,conflict,type,rules_yeskey,response_input,rules_response_verbal,rules_response_num,rt,correct_response,color,text,correct,flanker_stim_type,direction)
 ```
 
 ```{r tagging task-specific variables}
 clean <- clean |> 
   rename(
-    rules_scen = scen,
-    rules_rule = rule,
-    rules_question = question,
     rules_textviolation = text_violation,
     rules_purposeviolation = purpose_violation,
     rules_violationtype = type, 
@@ -115,9 +177,11 @@ nlevels(factor(raw$subj_code))
 #n participants in clean data
 nlevels(factor(clean$subj_code))
 
-#check that the missing 4 are noncompleters
+#check that the missing 5 are noncompleters
 noncompleters <- raw |> filter(!subj_code %in% clean$subj_code)
 
+noncompleters |> 
+  summarize(subj_codes = n_distinct(subj_code))
 
 #each participant saw all three tasks
 clean |> group_by(subj_code) |> 
@@ -132,18 +196,6 @@ clean |> group_by(subj_code,task) |>
 #congruent and incongruent trials per task
 clean |> group_by(subj_code,task,congruent) |> 
   summarize(n = n())
-
-#rules: each participant saw 8 distinct scenarios
-clean |> 
-  filter(task=="rules") |> 
-  group_by(subj_code) |> 
-  summarize(n_scen = n_distinct(rules_scen))
-
-#with 4 combinations of text and purpose violation per scenario
-clean |> 
-  filter(task=="rules") |> 
-  group_by(subj_code,rules_scen) |> 
-  summarize(n_type = n_distinct(rules_violationtype))
 
 #check that reaction times make sense
 clean$rt <- as.numeric(clean$rt)
@@ -160,6 +212,59 @@ clean |>
 
 
 ```
+
+```{r add demographics}
+demographics <- demographics %>%
+  separate(response, into = c("field", "value"), sep = ":", remove = FALSE)
+
+demographics <- demographics %>%
+  mutate(
+    field = gsub("[^a-zA-Z0-9 ]", "", field),     # Keep only letters, numbers, and spaces in 'field'
+    value = gsub("[^a-zA-Z0-9 ]", "", value)      # Keep only letters, numbers, and spaces in 'value'
+  ) |> 
+  select(-response)
+
+demographics <- demographics %>%
+  pivot_wider(names_from = field, values_from = value)
+
+clean <- clean |> 
+  left_join(demographics,by="subj_code")
+
+```
+
+```{r add strata info}
+
+clean <- clean |> 
+  mutate(strata = case_when(
+    strata=="strata1" ~ "18-28",
+    strata=="strata2" ~ "29-39",
+    strata=="strata3" ~ "40-51",
+    strata=="strata4" ~ "52-63",
+    strata=="strata5" ~ "64-89",
+    strata=="strata6" ~ "all ages",
+  ))
+
+clean <- clean |> 
+  rename(strata_age = strata)
+
+#check match with demographics
+clean |> 
+  group_by(strata_age) |> 
+  summarize(
+    min_age = min(age),
+    max_age = max(age),
+    mean_age = mean(age)
+  )
+
+#some deviations (probably due to incorrect reporting by participants), but overall age range per strata is okay
+
+```
+
+```{r add theory questions}
+clean <- clean |> 
+  left_join(theory,by="subj_code")
+```
+
 
 ```{r export}
 write.csv(clean,"clean.csv",row.names = F)
