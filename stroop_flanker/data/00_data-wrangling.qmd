@@ -153,12 +153,13 @@ clean <- clean |>
 
 ```{r select and order columns}
 clean <- clean |> 
-  select(subj_code,strata,trial_index,task,stimulus,text_violation,purpose_violation,conflict,type,rules_yeskey,response_input,rules_response_verbal,rules_response_num,rt,correct_response,color,text,correct,flanker_stim_type,direction)
+  select(subj_code,strata,trial_index,task,stimulus,scen,text_violation,purpose_violation,conflict,type,rules_yeskey,response_input,rules_response_verbal,rules_response_num,rt,correct_response,color,text,correct,flanker_stim_type,direction)
 ```
 
 ```{r tagging task-specific variables}
 clean <- clean |> 
   rename(
+    rules_scen = scen,
     rules_textviolation = text_violation,
     rules_purposeviolation = purpose_violation,
     rules_violationtype = type, 

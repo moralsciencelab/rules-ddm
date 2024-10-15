@@ -27,14 +27,12 @@ punishment <- read.csv(here("punishment","data","clean.csv"))
 
 ```{r prepare violate dataframe}
 violate <- violate |> 
-  select(-X) |> 
   mutate(study = rep("violate",length(violate$subj_code))) |> 
   filter(case!="noise") 
 ```
 
 ```{r prepare comply dataframe}
 comply <- comply |> 
-  select(-X) |> 
   mutate(study = rep("comply",length(comply$subj_code))) |> 
   filter(case!="noise")
 
@@ -55,34 +53,11 @@ comply <- comply |>
 rules_allstudies <- bind_rows(violate,comply)
 ```
 
-<!-- # add the rules and behavior variables from codingsheet -->
-
-<!-- ```{r import codingsheet} -->
-<!-- codingsheet <- read.csv("codingsheet.csv",sep=";") -->
-
-<!-- #only relevant variables -->
-<!-- codingsheet <- codingsheet |> select(rule,question) -->
-<!-- ``` -->
-
-# ```{r add via fuzzyjoin with stimulus}
-# library(fuzzyjoin)
-# rules_allstudies <- regex_left_join(rules_allstudies, codingsheet, by = c("stimulus" = "question"))
-# ```
-
-note: this matches via behavor, not via rule. Slight deviations from rule phrasing in codingsheet and rule phrasing in stimulus variable are possible. But there is never a change in meaning. When in conflict, what participants actually saw is represented in "Stimulus".
-
-- > try to achieve the same thing later with separate
-
-# ```{r rename question to behavior}
-# rules_allstudies <- rules_allstudies |> 
-#   rename(behavior = question)
-# ```
-
 ## order variables
 
 ```{r}
 rules_allstudies <- rules_allstudies |> 
-  select(study,subj_code,trial_index,case,stimulus,text,purpose,condition,congruent,response,rt)
+  select(study,subj_code,trial_index,case,stimulus,text,purpose,condition,congruent,response,rt,age,gender,handedness,comments)
 ```
 
 # add congruency_proportions
@@ -311,6 +286,7 @@ stroop_flanker <- stroop_flanker |>
   select(
     study,
     subj_code,
+    strata_age,
     trial_index,
     task,
     stimulus,
@@ -324,7 +300,14 @@ stroop_flanker <- stroop_flanker |>
     response_flanker,
     rt,
     stroopflanker_correct_resp,
-    correct_answer
+    correct_answer,
+    theory_question_binary,
+    theory_question_bipolar,
+    theory_question_bipolar_num,
+    age,
+    gender,
+    handedness,
+    comments
   )
 ```
 
@@ -338,11 +321,6 @@ rules_allstudies <- bind_rows(rules_allstudies,stroop_flanker)
 # add punishment
 
 ## align varnames and levels
-
-```{r delete row numbers}
-punishment <- punishment |> 
-  select(-X)
-```
 
 ```{r add study name}
 punishment <- punishment |> 
@@ -443,6 +421,7 @@ final reordering
 rules_allstudies <- rules_allstudies |> 
   select(study,
          subj_code,
+         strata_age,
          trial_index,
          task,
          scen_number,
@@ -464,7 +443,14 @@ rules_allstudies <- rules_allstudies |>
          congprop,
          congprop_block_order,
          spd_acc_mode,
-         spd_acc_order)
+         spd_acc_order,
+         theory_question_binary,
+         theory_question_bipolar,
+         theory_question_bipolar_num,
+         age,
+         gender,
+         handedness,
+         comments)
 ```
 
 # checks
