@@ -24,6 +24,38 @@ raw <- read.csv(here("data","raw_full.csv"))
 
 # extract demographics
 
+```{r}
+demographics <- raw %>%
+  filter(str_detect(response, "age") | str_detect(response, "gender")) %>%
+  select(subj_code, response) %>%
+  separate(response, into = c("field", "value"), sep = ":", remove = TRUE) %>%
+  mutate(
+    field = gsub("[^A-Za-z0-9 ]", "", field),  # Keep only letters, numbers, and spaces in 'field'
+    value = gsub("[^A-Za-z0-9 ]", "", value)  # Keep only letters, numbers, and spaces in 'value'
+  ) %>%
+  # Correct handedness fields
+  mutate(field = ifelse(value %in% c("righthanded", "lefthanded", "ambidextrous"), "handedness", field)) |> 
+  mutate(field = ifelse(field=="age" & value == "","comments",field)) |> 
+  mutate(field = ifelse(field=="age"& !grepl("^\\d+\\s*$", value),"comments",field)) 
+
+#check for duplicates
+demographics %>%
+  group_by(subj_code, field) %>%
+  summarise(n = n()) %>%
+  filter(n > 1)
+
+#pivot
+demographics <- demographics %>%
+  pivot_wider(
+    names_from = field,  # The 'field' column will become the new column names
+    values_from = value  # The 'value' column contains the data for those new columns
+  )
+
+#export
+write.csv(demographics,"demographics.csv",row.names = F)
+```
+
+
 # selecting variables and responses, initial coding
 
 ```{r}
@@ -144,6 +176,12 @@ age <- age |>
 mean(age$response)
 sd(age$response)
 
+```
+
+# add demogrpahics back in
+
+```{r}
+clean <- left_join(clean,demographics,by="subj_code")
 ```
 
 # save

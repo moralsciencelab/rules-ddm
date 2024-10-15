@@ -1,0 +1,67 @@
+---
+title: "wrangle"
+format: html
+editor: visual
+execute:
+  warning: false
+  message: false
+---
+
+# packages
+
+```{r}
+library(stringi)
+library(reshape2)
+library(here)
+library(tidyverse)
+```
+
+# raw data
+
+```{r}
+raw_batch1 <- read.csv(here("data","raw_batch1.csv"))
+raw_batch2 <- read.csv(here("data","raw_batch2.csv"))
+```
+
+# unique IDs
+
+## batch 1
+
+```{r}
+ids_raw_batch1 <- raw_batch1 %>% 
+  group_by(run_id) %>% 
+  summarize(max = max(run_id)) %>% 
+  rowwise() %>% 
+  mutate(id = paste0(stri_rand_strings(1, 5, "[A-Z]"), stri_rand_strings(1, 4, "[0-9]"), stri_rand_strings(1, 1, "[A-Z]"))) %>% 
+  select(-max)
+
+raw_batch1 <- left_join(raw_batch1,ids_raw_batch1,by="run_id")
+
+nlevels(factor(raw_batch1$id))
+```
+
+## batch 2
+
+```{r}
+ids_raw_batch2 <- raw_batch2 %>% 
+  group_by(run_id) %>% 
+  summarize(max = max(run_id)) %>% 
+  rowwise() %>% 
+  mutate(id = paste0(stri_rand_strings(1, 5, "[A-Z]"), stri_rand_strings(1, 4, "[0-9]"), stri_rand_strings(1, 1, "[A-Z]"))) %>% 
+  select(-max)
+
+raw_batch2 <- left_join(raw_batch2,ids_raw_batch2,by="run_id")
+
+nlevels(factor(raw_batch2$id))
+```
+
+## merge and save
+
+```{r}
+raw <- rbind(raw_batch1,raw_batch2) |> 
+  rename(subj_code = id)
+
+nlevels(factor(raw$subj_code))
+
+write.csv(raw,here("data","raw_full.csv"),row.names=F)
+```
