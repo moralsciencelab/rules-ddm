@@ -1,0 +1,121 @@
+stimulus,text ,purpose
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>A student listens to a podcast with headphones on at 11:30 pm.</b><br>",0,0
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>A student hosts a Karaoke night in her room at 11 pm.</b><br>",1,1
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>A student drills some holes into the wall to hang pictures at 11:15 pm.</b><br>",1,1
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>A student is firmly asleep in her bed at 10:30 pm.</b><br>",0,0
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>A student reads a novel in bed at 10 pm.</b><br>",0,0
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>A student is meditating in her room at 11:30 pm.</b><br>",0,0
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>A student is knitting a scarf in his room at midnight.</b><br>",0,0
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>A group of students practice for a musical audition at 10:45 pm.</b><br>",1,1
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>A student plays his electric guitar in his room at midnight.</b><br>",1,1
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>A student is looking out the window at 11 pm.</b><br>",0,0
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>Some students have a loud argument in the hallway at 11 pm.</b><br>",1,1
+"A university posted the following rule in a student dormitory:<br> ""No noise after 10 pm""<br><br><br><b>A student tests the maximum volume of her new TV at 11:30 pm.</b><br>",1,1
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A businesswoman enters the station and buys her train ticket.</b><br>",0,0
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A nightclub dancer falls asleep on a station bench after work.</b><br>",1,1
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A backpacker sits on a station bench and takes a five-minute nap.</b><br>",1,0
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A backpacker spends the night sleeping on a station bench.</b><br>",1,1
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A backpacker looks for her lost phone on the station platform.</b><br>",0,0
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A vagrant spends the night sleeping on the station floor.</b><br>",0,1
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A backpacker spends the night sleeping behind a station bench.</b><br>",0,1
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A vagrant spends the night sleeping on a bench at the station.</b><br>",1,1
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A commuter sits on a station bench while waiting for her train.</b><br>",0,0
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A shift worker briefly dozes on a bench waiting for her manager.</b><br>",1,0
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A commuter briefly falls asleep on a bench waiting for his train.</b><br>",1,0
+"To avoid people spending the night at the train station, the manager posted a rule:<br> ""No sleeping allowed on the benches""<br><br><br><b>A vagrant spends the whole night on a bench but does not sleep.</b><br>",0,1
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A man catches a deer using a trap and gives it a lethal injection.</b><br>",0,1
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A man takes a walk in the park and photographs the deer there.</b><br>",0,0
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A man catches and kills a lone baby deer with a hunting knife.</b><br>",0,1
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A vet shoots a deer with a disease that threatens the whole herd.</b><br>",1,0
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A man heads deep into the local forest and shoots a deer.</b><br>",1,1
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A woman hikes in the woods carrying a flashlight and a lunch box.</b><br>",0,0
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A hiker finds a dying deer and shoots it to relieve its pain.</b><br>",1,0
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A woman enters a wildlife reserve where she shoots two deer.</b><br>",1,1
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A farmer sprays poison in his woodland to kill the local deer.</b><br>",0,1
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A hunter, armed with a rifle, fires on the first deer he sees.</b><br>",1,1
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A man heads deep into the local forest and sees several deer.</b><br>",0,0
+"To protect the deer population, parliament enacts a law: ""It is an offense to shoot deer""<br><br><br><b>A farmer shoots a deer to end its suffering after it was run over.</b><br>",1,0
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>A sober man rides his motorcycle home after playing board games.</b><br>",0,0
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>A sober man re-parks his car in the cul-de-sac to let a guest out.</b><br>",0,0
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>A woman drives home after taking ecstasy at a music festival.</b><br>",0,1
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>One night two drunk motorbikers race each other on a dark backroad.</b><br>",1,1
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>A drunk man drives his wife to the hospital as she goes into labor.</b><br>",1,0
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>A young man drives home after drinking heavily at a music festival.</b><br>",1,1
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>A neighbor sips on wine and re-parks his car in the cul-de-sac.</b><br>",1,0
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>A woman drives home after drinking soda at the movie theater.</b><br>",0,0
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>A woman drives home after drinking whiskey at the movie theater.</b><br>",1,1
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>One stormy night two sober motorbikers race each other on a dark backroad.</b><br>",0,1
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>A person drives to work after using alcohol-based mouthwash.</b><br>",1,0
+"To reduce traffic accidents, a zero tolerance law is passed:<br> ""Driving with any trace of alcohol is strictly forbidden""<br><br><br><b>A young man rides his motorcycle home after smoking marihuana.</b><br>",0,1
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>A couple walk their new baby through the park in a stroller.</b><br>",0,0
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>A motorcycle courier takes a shortcut through the park.</b><br>",0,1
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>A person speeds through the park on their electric scooter.</b><br>",0,1
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>A man drives a tow-truck slowly into the park to remove a car.</b><br>",1,0
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>A landscaper parks a truck in the park to remove a tree.</b><br>",1,0
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>A landscaper pushes a grey wheelbarrow through the park.</b><br>",0,0
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>A person jogs through the park to get some daily exercise.</b><br>",0,0
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>An artist installs a race car in the park to honour local heroes.</b><br>",1,0
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>A taxi driver takes a shortcut through the park to save time.</b><br>",1,1
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>A group of friends cycle through the park on a beer bike.</b><br>",0,1
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>A person test-drives their new car through the park at noon.</b><br>",1,1
+"To avoid accidents, the local authority issued a rule: ""No cars are allowed inside the park""""<br><br><br><b>A red party limo drives through the park at the DJ's request.</b><br>",1,1
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A student arrives early to class and takes out her pencil case.</b><br>",0,0
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A student messages friends on his laptop and pays no attention.</b><br>",0,1
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A student plays on his tablet instead of paying attention in class.</b><br>",0,1
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A student consults the textbook to answer a question in class.</b><br>",0,0
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A student uses his phone's calculator for the in-class assignment.</b><br>",1,0
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A student uses her phone as a paperweight to keep papers together.</b><br>",1,0
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A student browses her phone instead of following her lesson.</b><br>",1,1
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A student plays a game on his phone instead of paying attention.</b><br>",1,1
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A student reads news on her tablet and doesn't follow the lesson.</b><br>",0,1
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A student texts friends on her phone and pays no attention.</b><br>",1,1
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A diabetic student gets an alert on her phone to take her insulin.</b><br>",1,0
+"To get students to pay attention in class, the headmaster announced:<br> ""Phones may not be used in the classroom""<br><br><br><b>A student takes notes by hand to help her understand a lesson.</b><br>",0,0
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>A customer brings his new pet fox into the restaurant for lunch.</b><br>",0,1
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>A man carries an injured dog into the restaurant to call for help.</b><br>",1,0
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>Three colleagues have a meeting over dinner at the restaurant.</b><br>",0,0
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>A customer walks into the restaurant with his new pet parrot.</b><br>",0,1
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>A customer walks into the restaurant with his pet greyhound.</b><br>",1,1
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>A customer brings his pet monkey into the restaurant for lunch.</b><br>",0,1
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>A couple bring their pet foxhound into the restaurant for dinner.</b><br>",1,1
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>A blind person brings his trained guide dog into the restaurant.</b><br>",1,0
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>A customer brings her pet bulldog into the restaurant for lunch.</b><br>",1,1
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>A customer uses the restaurant WC while waiting for her food.</b><br>",0,0
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>A woman brings her trained therapy labrador into the restaurant.</b><br>",1,0
+"A  restaurant's customers had their meals interrupted by the misbehaviour of a diner's pet dog.<br>
+                     To address these concerns, the owner posted a rule: ""No dogs allowed in the restaurant""<br><br><br><b>A couple have breakfast together at the restaurant before work.</b><br>",0,0
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A guest walks in with muddy socks and dirties the carpet.</b><br>",0,1
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A guest wears clean stilettos and keeps the carpet clean.</b><br>",1,0
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A guest walks around barefoot and the floor stays clean.</b><br>",0,0
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A guest wears brand new shoes and keeps the floor clean.</b><br>",1,0
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A guest wears muddy sneakers and dirties the carpets.</b><br>",1,1
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A guest walks around barefoot and keeps the carpet clean.</b><br>",0,0
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A guest wears wet deck shoes and dirties the floors.</b><br>",1,1
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A guest walks around in socks and keeps the floor clean.</b><br>",0,0
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A guest wears stilettos and the carpets get pretty dirty.</b><br>",1,1
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A barefoot guest has a bleeding toe and stains the carpets.</b><br>",0,1
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A guest walks around barefoot and dirties the carpets.</b><br>",0,1
+"To keep her house clean, Mary announced: ""No one may wear shoes in the house""<br><br><br><b>A guest wears his new sneakers and the floor stays clean.</b><br>",1,0
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>A student enters the laboratory to observe the scientists' work.</b><br>",1,1
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>A retired scientist visits the lab to offer advice to new hirees.</b><br>",1,0
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>A tourist walks past the laboratory on his way to the wax museum.</b><br>",0,0
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>A lab member stays after work and gets drunk in the laboratory.</b><br>",0,1
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>A lab member spends the night sleeping on fragile lab equipment.</b><br>",0,1
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>An amateur scientist enters the laboratory to take photographs.</b><br>",1,1
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>A thief enters the laboratory overnight to find and steal equipment.</b><br>",1,1
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>A member of the public walks past the laboratory while going home.</b><br>",0,0
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>A skilled technician enters the lab to discuss a job opening.</b><br>",1,0
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>A scientist working at the laboratory starts a new experiment.</b><br>",0,0
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>A lab scientist performs a risky task while feeling dizzy and tired.</b><br>",0,1
+"To avoid accidents, the director of a scientific laboratory issued a rule:<br> ""Access for laboratory personnel only""<br><br><br><b>A recently retired scientist returns to collect his briefcase.</b><br>",1,0
