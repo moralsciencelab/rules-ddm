@@ -48,7 +48,22 @@ raw <- rbind(raw1,raw2,raw3,raw4,raw5,raw6)
 ```{r demographics}
 demographics <- raw |> 
   filter(str_detect(response,"age")|str_detect(response,"gender")|str_detect(response,"handedness")|str_detect(response,"comments")) |> 
-  select(subj_code,response)
+  select(subj_code,response) |> 
+  separate(response, into = c("field", "value"), sep = ":", remove = TRUE) %>%
+  mutate(
+    field = gsub("[^A-Za-z0-9 ]", "", field),  # Keep only letters, numbers, and spaces in 'field'
+    value = gsub("[^A-Za-z0-9 ]", "", value)  # Keep only letters, numbers, and spaces in 'value'
+  ) 
+
+#pivot
+demographics <- demographics %>%
+  pivot_wider(
+    names_from = field,  # The 'field' column will become the new column names
+    values_from = value  # The 'value' column contains the data for those new columns
+  )
+
+#export
+write.csv(demographics,"demographics.csv",row.names = F)
 
 ```
 
@@ -214,18 +229,6 @@ clean |>
 ```
 
 ```{r add demographics}
-demographics <- demographics %>%
-  separate(response, into = c("field", "value"), sep = ":", remove = FALSE)
-
-demographics <- demographics %>%
-  mutate(
-    field = gsub("[^a-zA-Z0-9 ]", "", field),     # Keep only letters, numbers, and spaces in 'field'
-    value = gsub("[^a-zA-Z0-9 ]", "", value)      # Keep only letters, numbers, and spaces in 'value'
-  ) |> 
-  select(-response)
-
-demographics <- demographics %>%
-  pivot_wider(names_from = field, values_from = value)
 
 clean <- clean |> 
   left_join(demographics,by="subj_code")
@@ -264,7 +267,6 @@ clean |>
 clean <- clean |> 
   left_join(theory,by="subj_code")
 ```
-
 
 ```{r export}
 write.csv(clean,"clean.csv",row.names = F)
