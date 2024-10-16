@@ -10,9 +10,9 @@
 
 
 
-<meta name="date" content="2024-09-26" />
+<meta name="date" content="2024-10-16" />
 
-<title>codebook rule enforcement ddm</title>
+<title>Codebook: Rule Enforcement DDM</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -349,8 +349,8 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">codebook rule enforcement ddm</h1>
-<h4 class="date">2024-09-26</h4>
+<h1 class="title toc-ignore">Codebook: Rule Enforcement DDM</h1>
+<h4 class="date">2024-10-16</h4>
 
 </div>
 
@@ -360,7 +360,7 @@ display: none;
 <ul>
 <li><strong>Dataset Name</strong>: rules_allstudies.csv</li>
 <li><strong>Date Created</strong>: 2024-09-25</li>
-<li><strong>Date Last Modified</strong>: 2024-09-26</li>
+<li><strong>Date Last Modified</strong>: 2024-10-16</li>
 <li><strong>Creator</strong>: Neele Engelmann</li>
 <li><strong>Description</strong>: Joint dataset of all six studies
 contained in this repository for facilitated analysis and comparisons
@@ -374,12 +374,14 @@ between 2023-03 and 2024-09)</li>
 <h2>2. Variable Overview</h2>
 <table>
 <colgroup>
-<col width="42%" />
-<col width="40%" />
-<col width="17%" />
+<col width="3%" />
+<col width="26%" />
+<col width="59%" />
+<col width="10%" />
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left">#</th>
 <th align="left">Variable Name</th>
 <th align="left">Description</th>
 <th align="left">Type</th>
@@ -387,73 +389,204 @@ between 2023-03 and 2024-09)</li>
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">1</td>
 <td align="left"><code>study</code></td>
-<td align="left">study name</td>
+<td align="left">Study identifier</td>
 <td align="left">string</td>
 </tr>
 <tr class="even">
+<td align="left">2</td>
 <td align="left"><code>subj_code</code></td>
-<td align="left">unique identifier for each participant</td>
+<td align="left">Participant identifier</td>
 <td align="left">string</td>
 </tr>
 <tr class="odd">
-<td align="left"><code>case</code></td>
-<td align="left">scenario name</td>
+<td align="left">3</td>
+<td align="left"><code>strata_age</code></td>
+<td align="left">Age strata</td>
 <td align="left">string</td>
 </tr>
 <tr class="even">
-<td align="left"><code>rule</code></td>
-<td align="left">the relevant rule</td>
-<td align="left">string</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>behavior</code></td>
-<td align="left">the relevant behavior</td>
-<td align="left">string</td>
-</tr>
-<tr class="even">
-<td align="left"><code>stimulus</code></td>
-<td align="left">the full stimulus as presented to participants</td>
-<td align="left">string</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>text</code></td>
-<td align="left">indicates whether the behavior violates the rule’s
-text</td>
-<td align="left">boolean</td>
-</tr>
-<tr class="even">
-<td align="left"><code>purpose</code></td>
-<td align="left">indicates whether the behavior violates the rule’s
-purpose</td>
-<td align="left">boolean</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>congruent</code></td>
-<td align="left">indicates whether the trial is congruent or
-incongruent</td>
-<td align="left">boolean</td>
-</tr>
-<tr class="even">
-<td align="left"><code>condition</code></td>
-<td align="left">condition label</td>
-<td align="left">string</td>
-</tr>
-<tr class="odd">
+<td align="left">4</td>
 <td align="left"><code>trial_index</code></td>
-<td align="left">indicates the order in which trials were seen by
-participants</td>
+<td align="left">Index of the trial</td>
+<td align="left">numeric</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left"><code>task</code></td>
+<td align="left">Name of the task performed</td>
+<td align="left">string</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left"><code>scen_number</code></td>
+<td align="left">Scenario number</td>
+<td align="left">numeric</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left"><code>block_number</code></td>
+<td align="left">Block number in the study</td>
 <td align="left">numeric</td>
 </tr>
 <tr class="even">
-<td align="left"><code>response</code></td>
-<td align="left">participants’ response to the stimulus</td>
-<td align="left">TBA</td>
+<td align="left">8</td>
+<td align="left"><code>stimulus</code></td>
+<td align="left">Stimulus presented to the participant</td>
+<td align="left">string</td>
 </tr>
 <tr class="odd">
-<td align="left"><code>rt</code></td>
-<td align="left">participants’ reaction time to the stimulus</td>
+<td align="left">9</td>
+<td align="left"><code>case</code></td>
+<td align="left">Case label</td>
+<td align="left">string</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left"><code>rule</code></td>
+<td align="left">Rule related to the scenario</td>
+<td align="left">string</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left"><code>behavior</code></td>
+<td align="left">Behavior category associated with the rule</td>
+<td align="left">string</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left"><code>text</code></td>
+<td align="left">Indicates whether the behavior violates the rule’s
+text</td>
 <td align="left">numeric</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
+<td align="left"><code>purpose</code></td>
+<td align="left">Indicates whether the behavior violates the rule’s
+purpose</td>
+<td align="left">numeric</td>
+</tr>
+<tr class="even">
+<td align="left">14</td>
+<td align="left"><code>condition</code></td>
+<td align="left">Experimental condition</td>
+<td align="left">string</td>
+</tr>
+<tr class="odd">
+<td align="left">15</td>
+<td align="left"><code>congruent</code></td>
+<td align="left">Indicator for whether the trial was congruent</td>
+<td align="left">numeric</td>
+</tr>
+<tr class="even">
+<td align="left">16</td>
+<td align="left"><code>dv</code></td>
+<td align="left">Dependent variable</td>
+<td align="left">string</td>
+</tr>
+<tr class="odd">
+<td align="left">17</td>
+<td align="left"><code>response</code></td>
+<td align="left">Participants’ response (rules task)</td>
+<td align="left">numeric</td>
+</tr>
+<tr class="even">
+<td align="left">18</td>
+<td align="left"><code>response_stroop</code></td>
+<td align="left">Response for the Stroop task</td>
+<td align="left">string</td>
+</tr>
+<tr class="odd">
+<td align="left">19</td>
+<td align="left"><code>response_flanker</code></td>
+<td align="left">Response for the Flanker task</td>
+<td align="left">string</td>
+</tr>
+<tr class="even">
+<td align="left">20</td>
+<td align="left"><code>stroopflanker_correct_resp</code></td>
+<td align="left">Correct response option for Stroop or Flanker task</td>
+<td align="left">string</td>
+</tr>
+<tr class="odd">
+<td align="left">21</td>
+<td align="left"><code>correct</code></td>
+<td align="left">Indicator for correct response</td>
+<td align="left">numeric</td>
+</tr>
+<tr class="even">
+<td align="left">22</td>
+<td align="left"><code>rt</code></td>
+<td align="left">Response time</td>
+<td align="left">numeric</td>
+</tr>
+<tr class="odd">
+<td align="left">23</td>
+<td align="left"><code>congprop</code></td>
+<td align="left">Proportion of congruent trials</td>
+<td align="left">string</td>
+</tr>
+<tr class="even">
+<td align="left">24</td>
+<td align="left"><code>congprop_block_order</code></td>
+<td align="left">Block order for congruency proportion</td>
+<td align="left">string</td>
+</tr>
+<tr class="odd">
+<td align="left">25</td>
+<td align="left"><code>spd_acc_mode</code></td>
+<td align="left">Mode for speed-accuracy manipulation</td>
+<td align="left">string</td>
+</tr>
+<tr class="even">
+<td align="left">26</td>
+<td align="left"><code>spd_acc_order</code></td>
+<td align="left">Order of blocks for speed-accuracy manipulation</td>
+<td align="left">string</td>
+</tr>
+<tr class="odd">
+<td align="left">27</td>
+<td align="left"><code>theory_question_binary</code></td>
+<td align="left">Response to binary theory question</td>
+<td align="left">string</td>
+</tr>
+<tr class="even">
+<td align="left">28</td>
+<td align="left"><code>theory_question_bipolar</code></td>
+<td align="left">Response to bipolar theory question</td>
+<td align="left">string</td>
+</tr>
+<tr class="odd">
+<td align="left">29</td>
+<td align="left"><code>theory_question_bipolar_num</code></td>
+<td align="left">Numeric representation of the bipolar question</td>
+<td align="left">numeric</td>
+</tr>
+<tr class="even">
+<td align="left">30</td>
+<td align="left"><code>age</code></td>
+<td align="left">Participants’ age</td>
+<td align="left">numeric</td>
+</tr>
+<tr class="odd">
+<td align="left">31</td>
+<td align="left"><code>gender</code></td>
+<td align="left">Participants’ gender</td>
+<td align="left">string</td>
+</tr>
+<tr class="even">
+<td align="left">32</td>
+<td align="left"><code>handedness</code></td>
+<td align="left">Participants’ handedness</td>
+<td align="left">string</td>
+</tr>
+<tr class="odd">
+<td align="left">33</td>
+<td align="left"><code>comments</code></td>
+<td align="left">Participants’ comments</td>
+<td align="left">string</td>
 </tr>
 </tbody>
 </table>
@@ -461,86 +594,401 @@ participants</td>
 </div>
 <div id="variable-details" class="section level2">
 <h2>3. Variable Details</h2>
-<div id="id" class="section level3">
-<h3><code>ID</code></h3>
+<div id="study" class="section level3">
+<h3>1. <code>study</code></h3>
 <ul>
-<li><strong>Description</strong>: Unique identifier for each participant
-in the dataset.</li>
+<li><strong>Description</strong>: Identifier for the study
+conducted.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>violate</code>: rules task, dv asks whether rules were
+violated.</li>
+<li><code>comply</code>: rules task, dv asks whether rules were complied
+with.</li>
+<li><code>congruency_proportions</code>: rules task with a manipulation
+of the frequency of congruent vs. incongruent trials.</li>
+<li><code>speed_accuracy</code>: rules task with a manipulation of
+whether people should prioritize speed vs. accuracy.</li>
+<li><code>stroop_flanker</code>: rules task mixed with Stroop and
+Flanker tasks.</li>
+<li><code>punishment</code>: rules task, dv asks whether someone should
+be punished.</li>
+</ul></li>
+<li><strong>Missing Data</strong>: None.</li>
+</ul>
+</div>
+<div id="subj_code" class="section level3">
+<h3>2. <code>subj_code</code></h3>
+<ul>
+<li><strong>Description</strong>: Unique identifier assigned to each
+participant.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: None.</li>
+</ul>
+</div>
+<div id="strata_age" class="section level3">
+<h3>3. <code>strata_age</code></h3>
+<ul>
+<li><strong>Description</strong>: Age strata for participants.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>18-28</code>: Participants aged between 18 and 28 years.</li>
+<li><code>29-39</code>: Participants aged between 29 and 39 years.</li>
+<li><code>40-51</code>: Participants aged between 40 and 51 years.</li>
+<li><code>52-63</code>: Participants aged between 52 and 63 years.</li>
+<li><code>64-89</code>: Participants aged between 64 and 89 years.</li>
+<li><code>all ages</code>: Represents participants across all age
+groups.</li>
+</ul></li>
+<li><strong>Missing Data</strong>: Stratified data collection was only
+done for the stroop_flanker study.</li>
+<li><strong>Notes</strong>: Actual demographics diverge from intended
+brackets in some cases, due to discrepancies between self-report in the
+study and profile demographics on prolific.com.</li>
+</ul>
+</div>
+<div id="trial_index" class="section level3">
+<h3>4. <code>trial_index</code></h3>
+<ul>
+<li><strong>Description</strong>: Index of the trial for each
+participant.</li>
 <li><strong>Type</strong>: Numeric</li>
-<li><strong>Range</strong>: [1, N]</li>
-<li><strong>Missing Data</strong>: None</li>
-<li><strong>Notes</strong>: Generated automatically during data
-collection.</li>
+<li><strong>Missing Data</strong>: None.</li>
+</ul>
+</div>
+<div id="task" class="section level3">
+<h3>5. <code>task</code></h3>
+<ul>
+<li><strong>Description</strong>: The task performed by the participant
+in the study.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>rules</code>: rules task.</li>
+<li><code>flanker</code>: flanker task (only in study
+stroop_flanker).</li>
+<li><code>stroop</code>: stroop Task (only in study
+stroop_flanker).</li>
+</ul></li>
+<li><strong>Missing Data</strong>: None.</li>
+</ul>
+</div>
+<div id="scen_number" class="section level3">
+<h3>6. <code>scen_number</code></h3>
+<ul>
+<li><strong>Description</strong>: Scenario number within the study.</li>
+<li><strong>Type</strong>: Numeric</li>
+<li><strong>Missing Data</strong>: Yes, this information was not
+collected in all studies.</li>
+</ul>
+</div>
+<div id="block_number" class="section level3">
+<h3>7. <code>block_number</code></h3>
+<ul>
+<li><strong>Description</strong>: Block number within the study
+session.</li>
+<li><strong>Type</strong>: Numeric</li>
+<li><strong>Missing Data</strong>: Yes, this information was not
+collected in all studies.</li>
+</ul>
+</div>
+<div id="stimulus" class="section level3">
+<h3>8. <code>stimulus</code></h3>
+<ul>
+<li><strong>Description</strong>: Full information about the stimulus
+presented to the participant. For the rules task, this contains the full
+scenario text plus html formatting. For the stroop and flanker tasks, it
+contains the visual stimuli that were displayed plus html
+formatting.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: None.</li>
+</ul>
+</div>
+<div id="case" class="section level3">
+<h3>9. <code>case</code></h3>
+<ul>
+<li><strong>Description</strong>: Scenario label.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: This only applies to the rules task,
+not stroop or flanker.</li>
+</ul>
+</div>
+<div id="rule" class="section level3">
+<h3>10. <code>rule</code></h3>
+<ul>
+<li><strong>Description</strong>: Rule described in the scenario.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: This only applies to the rules task,
+not stroop or flanker.</li>
+</ul>
+</div>
+<div id="behavior" class="section level3">
+<h3>11. <code>behavior</code></h3>
+<ul>
+<li><strong>Description</strong>: Behavior that participants are asked
+to evaluate.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: This only applies to the rules task,
+not stroop or flanker.</li>
+</ul>
+</div>
+<div id="text" class="section level3">
+<h3>12. <code>text</code></h3>
+<ul>
+<li><strong>Description</strong>: Indicates whether the behavior
+violates the rule’s text.</li>
+<li><strong>Type</strong>: Numeric</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>0</code>: no violation</li>
+<li><code>1</code>: violation</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This only applies to the rules task,
+not stroop or flanker.</li>
+</ul>
+</div>
+<div id="purpose" class="section level3">
+<h3>13. <code>purpose</code></h3>
+<ul>
+<li><strong>Description</strong>: Indicates whether the behavior
+violates the rule’s purpose.</li>
+<li><strong>Type</strong>: Numeric</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>0</code>: no violation</li>
+<li><code>1</code>: violation</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This only applies to the rules task,
+not stroop or flanker.</li>
+</ul>
+</div>
+<div id="condition" class="section level3">
+<h3>14. <code>condition</code></h3>
+<ul>
+<li><strong>Description</strong>: Experimental condition (derived from
+the combination of text and purpose violation)..</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>no violation</code>: No rule violation.</li>
+<li><code>text violation</code>: The behavior violated the rule’s
+text.</li>
+<li><code>full violation</code>: The behavior violated both the rule’s
+text and purpose.</li>
+<li><code>purpose violation</code>: The behavior violated the rule’s
+purpose.</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This only applies to the rules task,
+not stroop or flanker.</li>
+</ul>
+</div>
+<div id="congruent" class="section level3">
+<h3>15. <code>congruent</code></h3>
+<ul>
+<li><strong>Description</strong>: Whether the trial was congruent or
+incongruent.</li>
+<li><strong>Type</strong>: numeric</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>0</code>: incongruent</li>
+<li><code>1</code>: congruent</li>
+</ul></li>
+<li><strong>Missing Data</strong>: None.</li>
+</ul>
+</div>
+<div id="dv" class="section level3">
+<h3>16. <code>dv</code></h3>
+<ul>
+<li><strong>Description</strong>: Dependent variable used in the rules
+task.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>violate</code>: Participants were asked whether behavior
+violated a rule.</li>
+<li><code>comply</code>: Participants were asked whether behavior
+complied with a rule.</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This is currently coded for all
+tasks, but only applies to the rule task, not stroop and flanker.</li>
+</ul>
+</div>
+<div id="response" class="section level3">
+<h3>17. <code>response</code></h3>
+<ul>
+<li><strong>Description</strong>: Participant’s response to the stimulus
+in the rules task.</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>0</code>: no</li>
+<li><code>1</code>: yes</li>
+</ul></li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+</ul>
+</div>
+<div id="response_stroop" class="section level3">
+<h3>18. <code>response_stroop</code></h3>
+<ul>
+<li><strong>Description</strong>: Participants’ response in the Stroop
+task.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>r</code>: red.</li>
+<li><code>g</code>: green.</li>
+<li><code>b</code>: blue.</li>
+<li><code>y</code>: yellow.</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This only applies to the stroop task,
+not rules or flanker.</li>
+</ul>
+</div>
+<div id="response_flanker" class="section level3">
+<h3>19. <code>response_flanker</code></h3>
+<ul>
+<li><strong>Description</strong>: Participants’ response in the Flanker
+task.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>i</code>: right.</li>
+<li><code>e</code>: left.</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This only applies to the flanker
+task, not rules or stroop.</li>
+</ul>
+</div>
+<div id="stroopflanker_correct_resp" class="section level3">
+<h3>20. <code>stroopflanker_correct_resp</code></h3>
+<ul>
+<li><strong>Description</strong>: The correct response option for the
+Stroop or Flanker task.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: This only applies to the stroop and
+flanker tasks.</li>
+</ul>
+</div>
+<div id="correct" class="section level3">
+<h3>21. <code>correct</code></h3>
+<ul>
+<li><strong>Description</strong>: Indicates whether the response was
+correct. For the rules task, the textualist response is coded as
+correct.</li>
+<li><strong>Type</strong>: numeric</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>0</code>: incorrect</li>
+<li><code>1</code>: correct</li>
+</ul></li>
+<li><strong>Missing Data</strong>: None.</li>
+</ul>
+</div>
+<div id="rt" class="section level3">
+<h3>22. <code>rt</code></h3>
+<ul>
+<li><strong>Description</strong>: Response time (in milliseconds).</li>
+<li><strong>Type</strong>: Numeric</li>
+<li><strong>Missing Data</strong>: None.</li>
+</ul>
+</div>
+<div id="congprop" class="section level3">
+<h3>23. <code>congprop</code></h3>
+<ul>
+<li><strong>Description</strong>: Proportion of congruent trials.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+</ul>
+</div>
+<div id="congprop_block_order" class="section level3">
+<h3>24. <code>congprop_block_order</code></h3>
+<ul>
+<li><strong>Description</strong>: Block order for congruency
+proportion.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+</ul>
+</div>
+<div id="spd_acc_mode" class="section level3">
+<h3>25. <code>spd_acc_mode</code></h3>
+<ul>
+<li><strong>Description</strong>: Mode for speed-accuracy
+manipulation.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+</ul>
+</div>
+<div id="spd_acc_order" class="section level3">
+<h3>26. <code>spd_acc_order</code></h3>
+<ul>
+<li><strong>Description</strong>: Order of blocks for speed-accuracy
+manipulation.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+</ul>
+</div>
+<div id="theory_question_binary" class="section level3">
+<h3>27. <code>theory_question_binary</code></h3>
+<ul>
+<li><strong>Description</strong>: Response to the binary theory
+question.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+</ul>
+</div>
+<div id="theory_question_bipolar" class="section level3">
+<h3>28. <code>theory_question_bipolar</code></h3>
+<ul>
+<li><strong>Description</strong>: Response to the bipolar theory
+question.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+</ul>
+</div>
+<div id="theory_question_bipolar_num" class="section level3">
+<h3>29. <code>theory_question_bipolar_num</code></h3>
+<ul>
+<li><strong>Description</strong>: Numeric representation of the bipolar
+question.</li>
+<li><strong>Type</strong>: Numeric</li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
 </ul>
 </div>
 <div id="age" class="section level3">
-<h3><code>age</code></h3>
+<h3>30. <code>age</code></h3>
 <ul>
-<li><strong>Description</strong>: Age of the respondent at the time of
-the survey.</li>
+<li><strong>Description</strong>: Participant’s age.</li>
 <li><strong>Type</strong>: Numeric</li>
-<li><strong>Range</strong>: [18, 99]</li>
-<li><strong>Unit</strong>: Years</li>
-<li><strong>Missing Data</strong>: Coded as -99 for missing values.</li>
-<li><strong>Notes</strong>: N/A</li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
 </ul>
 </div>
 <div id="gender" class="section level3">
-<h3><code>gender</code></h3>
+<h3>31. <code>gender</code></h3>
 <ul>
-<li><strong>Description</strong>: Gender of the respondent.</li>
-<li><strong>Type</strong>: Categorical</li>
-<li><strong>Values</strong>:
-<ul>
-<li>1 = Male</li>
-<li>2 = Female</li>
-<li>3 = Other</li>
-</ul></li>
-<li><strong>Missing Data</strong>: Coded as -99 for missing values.</li>
-<li><strong>Notes</strong>: Optional open-ended response for
-“Other.”</li>
+<li><strong>Description</strong>: Participant’s gender.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
 </ul>
 </div>
-<div id="income" class="section level3">
-<h3><code>income</code></h3>
+<div id="handedness" class="section level3">
+<h3>32. <code>handedness</code></h3>
 <ul>
-<li><strong>Description</strong>: Reported annual income of the
-respondent.</li>
-<li><strong>Type</strong>: Numeric</li>
-<li><strong>Unit</strong>: US Dollars</li>
-<li><strong>Range</strong>: [0, 200000]</li>
-<li><strong>Missing Data</strong>: Coded as -99 for missing values.</li>
-<li><strong>Notes</strong>: Derived from question [Q5] on the survey
-form.</li>
+<li><strong>Description</strong>: Participant’s handedness (e.g., left
+or right-handed).</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
 </ul>
 </div>
-<div id="satisfaction" class="section level3">
-<h3><code>satisfaction</code></h3>
+<div id="comments" class="section level3">
+<h3>33. <code>comments</code></h3>
 <ul>
-<li><strong>Description</strong>: Satisfaction level on a 5-point
-scale.</li>
-<li><strong>Type</strong>: Ordinal</li>
-<li><strong>Values</strong>:
-<ul>
-<li>1 = Very Dissatisfied</li>
-<li>2 = Dissatisfied</li>
-<li>3 = Neutral</li>
-<li>4 = Satisfied</li>
-<li>5 = Very Satisfied</li>
-</ul></li>
-<li><strong>Missing Data</strong>: Coded as -99 for missing values.</li>
-<li><strong>Notes</strong>: Self-reported.</li>
+<li><strong>Description</strong>: Additional comments by the
+participant.</li>
+<li><strong>Type</strong>: Categorical (string)</li>
+<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
 </ul>
-<hr />
 </div>
-</div>
-<div id="code-snippets-if-applicable" class="section level2">
-<h2>4. Code Snippets (if applicable)</h2>
-<p>For reproducibility, here is an example of how we derived the
-<code>income_bracket</code> variable:</p>
-<p>```r # R code to generate income_bracket df<span class="math inline">\(income_bracket &lt;- cut(df\)</span>income,
-breaks=c(0, 30000, 60000, 100000, Inf), labels=c(“Low”, “Middle”,
-“High”, “Very High”)) ´´´</p>
 </div>
 
 
