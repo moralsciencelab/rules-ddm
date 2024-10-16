@@ -122,6 +122,31 @@ clean |>
   summarize(n_trials=n()) |> 
   summary() #always 96
 ```
+```{r apply exclusion criteria}
+clean <- clean %>%
+  mutate(rt = as.numeric(rt))
+
+
+clean <- clean %>%
+  mutate(rt_filter = case_when(
+    task %in% c("stroop", "flanker") ~ 200,
+    TRUE ~ 500
+  )) %>%
+  filter(rt > rt_filter) |> 
+  select(-rt_filter)
+
+clean |> 
+  group_by(task) |> 
+  summarize(
+    rt_min = min(rt, na.rm = TRUE),
+    rt_25 = quantile(rt, 0.25, na.rm = TRUE),
+    rt_50 = quantile(rt, 0.50, na.rm = TRUE),  
+    rt_75 = quantile(rt, 0.75, na.rm = TRUE),
+    rt_max = max(rt, na.rm = TRUE),
+    .groups = 'drop'
+  )
+```
+
 
 ```{r coding of scenario and text vs purpose violation for rules}
 #import codingsheet
@@ -273,3 +298,5 @@ clean <- clean |>
 write.csv(clean,"clean.csv",row.names = F)
 
 ```
+
+

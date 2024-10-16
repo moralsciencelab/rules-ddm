@@ -141,6 +141,9 @@ clean <- clean |>
 clean <- clean |> 
   mutate(rt = as.numeric(rt))
 
+#exlude rt's below 200ms (as preregistered)
+clean <- clean |> filter(rt>200)
+
 #import codingsheet for text vs purpose coding
 codingsheet <- read.csv("codingsheet.csv")
 

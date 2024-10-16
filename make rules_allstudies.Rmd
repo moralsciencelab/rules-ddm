@@ -167,6 +167,16 @@ speed_accuracy <- speed_accuracy |>
   rename(spd_acc_mode = mode)
 ```
 
+```{r add condition variable}
+speed_accuracy <- speed_accuracy |> 
+  mutate(condition = case_when(
+    text == 1 & purpose == 1 ~ "full violation",
+    text == 1 & purpose == 0 ~ "text violation",
+    text == 0 & purpose == 1 ~ "purpose violation",
+    text == 0 & purpose == 0 ~ "no violation",
+  ))
+```
+
 ## merge
 
 ```{r}
@@ -415,6 +425,14 @@ rules_allstudies <- rules_allstudies |>
   ))
 ```
 
+create dv variable
+
+```{r}
+rules_allstudies <- rules_allstudies |> 
+  mutate(dv = ifelse(study=="comply","comply","violate"))
+```
+
+
 final reordering
 
 ```{r}
@@ -434,6 +452,7 @@ rules_allstudies <- rules_allstudies |>
          purpose,
          condition,
          congruent,
+         dv,
          response,
          response_stroop,
          response_flanker,
@@ -453,7 +472,17 @@ rules_allstudies <- rules_allstudies |>
          comments)
 ```
 
+# export
+
+```{r}
+write.csv(rules_allstudies,"rules_allstudies.csv",row.names=F)
+```
+
 # checks
+
+```{r}
+rules_allstudies <- read.csv(here("rules_allstudies.csv"))
+```
 
 participants per study
 
@@ -462,13 +491,57 @@ rules_allstudies |>
   group_by(study) |> 
   summarize(n = n_distinct(subj_code))
 ```
-
-
-# export
+scenarios per participant per study
 
 ```{r}
-write.csv(rules_allstudies,"rules_allstudies.csv",row.names=F)
+rules_allstudies |> 
+  group_by(study,subj_code) |> 
+  summarize(n = n_distinct(case)) |> 
+  filter(n!=8) # stroop correctly has 9 levels because case is NA for stroop and flanker tasks
 ```
 
+congruent and incongruent trials per case, study and subject
 
+```{r}
+rules_allstudies |> 
+  group_by(study,subj_code,case) |> 
+  summarize(n_congruent = sum(congruent)) |>
+  filter(study!="congruency_proportions" & is.na(case)==F) |> 
+  filter(n_congruent!=6) #sometimes people have less when some of their trials were excluded (e.g., time-out)
+```
+rts and judgments
+
+```{r check exclusion criteria based on preregs}
+rules_allstudies |> 
+  group_by(study, task, spd_acc_mode) |> 
+  summarize(
+    rt_min = min(rt, na.rm = TRUE),
+    rt_25 = quantile(rt, 0.25, na.rm = TRUE),
+    rt_50 = quantile(rt, 0.50, na.rm = TRUE),  
+    rt_75 = quantile(rt, 0.75, na.rm = TRUE),
+    rt_max = max(rt, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+```
+```{r check differences between congruent and incongruent}
+rules_allstudies |> 
+  group_by(study, task, spd_acc_mode, congruent) |> 
+  summarize(
+    rt_min = min(rt, na.rm = TRUE),
+    rt_25 = quantile(rt, 0.25, na.rm = TRUE),
+    rt_50 = quantile(rt, 0.50, na.rm = TRUE),  
+    rt_75 = quantile(rt, 0.75, na.rm = TRUE),
+    rt_max = max(rt, na.rm = TRUE),
+    .groups = 'drop'
+  )
+```
+
+```{r check judgments between conditions}
+rules_allstudies |> 
+  filter(task=="rules") |> 
+  group_by(study,condition,response) |> 
+  summarize(n=n())
+
+```
 
