@@ -181,7 +181,7 @@ output: html_document
 - **Levels**:
   - `0`: no
   - `1`: yes
-- **Missing Data**: Yes, some entries are missing.
+- **Missing Data**: This only applies to the rules task, not stroop or flanker.
 
 ### 18. `response_stroop`
 - **Description**: Participants' response in the Stroop task.
@@ -222,56 +222,99 @@ output: html_document
 - **Missing Data**: None.
 
 ### 23. `congprop`
-- **Description**: Proportion of congruent trials.
+- **Description**: Proportion of congruent trials in the block (case).
 - **Type**: Categorical (string)
-- **Missing Data**: Yes, some entries are missing.
+- **Levels**:
+  - `low`: Low proportion of congruent trials (2 out of 12).
+  - `high`: High proportion of congruent trials (10 out of 12).
+- **Missing Data**: This only applies to the study congruency_proportions.
 
 ### 24. `congprop_block_order`
-- **Description**: Block order for congruency proportion.
+- **Description**: Presentation order of blocks for the congruency proportion manipulation.
 - **Type**: Categorical (string)
-- **Missing Data**: Yes, some entries are missing.
+- **Levels**:
+  - `low_high`: 4 blocks (cases) with low proportion first, then 4 blocks with high proportion.
+  - `high_low`: 4 blocks (cases) with high proportion first, then 4 blocks with low proportion.
+- **Missing Data**: This only applies to the study congruency_proportions.
+
 
 ### 25. `spd_acc_mode`
-- **Description**: Mode for speed-accuracy manipulation.
+- **Description**: The mode of the speed-accuracy manipulation in the task.
 - **Type**: Categorical (string)
-- **Missing Data**: Yes, some entries are missing.
+- **Levels**:
+  - `acc`: Accuracy mode, where the participant is instructed to prioritize accuracy.
+  - `spd`: Speed mode, where the participant is instructed to prioritize speed.
+- **Missing Data**: This only applies to the study speed_accuracy.
+
 
 ### 26. `spd_acc_order`
-- **Description**: Order of blocks for speed-accuracy manipulation.
+- **Description**: The order of blocks for the speed-accuracy manipulation.
 - **Type**: Categorical (string)
-- **Missing Data**: Yes, some entries are missing.
+- **Levels**:
+  - `accuracy_speed`: 4 blocks (cases) in accuracy mode first, then 4 blocks in speed mode.
+  - `speed_accuracy`: 4 blocks (cases) in speed mode first, then 4 blocks in accuracy mode.
+- **Missing Data**: This only applies to the study speed_accuracy.
+
 
 ### 27. `theory_question_binary`
-- **Description**: Response to the binary theory question.
+- **Description**: Response to the question: "Which of the following statements better captures your belief about what it means to violate or comply with a rule?".
 - **Type**: Categorical (string)
-- **Missing Data**: Yes, some entries are missing.
+- **Levels**:
+  - `spirit`: "To abide by the law, one must focus on the letter of the law. So, when someone acts in a way that conflicts with a rule's text (what it literally says), then that person has broken the rule."
+  - `letter`: "To abide by the law, one must focus on the spirit of the law. So, when someone acts in a way that conflicts with a rule's purpose (what it is ultimately for), then that person has broken the rule."
+- **Missing Data**: This was only asked in the study stroop_flanker.
+
 
 ### 28. `theory_question_bipolar`
-- **Description**: Response to the bipolar theory question.
+- **Description**: Response to the question ""On the previous page, you were asked which of two ways of applying rules best reflects your own way of thinking. We are now interested in understanding to what extent you relied on each approach: The Letter approach and the Spirit approach. When deciding whether someone has violated a rule, my approach is _____  ."
 - **Type**: Categorical (string)
-- **Missing Data**: Yes, some entries are missing.
+- **Levels**:
+  - `only spirit`
+  - `mostly spirit`
+  - `more spirit than letter`
+  - `both equally`
+  - `more letter than spirit`
+  - `mostly letter`
+  - `only letter`
+- **Missing Data**: This was only asked in the study stroop_flanker.
+
 
 ### 29. `theory_question_bipolar_num`
-- **Description**: Numeric representation of the bipolar question.
-- **Type**: Numeric
-- **Missing Data**: Yes, some entries are missing.
+- **Description**: Numeric representation of the bipolar theory question.
+- **Type**: Numeric (float)
+- **Levels**:
+  - `0`: only letter
+  - `1`: mostly letter
+  - `2`: more letter than spirit
+  - `3`: both equally
+  - `4`: more spirit than letter
+  - `5`: mostly spirit
+  - `6`: only spirit
+- **Missing Data**: This was only asked in the study stroop_flanker.
+
 
 ### 30. `age`
-- **Description**: Participant's age.
+- **Description**: Participants' age.
 - **Type**: Numeric
-- **Missing Data**: Yes, some entries are missing.
+- **Missing Data**: Some participants in the violate study (n = 4) did not answer this question (but provided valid data for all other parts of the study).
 
 ### 31. `gender`
 - **Description**: Participant's gender.
 - **Type**: Categorical (string)
-- **Missing Data**: Yes, some entries are missing.
+- **Levels**:
+  - `female`
+  - `male`
+  - `nonbinary`
+  - `no answer`
+  - `another identity`
+- **Missing Data**: Some participants in the violate study (n = 15) did not answer this question (but provided valid data for all other parts of the study).
 
 ### 32. `handedness`
 - **Description**: Participant's handedness (e.g., left or right-handed).
 - **Type**: Categorical (string)
-- **Missing Data**: Yes, some entries are missing.
+- **Missing Data**: Some participants in the violate study (n = 34) did not answer this question (but provided valid data for all other parts of the study).
 
 ### 33. `comments`
 - **Description**: Additional comments by the participant.
 - **Type**: Categorical (string)
-- **Missing Data**: Yes, some entries are missing.
+- **Missing Data**: Yes, this was an optional free text field.

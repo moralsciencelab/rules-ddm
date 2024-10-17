@@ -825,7 +825,8 @@ in the rules task.</li>
 <li><code>0</code>: no</li>
 <li><code>1</code>: yes</li>
 </ul></li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+<li><strong>Missing Data</strong>: This only applies to the rules task,
+not stroop or flanker.</li>
 </ul>
 </div>
 <div id="response_stroop" class="section level3">
@@ -896,71 +897,145 @@ correct.</li>
 <div id="congprop" class="section level3">
 <h3>23. <code>congprop</code></h3>
 <ul>
-<li><strong>Description</strong>: Proportion of congruent trials.</li>
+<li><strong>Description</strong>: Proportion of congruent trials in the
+block (case).</li>
 <li><strong>Type</strong>: Categorical (string)</li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>low</code>: Low proportion of congruent trials (2 out of
+12).</li>
+<li><code>high</code>: High proportion of congruent trials (10 out of
+12).</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This only applies to the study
+congruency_proportions.</li>
 </ul>
 </div>
 <div id="congprop_block_order" class="section level3">
 <h3>24. <code>congprop_block_order</code></h3>
 <ul>
-<li><strong>Description</strong>: Block order for congruency
-proportion.</li>
+<li><strong>Description</strong>: Presentation order of blocks for the
+congruency proportion manipulation.</li>
 <li><strong>Type</strong>: Categorical (string)</li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>low_high</code>: 4 blocks (cases) with low proportion first,
+then 4 blocks with high proportion.</li>
+<li><code>high_low</code>: 4 blocks (cases) with high proportion first,
+then 4 blocks with low proportion.</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This only applies to the study
+congruency_proportions.</li>
 </ul>
 </div>
 <div id="spd_acc_mode" class="section level3">
 <h3>25. <code>spd_acc_mode</code></h3>
 <ul>
-<li><strong>Description</strong>: Mode for speed-accuracy
-manipulation.</li>
+<li><strong>Description</strong>: The mode of the speed-accuracy
+manipulation in the task.</li>
 <li><strong>Type</strong>: Categorical (string)</li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>acc</code>: Accuracy mode, where the participant is instructed
+to prioritize accuracy.</li>
+<li><code>spd</code>: Speed mode, where the participant is instructed to
+prioritize speed.</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This only applies to the study
+speed_accuracy.</li>
 </ul>
 </div>
 <div id="spd_acc_order" class="section level3">
 <h3>26. <code>spd_acc_order</code></h3>
 <ul>
-<li><strong>Description</strong>: Order of blocks for speed-accuracy
-manipulation.</li>
+<li><strong>Description</strong>: The order of blocks for the
+speed-accuracy manipulation.</li>
 <li><strong>Type</strong>: Categorical (string)</li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>accuracy_speed</code>: 4 blocks (cases) in accuracy mode
+first, then 4 blocks in speed mode.</li>
+<li><code>speed_accuracy</code>: 4 blocks (cases) in speed mode first,
+then 4 blocks in accuracy mode.</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This only applies to the study
+speed_accuracy.</li>
 </ul>
 </div>
 <div id="theory_question_binary" class="section level3">
 <h3>27. <code>theory_question_binary</code></h3>
 <ul>
-<li><strong>Description</strong>: Response to the binary theory
-question.</li>
+<li><strong>Description</strong>: Response to the question: “Which of
+the following statements better captures your belief about what it means
+to violate or comply with a rule?”.</li>
 <li><strong>Type</strong>: Categorical (string)</li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>spirit</code>: “To abide by the law, one must focus on the
+letter of the law. So, when someone acts in a way that conflicts with a
+rule’s text (what it literally says), then that person has broken the
+rule.”</li>
+<li><code>letter</code>: “To abide by the law, one must focus on the
+spirit of the law. So, when someone acts in a way that conflicts with a
+rule’s purpose (what it is ultimately for), then that person has broken
+the rule.”</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This was only asked in the study
+stroop_flanker.</li>
 </ul>
 </div>
 <div id="theory_question_bipolar" class="section level3">
 <h3>28. <code>theory_question_bipolar</code></h3>
 <ul>
-<li><strong>Description</strong>: Response to the bipolar theory
-question.</li>
+<li><strong>Description</strong>: Response to the question ““On the
+previous page, you were asked which of two ways of applying rules best
+reflects your own way of thinking. We are now interested in
+understanding to what extent you relied on each approach: The Letter
+approach and the Spirit approach. When deciding whether someone has
+violated a rule, my approach is _____ .”</li>
 <li><strong>Type</strong>: Categorical (string)</li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>only spirit</code></li>
+<li><code>mostly spirit</code></li>
+<li><code>more spirit than letter</code></li>
+<li><code>both equally</code></li>
+<li><code>more letter than spirit</code></li>
+<li><code>mostly letter</code></li>
+<li><code>only letter</code></li>
+</ul></li>
+<li><strong>Missing Data</strong>: This was only asked in the study
+stroop_flanker.</li>
 </ul>
 </div>
 <div id="theory_question_bipolar_num" class="section level3">
 <h3>29. <code>theory_question_bipolar_num</code></h3>
 <ul>
 <li><strong>Description</strong>: Numeric representation of the bipolar
-question.</li>
-<li><strong>Type</strong>: Numeric</li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+theory question.</li>
+<li><strong>Type</strong>: Numeric (float)</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>0</code>: only letter</li>
+<li><code>1</code>: mostly letter</li>
+<li><code>2</code>: more letter than spirit</li>
+<li><code>3</code>: both equally</li>
+<li><code>4</code>: more spirit than letter</li>
+<li><code>5</code>: mostly spirit</li>
+<li><code>6</code>: only spirit</li>
+</ul></li>
+<li><strong>Missing Data</strong>: This was only asked in the study
+stroop_flanker.</li>
 </ul>
 </div>
 <div id="age" class="section level3">
 <h3>30. <code>age</code></h3>
 <ul>
-<li><strong>Description</strong>: Participant’s age.</li>
+<li><strong>Description</strong>: Participants’ age.</li>
 <li><strong>Type</strong>: Numeric</li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+<li><strong>Missing Data</strong>: Some participants in the violate
+study (n = 4) did not answer this question (but provided valid data for
+all other parts of the study).</li>
 </ul>
 </div>
 <div id="gender" class="section level3">
@@ -968,7 +1043,17 @@ question.</li>
 <ul>
 <li><strong>Description</strong>: Participant’s gender.</li>
 <li><strong>Type</strong>: Categorical (string)</li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+<li><strong>Levels</strong>:
+<ul>
+<li><code>female</code></li>
+<li><code>male</code></li>
+<li><code>nonbinary</code></li>
+<li><code>no answer</code></li>
+<li><code>another identity</code></li>
+</ul></li>
+<li><strong>Missing Data</strong>: Some participants in the violate
+study (n = 15) did not answer this question (but provided valid data for
+all other parts of the study).</li>
 </ul>
 </div>
 <div id="handedness" class="section level3">
@@ -977,7 +1062,9 @@ question.</li>
 <li><strong>Description</strong>: Participant’s handedness (e.g., left
 or right-handed).</li>
 <li><strong>Type</strong>: Categorical (string)</li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+<li><strong>Missing Data</strong>: Some participants in the violate
+study (n = 34) did not answer this question (but provided valid data for
+all other parts of the study).</li>
 </ul>
 </div>
 <div id="comments" class="section level3">
@@ -986,7 +1073,8 @@ or right-handed).</li>
 <li><strong>Description</strong>: Additional comments by the
 participant.</li>
 <li><strong>Type</strong>: Categorical (string)</li>
-<li><strong>Missing Data</strong>: Yes, some entries are missing.</li>
+<li><strong>Missing Data</strong>: Yes, this was an optional free text
+field.</li>
 </ul>
 </div>
 </div>
