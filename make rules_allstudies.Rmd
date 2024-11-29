@@ -544,6 +544,16 @@ rules_allstudies |>
   summarize(n=n())
 
 ```
+check if and why gender info is missing
 
+```{r}
+rules_allstudies |> 
+  filter(is.na(handedness) == TRUE) |> 
+  group_by(study) |> 
+  summarize(n = n_distinct(subj_code))
+  
+
+
+```
 
 

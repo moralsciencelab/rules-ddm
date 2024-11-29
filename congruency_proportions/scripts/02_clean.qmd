@@ -56,7 +56,6 @@ demographics <- demographics %>%
 write.csv(demographics,"demographics.csv",row.names = F)
 ```
 
-
 # selecting variables and responses, initial coding
 
 ```{r}
