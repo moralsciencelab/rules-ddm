@@ -1,0 +1,13 @@
+"dv","contrast","text","purpose","coefficient","SE","df","z.ratio","p.value"
+"violation","response0 - response1",0,0,139.793,103.683,Inf,1.348,0.178
+"violation","response0 - response1",1,0,288.196,44.301,Inf,6.505,0
+"violation","response0 - response1",0,1,96.075,48.06,Inf,1.999,0.046
+"violation","response0 - response1",1,1,778.651,86.505,Inf,9.001,0
+"compliance","response0 - response1",0,0,-75.473,77.891,Inf,-0.969,0.333
+"compliance","response0 - response1",1,0,-287.638,46.938,Inf,-6.128,0
+"compliance","response0 - response1",0,1,-184.22,47.401,Inf,-3.886,0
+"compliance","response0 - response1",1,1,-502.944,83.823,Inf,-6,0
+"punishment","response0 - response1",0,0,-128.121,102.948,Inf,-1.245,0.213
+"punishment","response0 - response1",1,0,51.674,44.056,Inf,1.173,0.241
+"punishment","response0 - response1",0,1,337.279,43.742,Inf,7.711,0
+"punishment","response0 - response1",1,1,659.361,76.287,Inf,8.643,0
