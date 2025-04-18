@@ -86,9 +86,15 @@
     1,
   );
 
+  var order = jsPsych.randomization.sampleWithoutReplacement(
+    ["Before", "After"],
+    1,
+  )[0];
+
   /* record key assignment*/
   jsPsych.data.addProperties({
     key_assignment: keys,
+    order_assignment: order,
   });
 
   /* create timeline */
@@ -133,11 +139,57 @@
 
   timeline.push(welcome);
 
+
+  var theory = {
+    type: jsPsychSurveyMultiChoice,
+    questions: [
+      {
+        prompt:
+          "Which of the following statements better captures your belief about what it means to violate or comply with a rule?",
+        name: "theory_question",
+        options: [
+          "To abide by the law, one must focus on the letter of the law. So, when someone acts in a way that conflicts with a rule<span>&#39;</span>s text (what it literally says), then that person has broken the rule.",
+          "To abide by the law, one must focus on the spirit of the law. So, when someone acts in a way that conflicts with a rule<span>&#39;</span>s purpose (what it is ultimately for), then that person has broken the rule.",
+        ],
+        required: true,
+      },
+    ],
+  };
+
+  var theory_bipolar = {
+    type: jsPsychSurveyLikert,
+    questions: [
+      {
+        prompt:
+          "On the previous page, you were asked which of two ways of applying rules best reflects your own way of thinking. <br>" +
+          "We are now interested in understanding to what extent you rely on each approach: The <b>Letter approach</b> and the <b>Spirit approach</b>.<br>" +
+          "<br>When deciding whether someone has violated a rule, my approach is _____  .",
+        name: "theory_question_bipolar",
+        labels: [
+          "<br>Only<br>Letter",
+          "<br>Mostly<br>Letter",
+          "More<br>Letter<br>than<br>Spirit",
+          "<br>Both<br>Equally",
+          "More<br>Spirit<br>than<br>Letter",
+          "<br>Mostly<br>Spirit",
+          "<br>Only<br>Spirit",
+        ],
+        required: true,
+      },
+    ],
+  };
+
+
   /*enter fullscreen*/
   timeline.push({
     type: jsPsychFullscreen,
     fullscreen_mode: true,
   });
+
+  if (order === "Before") {
+    timeline.push(theory);
+    timeline.push(theory_bipolar);
+  }
 
   // all three INSTRUCTIONS blocks //
   var stroop_instructions = {
@@ -160,7 +212,7 @@
 
   var stroop_comprehension = {
     type: jsPsychSurveyMultiChoice,
-    preamble: `<p style="font-size:20px;"><span style="color: green">yellow</span></p>`,
+    preamble: `<p style="color: green"><b>yellow</b></p>`,
     name: "instr_check",
     questions: [
       {
@@ -389,6 +441,10 @@
     ["Control", "Experimental"],
     1,
   )[0];
+
+  jsPsych.data.addProperties({
+    condition_assignment: condition,
+  });
 
   var final_instructions_control = {
     type: jsPsychHtmlKeyboardResponse,
@@ -1373,49 +1429,10 @@
   };
   timeline.push(experimental_procedure);
 
-  var theory = {
-    type: jsPsychSurveyMultiChoice,
-    questions: [
-      {
-        prompt:
-          "Which of the following statements better captures your belief about what it means to violate or comply with a rule?",
-        name: "theory_question",
-        options: [
-          "To abide by the law, one must focus on the letter of the law. So, when someone acts in a way that conflicts with a rule<span>&#39;</span>s text (what it literally says), then that person has broken the rule.",
-          "To abide by the law, one must focus on the spirit of the law. So, when someone acts in a way that conflicts with a rule<span>&#39;</span>s purpose (what it is ultimately for), then that person has broken the rule.",
-        ],
-        required: true,
-      },
-    ],
-  };
-
-  timeline.push(theory);
-
-  var theory_bipolar = {
-    type: jsPsychSurveyLikert,
-    questions: [
-      {
-        prompt:
-          "On the previous page, you were asked which of two ways of applying rules best reflects your own way of thinking. <br>" +
-          "We are now interested in understanding to what extent you relied on each approach: The <b>Letter approach</b> and the <b>Spirit approach</b>.<br>" +
-          "<br>When deciding whether someone has violated a rule, my approach is _____  .",
-        name: "theory_question_bipolar",
-        labels: [
-          "<br>Only<br>Letter",
-          "<br>Mostly<br>Letter",
-          "More<br>Letter<br>than<br>Spirit",
-          "<br>Both<br>Equally",
-          "More<br>Spirit<br>than<br>Letter",
-          "<br>Mostly<br>Spirit",
-          "<br>Only<br>Spirit",
-        ],
-        required: true,
-      },
-    ],
-  };
-
-  timeline.push(theory_bipolar);
-
+  if (order === "After") {
+    timeline.push(theory);
+    timeline.push(theory_bipolar);
+  }
   /*demographics*/
   var age = {
     type: jsPsychSurveyText,
@@ -1489,6 +1506,16 @@
         name: "comments",
       },
     ],
+    on_load: function () {
+      const input = document.querySelector('input[type="text"]');
+
+      if (input) {
+        // Disable copy, paste, and cut
+        input.addEventListener('paste', (e) => e.preventDefault());
+        input.addEventListener('copy', (e) => e.preventDefault());
+        input.addEventListener('cut', (e) => e.preventDefault());;
+      }
+    },
   };
 
   timeline.push(remarks);
