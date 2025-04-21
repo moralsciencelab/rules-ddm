@@ -27,7 +27,7 @@
   var jsPsych = initJsPsych({
     on_finish: function () {
       // jsPsych.data.displayData();
-      // window.location = "https://app.prolific.com/submissions/complete?cc=CF0W83XX"
+      window.location = "https://app.prolific.com/submissions/complete?cc=CF0W83XX"
     },
   });
 
@@ -376,7 +376,7 @@
   <p style="text-align:left;">In the RULES task, we will present you with several hypothetical rules, and with descriptions of people whose actions may or may not violate these rules.<br>
   <br>
   In each case, your task will be to decide whether a person's action violated the rule or not, by pressing either the <b>E key</b> or the <b>I key</b> on your keyboard.<br>
-  There will be a time limit of <b>6 seconds</b> to read about each case and make a decision.<br><br>
+  There will be a time limit of <b>8 seconds</b> to read about each case and make a decision.<br><br>
   Try to make the decision <b>as quickly as possible.</b><br>
   <br>
     <p style="font-size:20px;">Press any key to receive further information.</p>`,
@@ -1194,6 +1194,7 @@
             correct = true;
           }
           data.correct = correct;
+          data.task = "flanker_response";
         },
       },
     ],
@@ -1438,7 +1439,7 @@
     type: jsPsychSurveyText,
     questions: [
       {
-        prompt: "Please indicate your age::",
+        prompt: "Please indicate your age.",
         name: "age",
         required: true,
       },
@@ -1540,7 +1541,7 @@
   /* start the experiment */
   jsPsych.run(timeline);
 
-  // jsPsych.simulate(timeline);
+  //jsPsych.simulate(timeline);
 </script>
 
 </html>
