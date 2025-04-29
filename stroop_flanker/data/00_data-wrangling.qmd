@@ -122,6 +122,7 @@ clean |>
   summarize(n_trials=n()) |> 
   summary() #always 96
 ```
+
 ```{r apply exclusion criteria}
 clean <- clean %>%
   mutate(rt = as.numeric(rt))
@@ -146,7 +147,6 @@ clean |>
     .groups = 'drop'
   )
 ```
-
 
 ```{r coding of scenario and text vs purpose violation for rules}
 #import codingsheet
@@ -298,5 +298,3 @@ clean <- clean |>
 write.csv(clean,"clean.csv",row.names = F)
 
 ```
-
-
