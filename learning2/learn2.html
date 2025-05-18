@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Colors, Arrows and Rules</title>
+
+    <script src="https://unpkg.com/jspsych@7.3.1"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-fullscreen@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.1"></script>
+    <script src="rules.js"></script>
+    <script src="rules_congruency.js"></script>
+    <link
+      href="https://unpkg.com/jspsych@7.3.1/css/jspsych.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="learn.css" rel="stylesheet" type="text/css" />
+    <style></style>
+  </head>
+
+  <body></body>
+  <script>
+    /* initialize jsPsych*/
+    var jsPsych = initJsPsych({
+      on_finish: function () {
+        // jsPsych.data.displayData();
+        window.location =
+          "https://app.prolific.com/submissions/complete?cc=CF0W83XX";
+      },
+    });
+
+    /* capture info from Prolific */
+    var study_id = jsPsych.data.getURLVariable("STUDY_ID");
+    var session_id = jsPsych.data.getURLVariable("SESSION_ID");
+
+    jsPsych.data.addProperties({
+      study_id: study_id,
+      session_id: session_id,
+    });
+
+    /* make subject ID */
+    var subj_code; // a variable that later stores a random subject code
+
+    function makeid(length) {
+      var result = "";
+      var characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      var charactersLength = characters.length;
+      for (var i = 0; i < length; i++) {
+        result += characters.charAt(
+          Math.floor(Math.random() * charactersLength)
+        );
+      }
+      return result;
+    } // this function creates a random subject code using the characters listed above
+
+    subj_code = makeid(12); // generate the actual code (12 strings)
+
+    console.log(subj_code); // give it back to the console
+
+    jsPsych.data.addProperties({ subj_code: subj_code }); // add the code to the data
+
+    // preload images due to presenting them with timeline variables
+    var images = [
+      "img/con1.png",
+      "img/con2.png",
+      "img/inc1.png",
+      "img/inc2.png",
+    ];
+    var preload = {
+      type: jsPsychPreload,
+      images: images,
+    };
+
+    /* Rules lateralization */
+    var keys = jsPsych.randomization.sampleWithoutReplacement(
+      [
+        "<br>Did this person violate the rule?<br><br><b>Press e for yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Press i for no</b>",
+        "<br>Did this person violate the rule?<br><br><b>Press e for no&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Press i for yes</b>",
+      ],
+      1
+    );
+
+    var order = jsPsych.randomization.sampleWithoutReplacement(
+      ["Before", "After"],
+      1
+    )[0];
+
+    /* record key assignment*/
+    jsPsych.data.addProperties({
+      key_assignment: keys,
+      order_assignment: order,
+    });
+
+    /* create timeline */
+    var timeline = [];
+
+    /* define fixation cross to show between trials - for practice trials and main task */
+    var fixation = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus:
+        `<div style="font-size:60px;">+</div>` +
+        `<span style="font-size: 1px; color: #ffffff; position: absolute; left: -9999px;" >
+                Press the letter Z on your keyboard.</span>`,
+      choices: ["z"],
+      trial_duration: function () {
+        return jsPsych.randomization.sampleWithReplacement(
+          [250, 500, 750, 1000, 1250, 1500, 1750],
+          1
+        )[0];
+      },
+      data: {
+        task: "fixation",
+      },
+    };
+
+    /*  WELCOME */
+    var welcome = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<h1>Welcome to the experiment!</h1><br>
+                <p style="text-align:left;">The experiment is made up of <b> three different tasks</b>: RULES, COLORS, and ARROWS.<br>
+                On every task, you will be asked to decide as quickly as possible, by pressing a button.<br>
+                <br>
+                You will need a <b>physical keyboard</b> to participate.<br>
+                <br>
+                Please only start the study if you are in a calm, distraction-free environment and will not be disturbed during the next <b>16 minutes</b>.<br>
+                <br>
+                Turn off any music, TV noise, etc.<br>
+                <br>
+                As stated on Prolific, the remainder of this experiment is <b>incompatible with the Safari browser.</b><br>
+                If you are using the Safari browser, please return the survey now.<br></p>
+                <br><br>
+                <p style="font-size:20px;">Press any key to receive further information.</p>`,
+    };
+
+    timeline.push(welcome);
+
+    /*enter fullscreen*/
+    timeline.push({
+      type: jsPsychFullscreen,
+      fullscreen_mode: true,
+    });
+
+    var theory = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt:
+            "Which of the following statements better captures your belief about what it means to violate or comply with a rule?",
+          name: "theory_question",
+          options: [
+            "To abide by the law, one must focus on the letter of the law. So, when someone acts in a way that conflicts with a rule<span>&#39;</span>s text (what it literally says), then that person has broken the rule.",
+            "To abide by the law, one must focus on the spirit of the law. So, when someone acts in a way that conflicts with a rule<span>&#39;</span>s purpose (what it is ultimately for), then that person has broken the rule.",
+          ],
+          required: true,
+        },
+      ],
+    };
+
+    var theory_bipolar = {
+      type: jsPsychSurveyLikert,
+      questions: [
+        {
+          prompt:
+            "On the previous page, you were asked which of two ways of applying rules best reflects your own way of thinking. <br>" +
+            "We are now interested in understanding to what extent you rely on each approach: The <b>Letter approach</b> and the <b>Spirit approach</b>.<br>" +
+            "<br>When deciding whether someone has violated a rule, my approach is _____  .",
+          name: "theory_question_bipolar",
+          labels: [
+            "<br>Only<br>Letter",
+            "<br>Mostly<br>Letter",
+            "More<br>Letter<br>than<br>Spirit",
+            "<br>Both<br>Equally",
+            "More<br>Spirit<br>than<br>Letter",
+            "<br>Mostly<br>Spirit",
+            "<br>Only<br>Spirit",
+          ],
+          required: true,
+        },
+      ],
+    };
+
+    if (order === "Before") {
+      timeline.push(theory);
+      timeline.push(theory_bipolar);
+    }
+
+    // Randomly assign condition
+    var task_condition = jsPsych.randomization.sampleWithoutReplacement(
+      ["Rules", "Stroop", "Control"],
+      1
+    )[0];
+
+    var conflict_condition = jsPsych.randomization.sampleWithoutReplacement(
+      ["Incongruent", "Congruent"],
+      1
+    )[0];
+
+    console.log("cond assign: ", task_condition);
+    console.log("cond assign: ", conflict_condition);
+
+    // all three INSTRUCTIONS blocks //
+    var stroop_instructions = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<h1>The COLORS Task Tutorial</h1><br>
+            <p style="text-align:left;">In the COLORS task, a series of words will appear in the center of the screen.<br>
+            <br>
+            When the word appears, you are asked to respond with the <strong>color</strong> in which the word is printed <b>as quickly as you can.</b><br>
+            <br>
+            Press <strong>R</strong> for <span style="color: red">red</span>, <strong>G</strong> for <span style="color: green">green</span>, <strong>Y</strong> for <span style="color: yellow">yellow</span> and <strong>B</strong> for <span style="color: blue">blue</span>.</p>
+            <p style="text-align:left;">For example, if the word <span style="color: blue">red</span> appears printed in blue, the right answer is the letter B, <strong>not</strong> the letter R.</p>
+            <br>
+              <p style="font-size:20px;">If you have understood the above instructions, press any key to proceed.</p>`,
+    };
+
+    /*instruction check*/
+    var i = 0;
+
+    var stroop_comprehension = {
+      type: jsPsychSurveyMultiChoice,
+      preamble: `<p style="color: green"><b>yellow</b></p>`,
+      name: "instr_check",
+      questions: [
+        {
+          prompt:
+            "If the word above appears in the COLORS Task, I am supposed to...",
+          options: [
+            "press the letter that matches the word I am reading (Y for yellow)",
+            "press the letter that matches the color the word is printed in (G for green)",
+          ],
+          required: true,
+          name: "goal_check",
+        },
+      ],
+      on_finish: function (data) {
+        i++;
+        console.log("instr test rounds: " + i);
+        if (
+          data.response.goal_check ==
+          "press the letter that matches the color the word is printed in (G for green)"
+        ) {
+          instr_check = "correct";
+        } else {
+          instr_check = "incorrect";
+        }
+        console.log("result instruction check: " + instr_check);
+        jsPsych.data.addProperties({ instr_tests: i });
+      },
+    };
+
+    /*shown if instruction check incorrect*/
+    var instr_check_failed = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `
+              <p><b>You did not answer the comprehension check questions correctly. We will therefore show you the instructions again.</b></p>
+
+              <p>Please click the button below to read the instruction again and repeat the test.</p>
+              `,
+      choices: ["Back to instructions"],
+    };
+
+    /*check if instruction check correct*/
+    var loop_stroop = {
+      timeline: [instr_check_failed, stroop_instructions, stroop_comprehension],
+      loop_function: function () {
+        if (instr_check == "incorrect") {
+          return true;
+        } else {
+          return false;
+        }
+      },
+    };
+
+    var if_node_stroop = {
+      timeline: [loop_stroop],
+      conditional_function: function () {
+        if (instr_check == "incorrect") {
+          return true;
+        } else {
+          return false;
+        }
+      },
+    };
+
+    var stroop_practice_stimuli = [
+      { stimulus: '<p style="font-size:30px; color:blue;"><b>blue</b></p>' },
+      { stimulus: '<p style="font-size:30px; color:red;"><b>blue</b></p>' },
+      { stimulus: '<p style="font-size:30px; color:green;"><b>yellow</b></p>' },
+      { stimulus: '<p style="font-size:30px; color:green;"><b>green</b></p>' },
+    ];
+
+    var stroop_practice = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: jsPsych.timelineVariable("stimulus"),
+      choices: ["r", "g", "b", "y"],
+    };
+
+    /* whole sequence for practice trials */
+    var stroop_practice_trials = {
+      timeline: [fixation, stroop_practice],
+      timeline_variables: stroop_practice_stimuli,
+      repetitions: 1,
+    };
+
+    /* flanker */
+    var flanker_instructions = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<h1>The ARROWS Task Tutorial</h1><br>
+            <p style="text-align:left;">In the ARROWS task, you will see five arrows on the screen, as shown below.<br>
+              <br>
+            <center><img src='img/inc1.png'></img></center>
+            <p>If the middle arrow is pointing left (<), press the letter <strong>E</strong> as quickly as you can.<br>
+            If the middle arrow is pointing right (>), press the letter <strong>I</strong> as quickly as you can.<br><br>
+            Remember: You must indicate the direction in which the <strong>middle</strong> arrow is pointing. <br>
+            In the above example, since the middle arrow is pointing right (>), you would press the letter I.</p>
+            <br>
+              <p style="font-size:20px;">Press any key to proceed with a few practice runs.</p>`,
+    };
+
+    var flanker_stimuli = [
+      {
+        stimulus: "img/con1.png",
+        data: {
+          flanker_stim_type: "congruent",
+          direction: "left",
+          correct_response: "e",
+        },
+      },
+      {
+        stimulus: "img/con2.png",
+        data: {
+          flanker_stim_type: "congruent",
+          direction: "right",
+          correct_response: "i",
+        },
+      },
+      {
+        stimulus: "img/inc1.png",
+        data: {
+          flanker_stim_type: "incongruent",
+          direction: "right",
+          correct_response: "i",
+        },
+      },
+      {
+        stimulus: "img/inc2.png",
+        data: {
+          flanker_stim_type: "incongruent",
+          direction: "left",
+          correct_response: "e",
+        },
+      },
+    ];
+
+    var flanker_practice = {
+      type: jsPsychImageKeyboardResponse,
+      stimulus: jsPsych.timelineVariable("stimulus"),
+      choices: ["e", "i"],
+    };
+
+    /* whole sequence for practice trials */
+    var flanker_practice_trials = {
+      timeline: [fixation, flanker_practice],
+      timeline_variables: flanker_stimuli,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* rules */
+    var rules_instructions = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<h1>The RULES Task Tutorial</h1><br>
+            <p style="text-align:left;">In the RULES task, we will present you with several hypothetical rules, and with descriptions of people whose actions may or may not violate these rules.<br>
+            <br>
+            In each case, your task will be to decide whether a person's action violated the rule or not, by pressing either the <b>E key</b> or the <b>I key</b> on your keyboard.<br>
+            There will be a time limit of <b>8 seconds</b> to read about each case and make a decision.<br><br>
+            Try to make the decision <b>as quickly as possible.</b><br>
+            <br>
+              <p style="font-size:20px;">Press any key to receive further information.</p>`,
+    };
+
+    /*startpage*/
+    var startpage_practicetrial = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<h1>The RULES Task Tutorial</h1><br>
+               <p style="text-align:left;"> <b>A university posted the following rule in a student dormitory: "No noise after 10 pm".</b><br>
+               <br>
+               On the following pages, we will show you  examples of behaviours that may or may not violate the rule.<br>
+               <br>
+               Each action will be presented on a separate page.<br>
+               <br>
+               Press the assigned keys (shown alongside the described actions) to indicate whether or not the person violated the rule.<br>
+               <br>
+               You can move through the pages at your own pace during these practice trials.</p><br>
+               <br>
+               <p style="font-size:20px;">Press any key to proceed with a few practice runs.</p>`,
+    };
+
+    /*stimuli practice trials*/
+    var rules_stimuli_practice = [
+      {
+        stimulus: `A university posted the following rule in a student dormitory:<br> "No noise after 10 pm"<br><br><br><b>A student plays his electric guitar in his room at midnight.</b><br>`,
+      },
+      {
+        stimulus: `A university posted the following rule in a student dormitory:<br> "No noise after 10 pm"<br><br><br><b>Some students have a loud argument in the hallway at 11 pm.</b><br>`,
+      },
+      {
+        stimulus: `A university posted the following rule in a student dormitory:<br> "No noise after 10 pm"<br><br><br><b>A student listens to a podcast with headphones on at 11:30 pm.</b><br>`,
+      },
+      {
+        stimulus: `A university posted the following rule in a student dormitory:<br> "No noise after 10 pm"<br><br><br><b>A student is meditating in her room at 11:30 pm.</b><br>`,
+      },
+    ];
+
+    /* define trial that selects stimulus and displays it - balancing response keys, no time limit - for practice trials*/
+    var rules_practice = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: jsPsych.timelineVariable("stimulus"),
+      choices: ["e", "i"],
+      prompt: keys,
+    };
+
+    /* whole sequence for practice trials */
+    var rules_practice_trials = {
+      timeline: [fixation, rules_practice],
+      timeline_variables: rules_stimuli_practice,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    jsPsych.data.addProperties({
+      condition_assignment: [task_condition, conflict_condition],
+    });
+
+    if (task_condition !== "Control") {
+      timeline.push(stroop_instructions);
+      timeline.push(stroop_comprehension);
+      timeline.push(if_node_stroop);
+      timeline.push(stroop_practice_trials);
+
+      timeline.push(flanker_instructions);
+      timeline.push(flanker_practice_trials);
+    }
+
+    timeline.push(rules_instructions);
+    timeline.push(startpage_practicetrial);
+    timeline.push(rules_practice_trials);
+
+    var condition_sentence;
+    // Conditionally push the correct instructions
+    if (task_condition === "Rules") {
+      condition_sentence = "There will be <b>8</b> blocks of RULES.";
+    } else if (task_condition === "Stroop") {
+      condition_sentence =
+        "There will be <b>4</b> blocks of RULES, <b>2</b> blocks of COLORS, and <b>2</b> blocks of ARROWS.";
+    } else {
+      condition_sentence =
+        "There will be <b>4</b> blocks of RULES and a simple mental speed task.";
+    }
+
+    var final_instructions = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+                  <h1><b>Ready?</b></h1><br>
+
+                  <p style="text-align:left;">${condition_sentence}<br>
+                    After each block, you will have the opportunity to take a short break.<br>
+                    <br>
+                    We expect the rest of the experiment to take around <b>8 minutes</b>.<br>
+                    <br>
+                    Press the space bar when you are ready to get started.</p>
+                  `,
+    };
+
+    timeline.push(final_instructions);
+
+    // Stroop stimuli (create two stimuli high congruency low congruency)
+    var stroop_stimuli_incongruent = [
+      // incongruent
+      {
+        color: "blue",
+        text: "yellow",
+        stroop_stim_type: "incongruent",
+        correct_response: "b",
+      },
+      {
+        color: "blue",
+        text: "green",
+        stroop_stim_type: "incongruent",
+        correct_response: "b",
+      },
+      {
+        color: "blue",
+        text: "red",
+        stroop_stim_type: "incongruent",
+        correct_response: "b",
+      },
+      {
+        color: "red",
+        text: "yellow",
+        stroop_stim_type: "incongruent",
+        correct_response: "r",
+      },
+      {
+        color: "red",
+        text: "green",
+        stroop_stim_type: "incongruent",
+        correct_response: "r",
+      },
+      {
+        color: "red",
+        text: "blue",
+        stroop_stim_type: "incongruent",
+        correct_response: "r",
+      },
+      {
+        color: "yellow",
+        text: "blue",
+        stroop_stim_type: "incongruent",
+        correct_response: "y",
+      },
+      {
+        color: "yellow",
+        text: "red",
+        stroop_stim_type: "incongruent",
+        correct_response: "y",
+      },
+      {
+        color: "yellow",
+        text: "green",
+        stroop_stim_type: "incongruent",
+        correct_response: "y",
+      },
+      {
+        color: "green",
+        text: "yellow",
+        stroop_stim_type: "incongruent",
+        correct_response: "g",
+      },
+      {
+        color: "green",
+        text: "red",
+        stroop_stim_type: "incongruent",
+        correct_response: "g",
+      },
+      {
+        color: "green",
+        text: "blue",
+        stroop_stim_type: "incongruent",
+        correct_response: "g",
+      },
+    ];
+
+    var stroop_stimuli_congruent = [
+      {
+        color: "blue",
+        text: "blue",
+        stroop_stim_type: "congruent",
+        correct_response: "b",
+      },
+      {
+        color: "red",
+        text: "red",
+        stroop_stim_type: "congruent",
+        correct_response: "r",
+      },
+      {
+        color: "yellow",
+        text: "yellow",
+        stroop_stim_type: "congruent",
+        correct_response: "y",
+      },
+      {
+        color: "green",
+        text: "green",
+        stroop_stim_type: "congruent",
+        correct_response: "g",
+      },
+      {
+        color: "blue",
+        text: "blue",
+        stroop_stim_type: "congruent",
+        correct_response: "b",
+      },
+      {
+        color: "red",
+        text: "red",
+        stroop_stim_type: "congruent",
+        correct_response: "r",
+      },
+      {
+        color: "yellow",
+        text: "yellow",
+        stroop_stim_type: "congruent",
+        correct_response: "y",
+      },
+      {
+        color: "green",
+        text: "green",
+        stroop_stim_type: "congruent",
+        correct_response: "g",
+      },
+      {
+        color: "blue",
+        text: "blue",
+        stroop_stim_type: "congruent",
+        correct_response: "b",
+      },
+      {
+        color: "red",
+        text: "red",
+        stroop_stim_type: "congruent",
+        correct_response: "r",
+      },
+      {
+        color: "yellow",
+        text: "yellow",
+        stroop_stim_type: "congruent",
+        correct_response: "y",
+      },
+      {
+        color: "green",
+        text: "green",
+        stroop_stim_type: "congruent",
+        correct_response: "g",
+      },
+    ];
+
+    // Flanker stimuli
+    var flanker_stimuli_congruent = [
+      {
+        stimulus: "img/con1.png",
+        data: {
+          flanker_stim_type: "congruent",
+          direction: "left",
+          correct_response: "e",
+        },
+      },
+      {
+        stimulus: "img/con2.png",
+        data: {
+          flanker_stim_type: "congruent",
+          direction: "right",
+          correct_response: "i",
+        },
+      },
+    ];
+
+    var flanker_stimuli_incongruent = [
+      {
+        stimulus: "img/inc1.png",
+        data: {
+          flanker_stim_type: "incongruent",
+          direction: "right",
+          correct_response: "i",
+        },
+      },
+      {
+        stimulus: "img/inc2.png",
+        data: {
+          flanker_stim_type: "incongruent",
+          direction: "left",
+          correct_response: "e",
+        },
+      },
+    ];
+
+    var stroop_stimuli;
+    var flanker_stimuli;
+
+    // generate high and low congruency stroop
+    if (conflict_condition === "Incongruent") {
+      // Sample 20 from congruent, and 4 from incongruent
+      var sampled_congruent = jsPsych.randomization.sampleWithReplacement(
+        stroop_stimuli_incongruent,
+        20
+      );
+      var sampled_incongruent = jsPsych.randomization.sampleWithReplacement(
+        stroop_stimuli_congruent,
+        4
+      );
+
+      // Combine and shuffle
+      var combined_trials = sampled_congruent.concat(sampled_incongruent);
+      stroop_stimuli = jsPsych.randomization.shuffle(combined_trials);
+
+      var sampled_congruent = jsPsych.randomization.sampleWithReplacement(
+        flanker_stimuli_incongruent,
+        20
+      );
+      var sampled_incongruent = jsPsych.randomization.sampleWithReplacement(
+        flanker_stimuli_congruent,
+        4
+      );
+
+      // Combine and shuffle
+      var combined_trials = sampled_congruent.concat(sampled_incongruent);
+      flanker_stimuli = jsPsych.randomization.shuffle(combined_trials);
+    } else if (conflict_condition === "Congruent") {
+      // Sample 20 from congruent, and 4 from incongruent
+      var sampled_congruent = jsPsych.randomization.sampleWithReplacement(
+        stroop_stimuli_incongruent,
+        4
+      );
+      var sampled_incongruent = jsPsych.randomization.sampleWithReplacement(
+        stroop_stimuli_congruent,
+        20
+      );
+
+      // Combine and shuffle
+      var combined_trials = sampled_congruent.concat(sampled_incongruent);
+      stroop_stimuli = jsPsych.randomization.shuffle(combined_trials);
+
+      var sampled_congruent = jsPsych.randomization.sampleWithReplacement(
+        flanker_stimuli_incongruent,
+        4
+      );
+      var sampled_incongruent = jsPsych.randomization.sampleWithReplacement(
+        flanker_stimuli_congruent,
+        20
+      );
+
+      // Combine and shuffle
+      var combined_trials = sampled_congruent.concat(sampled_incongruent);
+      flanker_stimuli = jsPsych.randomization.shuffle(combined_trials);
+    }
+
+    console.log("Stroop stimuli: ", stroop_stimuli);
+    console.log("Flanker stimuli: ", flanker_stimuli);
+
+    //// Stroop Trials
+
+    //define test trial
+    var stroop_test = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: function () {
+        var html = `
+                              <p style="color:${jsPsych.timelineVariable(
+                                "color"
+                              )}; font-size:30px;"><b>
+                              ${jsPsych.timelineVariable("text")}</b></p>`;
+        return html;
+      },
+      choices: ["r", "g", "b", "y"],
+      trial_duration: 3000,
+      data: {
+        task: "stroop_response",
+        color: jsPsych.timelineVariable("color"),
+        text: jsPsych.timelineVariable("text"),
+        condition: jsPsych.timelineVariable("stroop_stim_type"),
+        correct_response: jsPsych.timelineVariable("correct_response"),
+      },
+      on_finish: function (data) {
+        data.correct = jsPsych.pluginAPI.compareKeys(
+          data.response,
+          data.correct_response
+        );
+      },
+    };
+
+    // define test procedure
+    var stroop_block = {
+      timeline: [fixation, stroop_test],
+      timeline_variables: stroop_stimuli,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    // timeline.push(stroop_block);
+
+    //// Flanker Trials
+    var flanker_test = {
+      timeline: [
+        {
+          type: jsPsychImageKeyboardResponse,
+          choices: ["e", "i"],
+          trial_duration: 1500,
+          stimulus: jsPsych.timelineVariable("stimulus"),
+          data: jsPsych.timelineVariable("data"),
+          on_finish: function (data) {
+            var correct = false;
+            if (
+              data.direction == "left" &&
+              jsPsych.pluginAPI.compareKeys(data.response, "e") &&
+              data.rt > -1
+            ) {
+              correct = true;
+            } else if (
+              data.direction == "right" &&
+              jsPsych.pluginAPI.compareKeys(data.response, "i") &&
+              data.rt > -1
+            ) {
+              correct = true;
+            }
+            data.correct = correct;
+            data.task = "flanker_response";
+          },
+        },
+      ],
+    };
+
+    // define test procedure
+    var flanker_block = {
+      timeline: [fixation, flanker_test],
+      timeline_variables: flanker_stimuli,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    //    timeline.push(flanker_block);
+
+    /* Rule trials */
+    var rules_test = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: jsPsych.timelineVariable("stimulus"),
+      choices: ["e", "i"],
+      prompt: keys,
+      trial_duration: 8000,
+      data: {
+        task: "response",
+        correct_response: jsPsych.timelineVariable("correct_response"),
+      },
+    };
+
+    /*define break page*/
+    var pause_stroop = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<div style="text-align:center; color:red; font-size:20px">Time for the <b>COLORS task</b>.</div><br>
+                <br>
+                <br>
+                <br>
+                <p align="center">Place your fingers on the R, G, B and Y keys.</p><br>
+                <p align="center">Remember to respond with the <strong>color</strong> in which the word is printed <b>as quickly as you can.</b><br>
+                <p align="center">Press <strong>R</strong> for <span style="color: red">red</span>, <strong>G</strong> for <span style="color: green">green</span>, <strong>Y</strong> for <span style="color: yellow">yellow</span> and <strong>B</strong> for <span style="color: blue">blue</span>.</p>
+                <br>
+                <br>`,
+      prompt: `<p align="center">Press any key when you are ready to continue.</p>`,
+    };
+
+    var pause_flanker = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<div style="text-align:center; color:red; font-size:20px">Time for the <b>ARROWS task</b>.</div><br>
+                <br>
+                <br>
+                <br>
+                <p align="center">Place your fingers on the E and I keys.</p><br>
+                <p align="center">Remember you must indicate the direction in which the <strong>middle</strong> arrow is pointing. </p>
+                If the middle arrow is pointing left (<), press the letter <strong>E</strong> as quickly as you can.<br>
+                If the middle arrow is pointing right (>), press the letter <strong>I</strong> as quickly as you can.</p>
+                <br>
+                <br>`,
+      prompt: `<p align="center">Press any key when you are ready to continue.</p>`,
+    };
+
+    var pause_rules = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<div style="text-align:center; color:red; font-size:20px">Time for the <b>next rule</b>.</div><br>
+                <br>
+                <br>
+                <br>
+                <p align="center">Place your fingers on the E and I keys.</p><br>
+                <br>
+                <br>`,
+      prompt: `<p align="center">Press any key when you are ready to continue.</p>`,
+    };
+
+    ///    procedures
+
+    var flanker_procedure = {
+      timeline: [pause_flanker, flanker_block],
+      name: "flanker_proc", // Assign a name to the block
+    };
+
+    var stroop_procedure = {
+      timeline: [pause_stroop, stroop_block],
+      name: "stroop_proc", // Assign a name to the block
+    };
+
+    //// Rules
+
+    /* cases and rt task for shoes case */
+    var shoes_rt = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_shoes,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* define whole block for shoes case: intro page and then cases + rt task */
+    var shoes_block = {
+      timeline: [pause_rules, startpage_shoes, shoes_rt],
+    };
+
+    /* cases and rt task for cars case */
+    var cars_rt = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_cars,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for cars case: intro page and then cases + rt task */
+    var cars_block = {
+      timeline: [pause_rules, startpage_cars, cars_rt],
+    };
+
+    /* cases and rt task for trainstation case */
+    var trainstation_rt = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_trainstation,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for cars case: intro page and then cases + rt task */
+    var trainstation_block = {
+      timeline: [pause_rules, startpage_trainstation, trainstation_rt],
+    };
+
+    /* cases and rt task for phones case */
+    var phones_rt = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_phones,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for phones case: intro page and then cases + rt task */
+    var phones_block = {
+      timeline: [pause_rules, startpage_phones, phones_rt],
+    };
+
+    /* cases and rt task for deer case */
+    var deer_rt = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_deer,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for deer case: intro page and then cases + rt task */
+    var deer_block = {
+      timeline: [pause_rules, startpage_deer, deer_rt],
+    };
+
+    /* cases and rt task for lab case */
+    var lab_rt = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_lab,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for lab case: intro page and then cases + rt task */
+    var lab_block = {
+      timeline: [pause_rules, startpage_lab, lab_rt],
+    };
+
+    /* cases and rt task for alcohol case */
+    var alcohol_rt = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_alcohol,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for alcohol case: intro page and then cases + rt task */
+    var alcohol_block = {
+      timeline: [pause_rules, startpage_alcohol, alcohol_rt],
+    };
+
+    /* cases and rt task for restaurant case */
+    var restaurant_rt = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_restaurant,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for restaurant case: intro page and then cases + rt task */
+    var restaurant_block = {
+      timeline: [pause_rules, startpage_restaurant, restaurant_rt],
+    };
+
+    /* cases and rt task for shoes case */
+    var shoes_rt_10c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_shoes_10c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    var shoes_rt_02c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_shoes_02c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* define whole block for shoes case: intro page and then cases + rt task */
+    var shoes_block_10c = {
+      timeline: [pause_rules, startpage_shoes, shoes_rt_10c],
+      name: "shoes_10c", // Assign a name to the block
+    };
+
+    var shoes_block_02c = {
+      timeline: [pause_rules, startpage_shoes, shoes_rt_02c],
+      name: "shoes_02c", // Assign a name to the block
+    };
+
+    /* cases and rt task for cars case */
+    var cars_rt_10c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_cars_10c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    var cars_rt_02c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_cars_02c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for cars case: intro page and then cases + rt task */
+    var cars_block_10c = {
+      timeline: [pause_rules, startpage_cars, cars_rt_10c],
+      name: "cars_10c", // Assign a name to the block
+    };
+
+    var cars_block_02c = {
+      timeline: [pause_rules, startpage_cars, cars_rt_02c],
+      name: "cars_02c", // Assign a name to the block
+    };
+
+    /* cases and rt task for trainstation case */
+    var trainstation_rt_10c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_trainstation_10c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    var trainstation_rt_02c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_trainstation_02c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for cars case: intro page and then cases + rt task */
+    var trainstation_block_10c = {
+      timeline: [pause_rules, startpage_trainstation, trainstation_rt_10c],
+      name: "trainstation_10c", // Assign a name to the block
+    };
+
+    var trainstation_block_02c = {
+      timeline: [pause_rules, startpage_trainstation, trainstation_rt_02c],
+      name: "trainstation_02c", // Assign a name to the block
+    };
+
+    /* cases and rt task for phones case */
+    var phones_rt_10c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_phones_10c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    var phones_rt_02c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_phones_02c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for phones case: intro page and then cases + rt task */
+    var phones_block_10c = {
+      timeline: [pause_rules, startpage_phones, phones_rt_10c],
+      name: "phones_10c", // Assign a name to the block
+    };
+
+    var phones_block_02c = {
+      timeline: [pause_rules, startpage_phones, phones_rt_02c],
+      name: "phones_02c", // Assign a name to the block
+    };
+
+    /* cases and rt task for deer case */
+    var deer_rt_10c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_deer_10c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    var deer_rt_02c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_deer_02c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for deer case: intro page and then cases + rt task */
+    var deer_block_10c = {
+      timeline: [pause_rules, startpage_deer, deer_rt_10c],
+      name: "deer_10c", // Assign a name to the block
+    };
+
+    var deer_block_02c = {
+      timeline: [pause_rules, startpage_deer, deer_rt_02c],
+      name: "deer_02c", // Assign a name to the block
+    };
+
+    /* cases and rt task for lab case */
+    var lab_rt_10c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_lab_10c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    var lab_rt_02c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_lab_02c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for lab case: intro page and then cases + rt task */
+    var lab_block_10c = {
+      timeline: [pause_rules, startpage_lab, lab_rt_10c],
+      name: "lab_10c", // Assign a name to the block
+    };
+
+    var lab_block_02c = {
+      timeline: [pause_rules, startpage_lab, lab_rt_02c],
+      name: "lab_02c", // Assign a name to the block
+    };
+
+    /* cases and rt task for alcohol case */
+    var alcohol_rt_10c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_alcohol_10c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    var alcohol_rt_02c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_alcohol_02c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for alcohol case: intro page and then cases + rt task */
+    var alcohol_block_10c = {
+      timeline: [pause_rules, startpage_alcohol, alcohol_rt_10c],
+      name: "alcohol_10c", // Assign a name to the block
+    };
+
+    var alcohol_block_02c = {
+      timeline: [pause_rules, startpage_alcohol, alcohol_rt_02c],
+      name: "alcohol_02c", // Assign a name to the block
+    };
+
+    /* cases and rt task for restaurant case */
+    var restaurant_rt_10c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_restaurant_10c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    var restaurant_rt_02c = {
+      timeline: [fixation, rules_test],
+      timeline_variables: test_stimuli_restaurant_02c,
+      randomize_order: true,
+      repetitions: 1,
+    };
+
+    /* whole block for restaurant case: intro page and then cases + rt task */
+    var restaurant_block_10c = {
+      timeline: [pause_rules, startpage_restaurant, restaurant_rt_10c],
+      name: "restaurant_10c", // Assign a name to the block
+    };
+
+    var restaurant_block_02c = {
+      timeline: [pause_rules, startpage_restaurant, restaurant_rt_02c],
+      name: "restaurant_02c", // Assign a name to the block
+    };
+
+    /*list of blocks*/
+    var rules_blocks = [
+      { name: "cars_block", block: cars_block },
+      { name: "shoes_block", block: shoes_block },
+      { name: "trainstation_block", block: trainstation_block },
+      { name: "phones_block", block: phones_block },
+      { name: "deer_block", block: deer_block },
+      { name: "lab_block", block: lab_block },
+      { name: "alcohol_block", block: alcohol_block },
+      { name: "restaurant_block", block: restaurant_block },
+    ];
+
+    var rule_variants = {
+      cars_block: {
+        _02c: cars_block_02c,
+        _10c: cars_block_10c,
+      },
+      shoes_block: {
+        _02c: shoes_block_02c,
+        _10c: shoes_block_10c,
+      },
+      trainstation_block: {
+        _02c: trainstation_block_02c,
+        _10c: trainstation_block_10c,
+      },
+      phones_block: {
+        _02c: phones_block_02c,
+        _10c: phones_block_10c,
+      },
+      deer_block: {
+        _02c: deer_block_02c,
+        _10c: deer_block_10c,
+      },
+      lab_block: {
+        _02c: lab_block_02c,
+        _10c: lab_block_10c,
+      },
+      alcohol_block: {
+        _02c: alcohol_block_02c,
+        _10c: alcohol_block_10c,
+      },
+      restaurant_block: {
+        _02c: restaurant_block_02c,
+        _10c: restaurant_block_10c,
+      },
+    };
+
+    var flanker_stroop_blocks = [
+      flanker_procedure,
+      flanker_procedure,
+      stroop_procedure,
+      stroop_procedure,
+    ];
+
+    var passive_control_block = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+    <p>You now have 3 minutes to do whatever you like.</p>
+    <p>There is no task. You may sit quietly, relax, think, or rest.</p><br>
+    <p>After 3 minutes, you will hear a chime to alert you to continue the experiment.</p>
+  `,
+      choices: "NO_KEYS",
+      trial_duration: 3 * 60 * 1000,
+      on_finish: function () {
+        var audio = new Audio("chime.wav");
+        audio.play();
+      },
+    };
+
+    // Select 4 random rules at the end
+    var selected_rules = jsPsych.randomization.sampleWithoutReplacement(
+      rules_blocks,
+      4
+    );
+
+    // Break up the rule blocks
+    var rules1 = selected_rules[0].block;
+    var rules2 = selected_rules[1].block;
+    var rules3 = selected_rules[2].block;
+    var rules4 = selected_rules[3].block;
+
+    if (task_condition === "Rules") {
+      // Show all rule blocks in a randomized order
+      selected_rules = jsPsych.randomization.sampleWithoutReplacement(
+        rules_blocks,
+        rules_blocks.length
+      );
+
+      // 2. Extract the blocks
+      var rules1 = selected_rules[0].block;
+      var rules2 = selected_rules[1].block;
+      var rules3_key = selected_rules[2].name;
+      var rules4_key = selected_rules[3].name;
+      var rules5_key = selected_rules[4].name;
+      var rules6_key = selected_rules[5].name;
+      var rules7 = selected_rules[6].block;
+      var rules8 = selected_rules[7].block;
+
+      // 3. Replace rules3 and rules4 with _02c or _10c variants based on conflict_condition
+      var rules3, rules4, rules5, rules6;
+      console.log("rules 3 is: ", rules3_key);
+
+      // Get conditionally substituted blocks
+      var suffix = conflict_condition === "Congruent" ? "_2c" : "_10c";
+      rules3 = rule_variants[rules3_key][suffix];
+      rules4 = rule_variants[rules4_key][suffix];
+      rules5 = rule_variants[rules5_key][suffix];
+      rules6 = rule_variants[rules6_key][suffix];
+
+      // Create timeline
+      experimental_timeline = [
+        rules1,
+        rules2,
+        rules3,
+        rules4,
+        rules5,
+        rules6,
+        rules7,
+        rules8,
+      ];
+    } else if (task_condition === "Stroop") {
+      var cognitive_tasks = jsPsych.randomization.sampleWithoutReplacement(
+        flanker_stroop_blocks,
+        4
+      );
+
+      // Create timeline
+      experimental_timeline = [
+        rules1,
+        rules2,
+        ...cognitive_tasks,
+        rules3,
+        rules4,
+      ];
+    } else {
+      experimental_timeline = [
+        rules1,
+        rules2,
+        passive_control_block,
+        rules3,
+        rules4,
+      ];
+    }
+
+    console.log("timeline: ", experimental_timeline);
+
+    experimental_procedure = {
+      timeline: experimental_timeline,
+    };
+    timeline.push(experimental_procedure);
+
+    if (order === "After") {
+      timeline.push(theory);
+      timeline.push(theory_bipolar);
+    }
+    /*demographics*/
+    var age = {
+      type: jsPsychSurveyText,
+      questions: [
+        {
+          prompt: "Please indicate your age.",
+          name: "age",
+          required: true,
+        },
+      ],
+      on_load: function () {
+        const input = document.querySelector('input[type="text"]');
+
+        if (input) {
+          // Disable copy, paste, and cut
+          input.addEventListener("paste", (e) => e.preventDefault());
+          input.addEventListener("copy", (e) => e.preventDefault());
+          input.addEventListener("cut", (e) => e.preventDefault());
+
+          // Allow only numeric input
+          input.addEventListener("input", function () {
+            this.value = this.value.replace(/[^0-9]/g, "");
+          });
+        }
+      },
+    };
+
+    timeline.push(age);
+
+    var gender = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: "Please indicate your gender",
+          name: "gender",
+          options: [
+            "female",
+            "male",
+            "non-binary",
+            "another identity",
+            "no answer",
+          ],
+          required: true,
+          horizontal: true,
+        },
+      ],
+    };
+    timeline.push(gender);
+
+    var handedness = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: "I am...",
+          name: "handedness",
+          options: ["right-handed", "left-handed", "ambidextrous"],
+          required: true,
+          horizontal: true,
+        },
+      ],
+    };
+
+    timeline.push(handedness);
+
+    var remarks = {
+      type: jsPsychSurveyText,
+      questions: [
+        {
+          prompt:
+            "Do you have any further comments about this study? (optional)",
+          name: "comments",
+        },
+      ],
+      on_load: function () {
+        const input = document.querySelector('input[type="text"]');
+
+        if (input) {
+          // Disable copy, paste, and cut
+          input.addEventListener("paste", (e) => e.preventDefault());
+          input.addEventListener("copy", (e) => e.preventDefault());
+          input.addEventListener("cut", (e) => e.preventDefault());
+        }
+      },
+    };
+
+    timeline.push(remarks);
+
+    /*debrief*/
+    var debrief = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<p style="font-size:20px;">Thanks for taking part in this experiment!<br>
+                <br>
+                In this study, we aim to investigate how response behavior (reaction times and error rates) in the rules task is related to response behavior in the colors and arrows tasks.<br>
+                <br>
+                While the colors and arrows tasks are classical experiments in psychology, the rules task is relatively novel.<br>
+                <br>
+                The goal of the rules task is to find out when people think that a rule has been broken: when it's literal text has been violated or when its purpose has been violated?<br>
+                <br>
+                Press any key to continue to the next page and see some statistics about how you performed in the rules and arrows tasks.
+                </p>`,
+    };
+
+    timeline.push(debrief);
+
+    /* start the experiment */
+    jsPsych.run(timeline);
+
+    //jsPsych.simulate(timeline);
+  </script>
+</html>
