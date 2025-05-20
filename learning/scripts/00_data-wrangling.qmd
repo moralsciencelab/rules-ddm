@@ -3,10 +3,12 @@ title: "data wrangling"
 format: html
 editor: visual
 ---
+
 ```{r packages}
 library(tidyverse)
 library(here)
 ```
+
 ```{r data}
 raw <- read_csv(here("learning","data","learn1_raw.csv"))
 ```
@@ -115,24 +117,55 @@ clean <- clean |>
 ```
 
 ```{r text and purpose coding for the rules task}
-
+codingsheet <- read.csv("codingsheet.csv",sep=";")
+library(fuzzyjoin)
+clean <- regex_left_join(clean, codingsheet, by = c("stimulus" = "question"))
 ```
 
 ```{r key assignment for the rules task}
+# key assignment only shown where applicable (rules)
+clean <- clean |> 
+  mutate(key_assignment = ifelse(task=="rules",key_assignment,NA))
 
+#yes vs no coding for rules task
+clean <- clean |> 
+  mutate(rules_yeskey = ifelse(str_detect(key_assignment,"e for yes"),"e",
+                                    ifelse(str_detect(key_assignment,"i for yes"),"i",NA))) |> 
+  rename(response_input = response) |> 
+  mutate(rules_response_verbal = ifelse(task=="rules" & response_input == rules_yeskey,"yes",
+                           ifelse(task == "rules" & response_input != rules_yeskey,"no",NA)),
+         rules_response_num = ifelse(rules_response_verbal == "yes",1,
+                                     ifelse(rules_response_verbal == "no",0,NA)))
 ```
 
-```{r add text measures back in}
-
+```{r add theory measures back in}
+clean <- clean |> left_join(theory,by="subj_code")
 ```
 
 ```{r add demographics back in}
-
+clean <- clean |> left_join(demographics,by="subj_code")
 ```
 
 ```{r apply preregistered exclusions}
-#noncompleters
+#noncompleters: fewer than 96 trials
+noncompleters <- clean |> 
+  group_by(subj_code) |> 
+  summarize(n=n()) |> 
+  arrange(n) |> 
+  filter(n<96)
 
-#rt-based
+clean <- clean |> filter(!subj_code %in% noncompleters$subj_code)
+
+#rt-based: < 500ms or > 8000ms on the rules task
+clean <- clean |>
+  filter(!(task == "rules" & (rt < 500 | rt > 8000)))
+```
+
+```{r checks}
+
+```
+
+```{r export}
+write.csv(clean, here("learning", "data", "clean.csv"), row.names = FALSE)
 ```
 
