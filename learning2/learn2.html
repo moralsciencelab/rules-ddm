@@ -25,6 +25,7 @@
 <script>
   /* initialize jsPsych*/
   var jsPsych = initJsPsych({
+    experiment_width: 1200,
     on_finish: function () {
       // jsPsych.data.displayData();
       window.location =
@@ -121,12 +122,10 @@
   var welcome = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: `<h1>Welcome to the experiment!</h1><br>
-                <p style="text-align:left;">The experiment is made up of <b> three different tasks</b>: RULES, COLORS, and ARROWS.<br>
-                On every task, you will be asked to decide as quickly as possible, by pressing a button.<br>
-                <br>
-                You will need a <b>physical keyboard</b> to participate.<br>
-                <br>
-                Please only start the study if you are in a calm, distraction-free environment and will not be disturbed during the next <b>16 minutes</b>.<br>
+                <p style="text-align:left;">In this experiment, you will be asked to decide whether a series of rules have been broken. <br><br>
+                  We will assess <b>reaction times</b>, and you will need a <b>physical keyboard</b> to participate.<br>
+                  <br>
+                  Please only start the study if you are in a calm, distraction-free environment and will not be disturbed during the next <b>10 minutes</b>.<br>
                 <br>
                 Turn off any music, TV noise, etc.<br>
                 <br>
@@ -1272,7 +1271,6 @@
           if (timeLeft === 0) {
             clearInterval(timerId);
             countdownElement.textContent = "00:00";
-            playChime();
             return;
           }
           timeLeft--;
@@ -1462,16 +1460,17 @@
   /*debrief*/
   var debrief = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: `<p style="font-size:20px;">Thanks for taking part in this experiment!<br>
+    stimulus: `<h1>Thank you for taking part in this experiment!</h1><br>
                 <br>
-                In this study, we aim to investigate how response behavior (reaction times and error rates) in the rules task is related to response behavior in the colors and arrows tasks.<br>
+                <p style="text-align:left;">In this study, we aim to investigate how response behavior (reaction times and error rates) in the rules task is related to response behavior in the colors and arrows tasks.<br>
                 <br>
                 While the colors and arrows tasks are classical experiments in psychology, the rules task is relatively novel.<br>
                 <br>
-                The goal of the rules task is to find out when people think that a rule has been broken: when it's literal text has been violated or when its purpose has been violated?<br>
+                The goal of the rules task is to find out when people think that a rule has been broken: when it's literal text has been violated or when its purpose has been violated?</p><br>
                 <br>
-                Press any key to continue to the next page and see some statistics about how you performed in the rules and arrows tasks.
+                 <p style="text-align:center; color: #0E1FBE;">Press any key to return to Prolific.
                 </p>`,
+    trial_duration: 60000,
   };
 
   timeline.push(debrief);
