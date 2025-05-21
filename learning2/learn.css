@@ -175,3 +175,24 @@
         font-family: "Helvetica", "Arial", sans-serif !important;
         font-size: 20px;
     }
+
+    iframe.styled-video {
+        border: 3px solid #c3d2dc;
+        /* Blue border */
+        border-radius: 8px;
+        /* Rounded corners */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        /* Subtle shadow */
+    }
+
+    /* Countdown timer fixed top right */
+    #countdown-timer {
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        color: black;
+        font-family: monospace;
+        font-size: 2rem;
+        z-index: 9999;
+        user-select: none;
+    }
