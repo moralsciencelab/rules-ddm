@@ -90,6 +90,10 @@
     1
   )[0];
 
+  var correct_count = 0; // Initialize correct count for practice trials
+
+  console.log("initial correct counnt: ", correct_count);
+
   /* record key assignment*/
   jsPsych.data.addProperties({
     key_assignment: keys,
@@ -368,6 +372,8 @@
     repetitions: 1,
   };
 
+
+
   /* rules */
   var rules_instructions = {
     type: jsPsychHtmlKeyboardResponse,
@@ -402,15 +408,19 @@
   var rules_stimuli_practice = [
     {
       stimulus: `A university posted the following rule in a student dormitory:<br> "No noise after 10 pm"<br><br><br><b>A student plays his electric guitar in his room at midnight.</b><br>`,
+      data: { stim_type: 'congruent', correct_response: 'Yes' }
     },
     {
       stimulus: `A university posted the following rule in a student dormitory:<br> "No noise after 10 pm"<br><br><br><b>Some students have a loud argument in the hallway at 11 pm.</b><br>`,
+      data: { stim_type: 'congruent', correct_response: 'Yes' }
     },
     {
       stimulus: `A university posted the following rule in a student dormitory:<br> "No noise after 10 pm"<br><br><br><b>A student listens to a podcast with headphones on at 11:30 pm.</b><br>`,
+      data: { stim_type: 'congruent', correct_response: 'No' }
     },
     {
       stimulus: `A university posted the following rule in a student dormitory:<br> "No noise after 10 pm"<br><br><br><b>A student is meditating in her room at 11:30 pm.</b><br>`,
+      data: { stim_type: 'congruent', correct_response: 'No' }
     },
   ];
 
@@ -420,6 +430,27 @@
     stimulus: jsPsych.timelineVariable("stimulus"),
     choices: ["e", "i"],
     prompt: keys,
+    data: jsPsych.timelineVariable('data'),
+    on_finish: function (data) {
+      var correct_key = null;
+      if (data.key_assignment[0] == '<br>Did this person violate the rule?<br><br><b>Press e for yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Press i for no</b>' && data.correct_response == 'No') {
+        correct_key = 'i';
+      } else if (data.key_assignment[0] == '<br>Did this person violate the rule?<br><br><b>Press e for no&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Press i for yes</b>' && data.correct_response == 'No') {
+        correct_key = 'e';
+      }
+      if (data.key_assignment[0] == '<br>Did this person violate the rule?<br><br><b>Press e for yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Press i for no</b>' && data.correct_response == 'Yes') {
+        correct_key = 'e';
+      } else if (data.key_assignment[0] == '<br>Did this person violate the rule?<br><br><b>Press e for no&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Press i for yes</b>' && data.correct_response == 'Yes') {
+        correct_key = 'i';
+      }
+      data.correct_key = correct_key;
+
+      if (data.response === data.correct_key) {
+        console.log("Correct answer detected");
+        correct_count++;
+      }
+      console.log('correct count:', correct_count);
+    },
   };
 
   /* whole sequence for practice trials */
@@ -673,11 +704,11 @@
   // generate high and low congruency stroop
   if (conflict_condition === "Incongruent") {
     // Sample 20 from congruent, and 4 from incongruent
-    var sampled_congruent = jsPsych.randomization.sampleWithReplacement(
+    var sampled_incongruent = jsPsych.randomization.sampleWithReplacement(
       stroop_stimuli_incongruent,
       20
     );
-    var sampled_incongruent = jsPsych.randomization.sampleWithReplacement(
+    var sampled_congruent = jsPsych.randomization.sampleWithReplacement(
       stroop_stimuli_congruent,
       4
     );
@@ -686,11 +717,11 @@
     var combined_trials = sampled_congruent.concat(sampled_incongruent);
     stroop_stimuli = jsPsych.randomization.shuffle(combined_trials);
 
-    var sampled_congruent = jsPsych.randomization.sampleWithReplacement(
+    var sampled_incongruent = jsPsych.randomization.sampleWithReplacement(
       flanker_stimuli_incongruent,
       20
     );
-    var sampled_incongruent = jsPsych.randomization.sampleWithReplacement(
+    var sampled_congruent = jsPsych.randomization.sampleWithReplacement(
       flanker_stimuli_congruent,
       4
     );
@@ -698,13 +729,14 @@
     // Combine and shuffle
     var combined_trials = sampled_congruent.concat(sampled_incongruent);
     flanker_stimuli = jsPsych.randomization.shuffle(combined_trials);
+
   } else if (conflict_condition === "Congruent") {
     // Sample 20 from congruent, and 4 from incongruent
-    var sampled_congruent = jsPsych.randomization.sampleWithReplacement(
+    var sampled_incongruent = jsPsych.randomization.sampleWithReplacement(
       stroop_stimuli_incongruent,
       4
     );
-    var sampled_incongruent = jsPsych.randomization.sampleWithReplacement(
+    var sampled_congruent = jsPsych.randomization.sampleWithReplacement(
       stroop_stimuli_congruent,
       20
     );
@@ -818,10 +850,54 @@
     choices: ["e", "i"],
     prompt: keys,
     trial_duration: 8000,
-    data: {
-      task: "response",
-      correct_response: jsPsych.timelineVariable("correct_response"),
+    data: function () {
+      return Object.assign(
+        {},
+        jsPsych.timelineVariable('data'),  // e.g. { stim_type: 'congruent', correct_response: 'Yes' }
+        { task: "response" }               // adds a new field “task”: “response”
+      );
     },
+
+    on_finish: function (data) {
+      // figure out which key is “correct” based on key_assignment & data.correct_response:
+      var correct_key = null;
+      if (data.key_assignment[0].includes("Press e for yes") && data.correct_response === 'No') {
+        correct_key = 'i';
+      } else if (data.key_assignment[0].includes("Press e for no") && data.correct_response === 'No') {
+        correct_key = 'e';
+      } else if (data.key_assignment[0].includes("Press e for yes") && data.correct_response === 'Yes') {
+        correct_key = 'e';
+      } else if (data.key_assignment[0].includes("Press e for no") && data.correct_response === 'Yes') {
+        correct_key = 'i';
+      }
+      data.correct_key = correct_key;
+
+      // update your global counter:
+      if (data.response === correct_key) {
+        console.log("Correct answer detected");
+        correct_count++;
+      }
+      console.log("Correct count:", correct_count);
+    }
+  };
+
+  var data_quality_check = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `<p>You answered too many questions incorrectly.</p>
+              <p>The study will now end.</p>`,
+    choices: "ALL_KEYS",
+    on_finish: function (data) {
+      if (correct_count < 12) {
+        jsPsych.endExperiment("You did not meet the accuracy requirement.<br> Please return your submission."); // Ends timeline here
+      }
+    }
+  };
+
+  var data_quality_check_wrapper = {
+    timeline: [data_quality_check],
+    conditional_function: function () {
+      return correct_count < 12;
+    }
   };
 
   /*define break page*/
@@ -1315,7 +1391,6 @@
 
     // 3. Replace rules3 and rules4 with _02c or _10c variants based on conflict_condition
     var rules3, rules4, rules5, rules6;
-    console.log("rules 3 is: ", rules3_key);
 
     // Get conditionally substituted blocks
     var suffix = conflict_condition === "Congruent" ? "_02c" : "_10c";
@@ -1328,6 +1403,7 @@
     experimental_timeline = [
       rules1,
       rules2,
+      data_quality_check_wrapper,
       rules3,
       rules4,
       rules5,
@@ -1345,6 +1421,7 @@
     experimental_timeline = [
       rules1,
       rules2,
+      data_quality_check_wrapper,
       ...cognitive_tasks,
       rules3,
       rules4,
@@ -1353,6 +1430,7 @@
     experimental_timeline = [
       rules1,
       rules2,
+      data_quality_check_wrapper,
       passive_control_block,
       rules3,
       rules4,
