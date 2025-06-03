@@ -27,9 +27,9 @@
   var jsPsych = initJsPsych({
     experiment_width: 1200,
     on_finish: function () {
-      // jsPsych.data.displayData();
-      window.location =
-        "https://app.prolific.com/submissions/complete?cc=CF0W83XX";
+      if (passed_quality_check) {
+        window.location.href = "https://app.prolific.com/submissions/complete?cc=CF0W83XX"; // success redirect
+      }
     },
   });
 
@@ -91,6 +91,7 @@
   )[0];
 
   var correct_count = 0; // Initialize correct count for practice trials
+  var passed_quality_check = true;
 
   console.log("initial correct counnt: ", correct_count);
 
@@ -445,7 +446,7 @@
       }
       data.correct_key = correct_key;
 
-      if (data.response === data.correct_key) {
+      if (data.response !== null && data.response === data.correct_key) {
         console.log("Correct answer detected");
         correct_count++;
       }
@@ -872,8 +873,7 @@
       }
       data.correct_key = correct_key;
 
-      // update your global counter:
-      if (data.response === correct_key) {
+      if (data.response !== null && data.response === correct_key) {
         console.log("Correct answer detected");
         correct_count++;
       }
@@ -884,11 +884,13 @@
   var data_quality_check = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: `<p>You answered too many questions incorrectly.</p>
-              <p>The study will now end.</p>`,
+              <p>You will be asked to return your submission.<br> Press any key now.</p>`,
     choices: "ALL_KEYS",
+    trial_duration: 10000,
     on_finish: function (data) {
       if (correct_count < 12) {
-        jsPsych.endExperiment("You did not meet the accuracy requirement.<br> Please return your submission."); // Ends timeline here
+        passed_quality_check = false;
+        window.location.href = "https://app.prolific.com/submissions/complete?cc=FAILCODE"; // failure redirect
       }
     }
   };

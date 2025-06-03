@@ -229,7 +229,6 @@ var test_stimuli_trainstation = [
   },
   {
     stimulus: `To avoid people spending the night at the train station, the manager posted a rule:<br> "No sleeping allowed on the benches"<br><br><br><b>A vagrant spends the night sleeping on the station floor.</b><br>`,
-    data: { stim_type: "congruent", correct_response: "Yes" },
   },
   {
     stimulus: `To avoid people spending the night at the train station, the manager posted a rule:<br> "No sleeping allowed on the benches"<br><br><br><b>A backpacker spends the night sleeping behind a station bench.</b><br>`,
