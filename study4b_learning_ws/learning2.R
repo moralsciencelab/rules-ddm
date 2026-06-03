@@ -2,18 +2,29 @@ library(tidyverse)
 library(emmeans)
 library(lmerTest)
 
-learn2 = bind_rows(read.csv("learning2_batch1.csv"), 
-                read.csv("learning2_batch2.csv"))
-View(learn2)
+learn2 = bind_rows(read.csv("study4b_learning_ws/data/learning2_batch1.csv"), 
+                read.csv("study4b_learning_ws/data/learning2_batch2.csv"))
+glimpse(learn2)
 
 # Payment and exclusions ----
+
+demog4b = learn2 %>%
+  distinct(subj_code, PROLIFIC_PID, response) %>%
+  filter(str_detect(response, "age|gender"), 
+         response != 'pagedown') %>%
+  mutate(
+    key   = map_chr(response, ~names(fromJSON(.x))),
+    value = map_chr(response, ~as.character(fromJSON(.x)))
+  ) %>%
+  select(-response) %>%
+  pivot_wider(names_from = key, values_from = value)
+
 
 ## white text instructions
 learn2 %>%
   filter(task == 'fixation') %>%
   group_by(run_id, PROLIFIC_PID, response) %>%
-  tally() %>%
-  View()
+  tally() 
 
 completes = learn2 %>%
   filter(!is.na(PROLIFIC_PID)) %>%
@@ -32,9 +43,26 @@ failed_check = learn2 %>%
 id_list = full_join(completes, failed_check, by = c('run_id', 'PROLIFIC_PID')) 
 View(id_list)
 
+id_list_completes = id_list %>%
+  filter(is.na(screen_out_time_elapsed), !is.na(complete_time_elapsed)) %>% 
+  pull(PROLIFIC_PID)
+
 id_list %>%
   filter(!is.na(complete_time_elapsed), is.na(screen_out_time_elapsed)) %>%
   write.csv('completes_learn2_batch2.csv')
+
+demog4b %>%
+  left_join(., completes, by = 'PROLIFIC_PID') %>% 
+  distinct(PROLIFIC_PID, age) %>%
+  summarise(n(), mean(as.numeric(age), na.rm = TRUE),
+            sd(as.numeric(age), na.rm = TRUE))
+
+demog4b %>%
+  left_join(., completes, by = 'PROLIFIC_PID') %>% 
+  distinct(PROLIFIC_PID, gender) %>%
+  mutate(total = n()) %>%
+  group_by(gender, total) %>%
+  tally() %>% mutate(n/total*100)
 
 # Cleaning ----
 
@@ -62,7 +90,7 @@ learn2_clean = learn2 %>%
   group_by(run_id, PROLIFIC_PID) %>%
   mutate(trial = dense_rank(trial_index)) %>%
   select(run_id, PROLIFIC_PID, congruency, condition, trial, stimulus, response_num, rt) %>%
-  full_join(., read.csv('stimulus_coding.csv'), by = 'stimulus') %>%
+  full_join(., read.csv('study4c/data/stimulus_coding.csv'), by = 'stimulus') %>%
   mutate(text = if_else(case %in% c('v', 'o'), 1, 0),
          purpose = if_else(case %in% c('v', 'u'), 1, 0),
          block = 
@@ -107,7 +135,8 @@ model1_control = glmer(response_num ~ block * (text + purpose) +
                       (1 | PROLIFIC_PID) + (1 | rule), 
                     subset(learn2_clean, !is.na(block) &
                              condition == 'Control' &
-                             PROLIFIC_PID %in% completes$PROLIFIC_PID), 
+                             PROLIFIC_PID %in% id_list_completes & 
+                             as.numeric(rt) > 200), 
                     family = 'binomial')
 car::Anova(model1_control)
 # approach sig
@@ -119,17 +148,17 @@ model1_stroop = glmer(response_num ~ block * (text + purpose) +
                           (1 | PROLIFIC_PID) + (1 | rule), 
                         subset(learn2_clean, !is.na(block) &
                                  condition == 'Stroop' &
-                                 PROLIFIC_PID %in% completes$PROLIFIC_PID), 
+                                 PROLIFIC_PID %in% id_list_completes), 
                         family = 'binomial')
 car::Anova(model1_stroop)
 # both sig
 jtools::summ(model1_stroop, digits = 3, exp = TRUE)
 
-model1_rules = glmer(response_num ~ block * (text + purpose) + 
+model1_rules = glmer(response_num ~ block * (text * purpose) + 
                         (1 | PROLIFIC_PID) + (1 | rule), 
                       subset(learn2_clean, !is.na(block) &
                                condition == 'Rules' &
-                               PROLIFIC_PID %in% completes$PROLIFIC_PID), 
+                               PROLIFIC_PID %in% id_list_completes), 
                       family = 'binomial')
 car::Anova(model1_rules)
 # -purp sig

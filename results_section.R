@@ -213,3 +213,69 @@ ggplot() +
                      labels = c('Yes', 'No')) +
   guides(color = 'none')
 
+
+fig1a_rt = ggplot() + 
+  geom_histogram(data=subset(dt, study %in% c('violate') &
+                               as.factor(response)=="1" & rt > 400), fill = 'white', binwidth = 200,
+                 aes(rt, color=as.factor(response), y= ..count../220), linewidth = .2) +
+  geom_histogram(data=subset(dt, study %in% c('violate') &
+                               as.factor(response)=="0" & rt > 400), fill = 'white', binwidth = 200,
+                 aes(rt, color=as.factor(response), y= -..count../220), linewidth = .2) +
+  facet_grid(reorder(paste(text, purpose), -((text * 1.1) + purpose)) ~ study, 
+             labeller = labeller(`paste(text, purpose)` = case_labels, 
+                                 study = study_labels)) +
+  geom_density(data=subset(dt, study %in% c('violate') & as.factor(response)=="1" & rt > 400), color = NA,
+               aes(rt, fill="0",  y= ..count..), alpha = .3) +
+  geom_density(data=subset(dt, study %in% c('violate') & as.factor(response)=="0" & rt > 400), color = NA,
+               aes(rt, fill="1",  y= -..count..), alpha = .3) +
+  theme_minimal() + 
+  geom_segment(data = subset(fig1mdn, `as.factor(response)` == '0' & study == 'violate'), aes(x = rt, xend = rt), 
+               y = -Inf, yend = 0,  linetype = 1, color = color_no, size = 0.7) + 
+  geom_segment(data = subset(fig1mdn, `as.factor(response)` == '1' & study == 'violate'), aes(x = rt, xend = rt), 
+               y = 0, yend = Inf,  linetype = 1, color = color_yes, size = 0.7) +
+  geom_segment(data = subset(fig1iqr, `as.factor(response)` == '0' & study == 'violate'), aes(x = rt, xend = rt), 
+               y = -Inf, yend = 0,  linetype = 3, color = color_no, size = 0.4, alpha = .7) + 
+  geom_segment(data = subset(fig1iqr, `as.factor(response)` == '1' & study == 'violate'), aes(x = rt, xend = rt), 
+               y = 0, yend = Inf,  linetype = 3, color = color_yes, size = 0.4, alpha = .7) +
+  scale_y_continuous(name = '', limits = c(-1.4, 1.4), breaks = NULL) + 
+  scale_x_continuous(name = '', expand = c(0, 0),
+                     limits = c(0, 8000), breaks = seq(0, 8000, 2000), 
+                     labels = c(' 0', '2', '4', '6', '8 ')) + 
+  theme(legend.position = 'none', 
+        panel.grid.major.y = element_blank(), 
+        panel.grid.minor.x = element_blank(), 
+        strip.text = element_blank(),
+        strip.text.y.right = element_blank(),
+        legend.title = element_blank(),
+        panel.spacing.x = unit(.8, "lines"),
+        plot.margin = margin(.7, .2, .7, .2, "cm"),
+        panel.border = element_rect(colour = "black", size=0.5, fill = NA)) + 
+  scale_fill_manual(values=c(color_yes, color_no), 
+                    labels = c('Yes', 'No')) +
+  scale_color_manual(values=c(color_yes, color_no), 
+                     labels = c('Yes', 'No')) +
+  guides(color = 'none')
+
+### appendix 11
+
+lrn1_ddm = read.csv('~/Documents/ddm_rules/model_learn/model_learn_output.csv') %>%
+  rename(term = X) %>%
+  filter(!str_detect(term, "_subj."), !str_detect(term, "std")) %>%
+  select(term, mean, `X2.5q`, `X97.5q`) 
+
+
+
+read.csv('~/Documents/ddm_rules/model_learn2_control/model_learn2_control_output.csv') %>%
+  rename(term = X) %>%
+  filter(!str_detect(term, "_subj."), !str_detect(term, "std")) %>%
+  select(term, mean, `X2.5q`, `X97.5q`) 
+
+read.csv('~/Documents/ddm_rules/model_learn2_stroop/model_learn2_stroop_output.csv') %>%
+  rename(term = X) %>%
+  filter(!str_detect(term, "_subj."), !str_detect(term, "std")) %>%
+  select(term, mean, `X2.5q`, `X97.5q`) 
+
+read.csv('~/Documents/ddm_rules/model_learn2_rules/model_learn2_rules_output.csv') %>%
+  rename(term = X) %>%
+  filter(!str_detect(term, "_subj."), !str_detect(term, "std")) %>%
+  select(term, mean, `X2.5q`, `X97.5q`) 

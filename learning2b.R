@@ -3,9 +3,9 @@ library(emmeans)
 library(lmerTest)
 library(logistf)
 
-learn2 = bind_rows(read.csv("learning2/data/learning2_batch1.csv"), 
-                   read.csv("learning2/data/learning2_batch2.csv"))
-View(learn2)
+learn2 = bind_rows(read.csv("study4b_learning_ws/data/learning2_batch1.csv"), 
+                   read.csv("study4b_learning_ws/data/learning2_batch2.csv"))
+glimpse(learn2)
 
 # Payment and exclusions ----
 
@@ -13,8 +13,7 @@ View(learn2)
 learn2 %>%
   filter(task == 'fixation') %>%
   group_by(run_id, PROLIFIC_PID, response) %>%
-  tally() %>%
-  View()
+  tally() 
 
 completes = learn2 %>%
   filter(!is.na(PROLIFIC_PID)) %>%
@@ -31,7 +30,7 @@ failed_check = learn2 %>%
   select(run_id, PROLIFIC_PID, screen_out_time_elapsed)
 
 id_list = full_join(completes, failed_check, by = c('run_id', 'PROLIFIC_PID')) 
-View(id_list)
+#View(id_list)
 
 id_list %>%
   filter(!is.na(complete_time_elapsed), is.na(screen_out_time_elapsed)) %>%
@@ -63,7 +62,7 @@ learn2_clean = learn2 %>%
   group_by(run_id, PROLIFIC_PID) %>%
   mutate(trial = dense_rank(trial_index)) %>%
   select(run_id, PROLIFIC_PID, congruency, condition, trial, stimulus, response_num, rt) %>%
-  full_join(., read.csv('learning2/data/stimulus_coding.csv'), by = 'stimulus') %>%
+  full_join(., read.csv('study4b_learning_ws/data/stimulus_coding.csv'), by = 'stimulus') %>%
   mutate(text = if_else(case %in% c('v', 'o'), 1, 0),
          purpose = if_else(case %in% c('v', 'u'), 1, 0),
          block = 
@@ -80,9 +79,16 @@ learn2_clean = learn2 %>%
 
 # Analysis ----
 
+pass_list = id_list %>%
+  filter(!is.na(complete_time_elapsed), is.na(screen_out_time_elapsed)) %>%
+  pull(PROLIFIC_PID)
+
+learn2_clean  %>%
+  filter(PROLIFIC_PID %in% pass_list)
+
 ## T and P effects ----
 model0 = glmer(response_num ~ (text + purpose) + (1 | PROLIFIC_PID) + (1 | rule), 
-               subset(learn2_clean, PROLIFIC_PID %in% completes$PROLIFIC_PID), family = 'binomial')
+               subset(learn2_clean, PROLIFIC_PID %in% pass_list), family = 'binomial')
 car::Anova(model0)
 jtools::summ(model0)
 emmeans(model0, ~ text * purpose, type = 'response')
@@ -92,23 +98,36 @@ emmeans(model0, ~ text * purpose, type = 'response')
 model0_base = glmer(response_num ~ block * (text + purpose) + 
                       (1 | PROLIFIC_PID) + (1 | rule), 
                     subset(learn2_clean, !is.na(block) &
-                             PROLIFIC_PID %in% completes$PROLIFIC_PID), 
-                    family = 'binomial')
+                             PROLIFIC_PID %in% pass_list), 
+                    family = 'binomial',
+                    control = glmerControl(optimizer= "optimx",
+                                           optCtrl  = list(method="nlminb")))
 car::Anova(model0_base)
+emtrends(model0_base2, pairwise ~ block , var = 'text')
+emtrends(model0_base2, pairwise ~ block , var = 'purpose')
+
+anova(model0_base, model0)
+
+emmeans(model0_base2, pairwise ~ block | text * purpose, type = 'response')
 
 model0_base2 = glmer(response_num ~ condition * block * (text + purpose) + 
                        (1 | PROLIFIC_PID) + (1 | rule), 
                      subset(learn2_clean, !is.na(block) &
-                              PROLIFIC_PID %in% completes$PROLIFIC_PID), 
-                     family = 'binomial')
+                              PROLIFIC_PID %in% pass_list), 
+                     family = 'binomial',
+                     control = glmerControl(optimizer= "optimx",
+                                            optCtrl  = list(method="nlminb")))
 car::Anova(model0_base2)
 emtrends(model0_base2, pairwise ~ block | condition, var = 'text')
 emtrends(model0_base2, pairwise ~ block | condition, var = 'purpose')
 
+anova(model0_base2, model0_base)
+
+
 learn2_clean = learn2_clean %>%
   mutate(treatment = paste(congruency, condition))
 
-model0_base3 = glmer(response_num ~ treatment* block * (text + purpose) + 
+model0_base3 = glmer(response_num ~ treatment * block * (text + purpose) + 
                        (1 | PROLIFIC_PID) + (1 | rule), 
                      subset(learn2_clean, !is.na(block) & 
                               PROLIFIC_PID %in% completes$PROLIFIC_PID), 
@@ -116,9 +135,6 @@ model0_base3 = glmer(response_num ~ treatment* block * (text + purpose) +
 car::Anova(model0_base3)
 emtrends(model0_base3, pairwise ~ block | treatment, var = 'purpose')
 emtrends(model0_base3, pairwise ~ block | treatment, var = 'text')
-
-
-anova(model0_base2, model0_base)
 
 jtools::summ(model0_base, digits = 3, exp = TRUE)
 
@@ -133,11 +149,14 @@ model1_control = glmer(response_num ~ block * (text + purpose) +
                          (1 | PROLIFIC_PID) + (1 | rule), 
                        subset(learn2_clean, !is.na(block) &
                                 condition == 'Control' &
-                                PROLIFIC_PID %in% completes$PROLIFIC_PID), 
-                       family = 'binomial')
+                                PROLIFIC_PID %in% pass_list), 
+                       family = 'binomial', 
+                       control = glmerControl(optimizer= "optimx",
+                                              optCtrl  = list(method="nlminb")))
+
 car::Anova(model1_control)
 # approach sig
-jtools::summ(model1_control, digits = 3, exp = TRUE)
+jtools::summ(model1_control, digits = 3, confint = TRUE, exp = TRUE)
 emtrends(model1_control, pairwise ~ block, var = "text")
 emtrends(model1_control, pairwise ~ block, var = "purpose")
 
@@ -145,21 +164,30 @@ model1_stroop = glmer(response_num ~ block * (text + purpose) +
                         (1 | PROLIFIC_PID) + (1 | rule), 
                       subset(learn2_clean, !is.na(block) &
                                condition == 'Stroop' &
-                               PROLIFIC_PID %in% completes$PROLIFIC_PID), 
-                      family = 'binomial')
+                               PROLIFIC_PID %in% pass_list), 
+                      family = 'binomial', 
+                      control = glmerControl(optimizer= "optimx",
+                                             optCtrl  = list(method="nlminb")))
+
 car::Anova(model1_stroop)
 # both sig
-jtools::summ(model1_stroop, digits = 3, exp = TRUE)
+jtools::summ(model1_stroop, digits = 3, confint = TRUE, exp = TRUE)
+emtrends(model1_stroop, pairwise ~ block, var = "text")
+emtrends(model1_stroop, pairwise ~ block, var = "purpose")
 
 model1_rules = glmer(response_num ~ block * (text + purpose) + 
                        (1 | PROLIFIC_PID) + (1 | rule), 
                      subset(learn2_clean, !is.na(block) &
                               condition == 'Rules' &
-                              PROLIFIC_PID %in% completes$PROLIFIC_PID), 
-                     family = 'binomial')
+                              PROLIFIC_PID %in% pass_list), 
+                     family = 'binomial', 
+                     control = glmerControl(optimizer= "optimx",
+                                            optCtrl  = list(method="nlminb")))
 car::Anova(model1_rules)
 # -purp sig
 jtools::summ(model1_rules, digits = 3, exp = TRUE)
+emtrends(model1_rules, pairwise ~ block, var = "text")
+emtrends(model1_rules, pairwise ~ block, var = "purpose")
 
 # Congruency effects (by treatment) ----
 
@@ -167,8 +195,11 @@ model2_stroop = glmer(response_num ~ congruency * block * (text + purpose) +
                         (1 | PROLIFIC_PID) + (1 | rule), 
                       subset(learn2_clean, !is.na(block) &
                                condition == 'Stroop' &
-                               PROLIFIC_PID %in% completes$PROLIFIC_PID), 
-                      family = 'binomial')
+                               PROLIFIC_PID %in% pass_list), 
+                      family = 'binomial', 
+                      control = glmerControl(optimizer= "optimx",
+                                             optCtrl  = list(method="nlminb")))
+
 car::Anova(model2_stroop)
 # increase in T for incongruent
 emtrends(model2_stroop, pairwise ~ block | congruency, var = "text")
@@ -179,14 +210,91 @@ model2_rules = glmer(response_num ~ congruency * block * (text + purpose) +
                        (1 | PROLIFIC_PID) + (1 | rule), 
                      subset(learn2_clean, !is.na(block) &
                               condition == 'Rules' &
-                              PROLIFIC_PID %in% completes$PROLIFIC_PID), 
-                     family = 'binomial')
+                              PROLIFIC_PID %in% pass_list), 
+                     family = 'binomial', 
+                     control = glmerControl(optimizer= "optimx",
+                                            optCtrl  = list(method="nlminb")))
+
+model2b_control = glmer(response_num ~ block * (text + purpose) + 
+                       (1 | PROLIFIC_PID) + (1 | rule), 
+                     subset(learn2_clean, !is.na(block) &
+                              condition == 'Control' &
+                              PROLIFIC_PID %in% pass_list), 
+                     family = 'binomial', 
+                     control = glmerControl(optimizer= "optimx",
+                                            optCtrl  = list(method="nlminb")))
+
 car::Anova(model2_rules)
 # no increase in T 
 emtrends(model2_rules, pairwise ~ block | congruency, var = "text")
 emtrends(model2_rules, pairwise ~ block, var = "text")
 # decrease in P about the same
 emtrends(model2_rules, pairwise ~ block | congruency, var = "purpose")
+
+supp1t = interactions::sim_slopes(model2_stroop, pred = 'text', modx = 'block', 
+                         mod2 = 'congruency', confint = TRUE)$slopes 
+supp1p = interactions::sim_slopes(model2_stroop, pred = 'purpose', modx = 'block', 
+                         mod2 = 'congruency', confint = TRUE)$slopes
+supp2t = interactions::sim_slopes(model2_rules, pred = 'text', modx = 'block', 
+                         mod2 = 'congruency', confint = TRUE)$slopes
+supp2p = interactions::sim_slopes(model2_rules, pred = 'purpose', modx = 'block', 
+                         mod2 = 'congruency', confint = TRUE)$slopes
+supp3t = interactions::sim_slopes(model2b_control, pred = 'text', modx = 'block', 
+                                   confint = TRUE)$slopes
+supp3p = interactions::sim_slopes(model2b_control, pred = 'purpose', modx = 'block', 
+                                  confint = TRUE)$slopes
+
+supp3t %>% data.frame() %>% mutate(predictor = 'text', treatment = 'control', condition = "control"),
+supp3p %>% data.frame() %>% mutate(predictor = 'purpose', treatment = 'control', condition = "control")
+
+bind_rows(supp1t[1] %>% data.frame() %>% mutate(predictor = 'text', treatment = 'stroop', condition = "congruent"),
+          supp1t[2] %>% data.frame() %>% mutate(predictor = 'text', treatment = 'stroop', condition = "incongruent"),
+          supp1p[1] %>% data.frame() %>% mutate(predictor = 'purpose', treatment = 'stroop', condition = "congruent"),
+          supp1p[2] %>% data.frame() %>% mutate(predictor = 'purpose', treatment = 'stroop', condition = "incongruent"),
+          supp2t[1] %>% data.frame() %>% mutate(predictor = 'text', treatment = 'rules', condition = "congruent"),
+          supp2t[2] %>% data.frame() %>% mutate(predictor = 'text', treatment = 'rules', condition = "incongruent"),
+          supp2p[1] %>% data.frame() %>% mutate(predictor = 'purpose', treatment = 'rules', condition = "congruent"),
+          supp2p[2] %>% data.frame() %>% mutate(predictor = 'purpose', treatment = 'rules', condition = "incongruent"),
+          supp3t %>% data.frame() %>% mutate(predictor = 'text', treatment = 'control', condition = "control"),
+          supp3p %>% data.frame() %>% mutate(predictor = 'purpose', treatment = 'control', condition = "control")) %>%
+  ggplot(aes(x = condition, y = Est., color = predictor, shape = Value.of.block)) + 
+  geom_linerange(aes(ymin = `X2.5.`, ymax = `X97.5.`),
+                 position = position_dodge(width = .3)) +
+  geom_point(size = 2, fill = 'white', 
+             position = position_dodge(width = .3)) + theme_classic() +
+  coord_flip() + facet_grid(treatment ~ ., scales = 'free_y', space = 'free_y') + 
+  scale_shape_manual(values = c(16, 21)) + 
+  scale_y_continuous(name = "Pre-to-post change")
+
+cong_effects = bind_rows(
+emtrends(model2_stroop, pairwise ~ block | congruency, var = "text")$contrasts %>%
+  as.data.frame() %>% mutate(effect = 'text', treat = 'stroop/flanker'),
+emtrends(model2_stroop, pairwise ~ block | congruency, var = "purpose")$contrasts %>%
+  as.data.frame() %>% mutate(effect = 'purpose', treat = 'stroop/flanker'),
+emtrends(model2_rules, pairwise ~ block | congruency, var = "text")$contrasts %>%
+  as.data.frame() %>% mutate(effect = 'text', treat = 'rules'),
+emtrends(model2_rules, pairwise ~ block | congruency, var = "purpose")$contrasts %>%
+  as.data.frame() %>% mutate(effect = 'purpose', treat = 'rules'),
+emtrends(model2b_control, pairwise ~ block, var = "text")$contrasts %>%
+  as.data.frame() %>% mutate(effect = 'text', treat = 'control', congruency = 'control'),
+emtrends(model2b_control, pairwise ~ block, var = "purpose")$contrasts %>%
+  as.data.frame() %>% mutate(effect = 'purpose', treat = 'control', congruency = 'control')) %>%
+  ggplot(aes(x = reorder(congruency, estimate), y = -estimate, color = effect, shape = congruency)) + 
+  geom_linerange(aes(ymin = -estimate - (1.96 * SE), ymax = -estimate + 1.96 * SE),
+                 position = position_dodge(width = .3)) +
+  geom_hline(yintercept = 0, linetype = 2) +
+  geom_point(size = 2, fill = 'white', 
+             position = position_dodge(width = .3)) + theme_classic() +
+  coord_flip() + facet_grid(treat ~ effect, scales = 'free_y', space = 'free_y') + 
+  scale_shape_manual(values = c(16, 16, 21)) + 
+  scale_y_continuous(name = "Pre-to-post change") + 
+  scale_x_discrete(name = NULL) + 
+  theme(axis.ticks = element_blank(), 
+        strip.background = element_blank(), 
+        axis.line = element_blank(),
+        legend.position = 'none',
+        panel.border = element_rect(color = 'black'))
+
 
 model1_rules = glmer(response_num ~ block * (text + purpose) + 
                        (1 | PROLIFIC_PID) + (1 | rule), 
@@ -478,10 +586,9 @@ mean_resps2 = learn2_clean %>%
   summarise(response_num = mean(response_num, na.rm = TRUE))
 
 
-ggplot(data = mean_resps2, aes(x = trial_norm, y = response_num)) + 
+fig6a = ggplot(data = mean_resps2, aes(x = trial_norm, y = response_num)) + 
   annotate(geom = 'rect', ymin = -Inf, ymax = .5, xmin = -Inf, xmax = Inf, 
            fill = 'lightgrey', alpha = .2) +
-  geom_vline(xintercept = 24.5, linetype = 3) +
   geom_line(aes(group = case, color = as.factor(text), 
                 linetype = text != purpose), alpha = .4) +
   geom_smooth(data = subset(learn2_clean, as.numeric(rt) > 500 & !is.na(block)), 
@@ -490,14 +597,35 @@ ggplot(data = mean_resps2, aes(x = trial_norm, y = response_num)) +
                   linetype = text != purpose), linewidth = .5,
               method = "glm", 
               method.args = list(family = "binomial")) + 
-  facet_grid(condition ~ block, scales = 'free_x', space = 'free_x') +
+  facet_grid(condition ~ block, scales = 'free_x', space = 'free_x',
+             labeller = labeller(condition = c(
+               "Rules" = "Task-Specific\nLearning",
+               "Stroop" = "Domain-General\nConflict",
+               "Control" = "Passive\nControl"
+             ), 
+             block = c(
+               "B1" = "Pre-Block",
+               "B2" = "Post-Block"))) +
   theme_classic() + 
-  theme(legend.position = 'none', axis.ticks = element_blank(), 
-        strip.text.y = element_text(angle = 0), 
-        strip.background = element_blank()) + 
-  scale_y_continuous(name = NULL, limits = c(0, 1), expand = c(0, 0), 
-                     breaks = seq(0, 1, .50), labels = c('No', '', 'Yes')) +
-  scale_x_continuous(expand = c(0, 0))
+  theme(legend.position = 'none', 
+        strip.background = element_blank(), 
+        strip.text.x = element_text(size = 12, face = 'bold'),
+        strip.text.y = element_blank(),
+        panel.spacing.y = unit(0.3, "cm"),
+        panel.spacing.x = unit(0.2, "cm"),
+        axis.line = element_blank(),
+        axis.ticks = element_blank(),
+        panel.background = element_rect(fill = 'transparent', color = 'black', 
+                                        linewidth = .5)) + 
+  scale_y_continuous(name = "Violation judgment",
+                     limits = c(0, 1), expand = c(0, 0), 
+                     breaks = c(0, .5, 1), labels = c("No\n", "", "\nYes")) +
+  scale_x_continuous(name = "Trial number", labels = c(" 1", "12", "24   ", "   25", "36", "48 "),
+                     expand = c(0, 0), breaks = c(1, 12, 24, 25, 36, 48)) +
+  scale_color_manual(values = c("#be983f", "#3f8d97")) +
+  scale_fill_manual(values = c("#be983f", "#3f8d97"))
+
+ggsave('learning2_a.jpg', dpi = 600, width = 16, height = 12, units = 'cm')
 
 mean_resps3 = learn2_clean %>%
   ungroup() %>%
@@ -575,44 +703,54 @@ ddm_rules = read.csv('~/Documents/ddm_rules/model_learn2_rules/model_learn2_rule
 
 ddm_fig4 = bind_rows(ddm_control, ddm_stroop, ddm_rules) %>%
   mutate(parameter_group = if_else(str_detect(parameter, "Δv"), "Δv", ""),
-         treatment = relevel(as.factor(treatment), ref = "Control"))
+         treatment = relevel(as.factor(treatment), ref = "Learning"),
+         treatment = relevel(as.factor(treatment), ref = "Control"), 
+         treatment_labels = case_when(treatment == "Control" ~ "Passive\nControl",
+                                      treatment == "Learning" ~ "Task-Specific\nLearning",
+                                      treatment == "Conflict" ~ "Domain-General\nConflict"))
+
+
 
 ddm_fig4_mdn = ddm_fig4 %>%
   group_by(parameter, treatment) %>%
   summarise(value = median(value,na.rm = TRUE))
 
-ggplot(ddm_fig4, aes(x = treatment, y = value)) +
-  geom_violin(trim = FALSE, draw_quantiles = c(.25, .75)) + 
-  facet_wrap(~ parameter, scales = 'free_x', nrow = 2) + 
-  geom_hline(yintercept = 0, linetype = 2) +
-  geom_point(data = ddm_fig4_mdn, aes(y = value)) +
-  coord_flip() + 
-  theme_classic() +
-  theme(strip.background = element_blank(), 
-        axis.ticks = element_blank(), 
-        axis.title.y = element_blank())
 
 
-fig6b = ggplot(subset(ddm_fig4, parameter %in% c('Δa', 'Δt')), 
+
+fig6c = ggplot(subset(ddm_fig4, parameter %in% c('Δa', 'Δt')), 
                aes(x = fct_rev(treatment), y = value)) +
   geom_violin(trim = FALSE, draw_quantiles = c(.25, .75)) + 
-  facet_wrap(~ parameter, scales = 'free_x', nrow = 2) + 
+  facet_grid(treatment ~ parameter, scales = 'free', 
+             labeller = labeller(treatment = c(
+               "Learning" = "Task-Specific\nExperience",
+               "Conflict" = "Domain-General\nDemands",
+               "Control" = "Passive\nControl"
+             ))) + 
   geom_hline(yintercept = 0, linetype = 2) +
   geom_point(data = subset(ddm_fig4_mdn, parameter %in% c('Δa', 'Δt')), aes(y = value)) +
   coord_flip() + 
   theme_classic() +
-  scale_x_discrete(position = "top") +
-  scale_y_continuous(name = "Pre-to-post block change") +
+  scale_x_discrete(position = "top", expand = c(0.45, 0.45)) +
+  scale_y_continuous(name = "Pre-to-post change", 
+                     breaks = c(-0.2, 0)) +
   theme(strip.background = element_blank(), 
+        panel.spacing.y = unit(0.3, "cm"),
+        panel.spacing.x = unit(0.2, "cm"),
         axis.ticks = element_blank(), 
-        axis.text = element_text(size = 11),
+        axis.text = element_text(size = 9),
         strip.text = element_text(size = 12),
+        strip.text.y = element_text(size = 11, angle = 0),
+        axis.text.y = element_blank(),
         axis.line = element_blank(),
         axis.title.y = element_blank(), 
-        panel.background = element_rect(fill = '#eee', colour ='black', 
-                                        linewidth = 1))
+        panel.background = element_rect(fill = '#efefef', colour ='black', 
+                                        linewidth = 0.5))
 
-fig6a = ggplot(subset(ddm_fig4, parameter %in% c('Δv-text', 'Δv-purpose')), 
+color_text = "#3b3530"
+color_purpose = "#b05c6a"
+
+fig6b = ggplot(subset(ddm_fig4, parameter %in% c('Δv-text', 'Δv-purpose')), 
                aes(x = fct_rev(treatment), y = value)) +
   geom_violin(aes(group = paste(parameter, treatment), fill = parameter), 
               trim = FALSE, draw_quantiles = c(.25, .75), alpha = .6, 
@@ -623,27 +761,37 @@ fig6a = ggplot(subset(ddm_fig4, parameter %in% c('Δv-text', 'Δv-purpose')),
              shape = 21, size = 2, fill = 'white', stroke = 1.2, 
              position = position_dodge(width = .6)) +
   coord_flip() + 
-  facet_wrap(~ parameter_group, scales = 'free_x', nrow = 1) + 
+  facet_grid(treatment ~ parameter_group, scales = 'free') + 
   theme_classic() +
-  scale_y_continuous(name = "Pre-to-post block change") +
+  scale_y_continuous(name = "Pre-to-post change") +
+  scale_x_discrete(expand = c(0.25, 0.25)) +
   guides(stroke = "none") +
   theme(strip.background = element_blank(), 
-        legend.position = c(.18, .91), legend.title = element_blank(),
-        legend.background = element_rect(fill = '#eee', colour = NA, 
-                                         linewidth = 0.1),
+        panel.spacing.y = unit(0.3, "cm"),
+        panel.spacing.x = unit(0.2, "cm"),
+        legend.position = c(.76, .072), legend.title = element_blank(),
+        legend.background = element_rect(fill = 'transparent', colour = NA, 
+                                         linewidth = 0.05),
         legend.key = element_rect(color = NA),
+        legend.text = element_text(size = 7),
         axis.ticks = element_blank(), 
-        axis.text = element_text(size = 11),
+        axis.text.x = element_text(size = 9),
+        axis.text.y = element_blank(),
         strip.text = element_text(size = 12),
+        strip.text.y = element_blank(),
         axis.line = element_blank(),
         axis.title.y = element_blank(), 
         panel.background = element_rect(fill = '#eee', colour ='black', 
-                                        linewidth = 1))
+                                        linewidth = 0.5)) +
+  scale_color_manual(values = c( color_purpose, color_text)) +
+  scale_fill_manual(values = c(color_purpose, color_text))
 
 
-ggpubr::ggarrange(fig6a, fig6b, widths = c(1.3, 1))
+ggpubr::ggarrange(fig6a, fig6b, fig6c, widths = c(1.5, 1, 1.5), 
+                  labels = c('A', 'B', ''),
+                  nrow = 1)
 
-ggsave('figure6ddm.jpg', dpi = 300, width = 20, height = 12, units = 'cm')
+ggsave('figure6ddm.png', dpi = 300, width = 24, height = 12, units = 'cm')
 
 
 learn2_clean %>%
@@ -690,3 +838,103 @@ modL = glmer(response_num ~ (text * purpose)*prev_congruent + (1 | run_id) + (1 
 car::Anova(modL)
 emmeans(modL, pairwise ~ prev_congruent, type = 'response')
 emmeans(modL, pairwise ~ prev_congruent | text * purpose, type = 'response')
+
+
+temp_dt = subset(learn2_clean, !is.na(block) &
+                   condition == 'Stroop' &
+                   PROLIFIC_PID %in% pass_list) %>%
+  ungroup() %>%
+  select(run_id, PROLIFIC_PID, rule, congruency, block, text, purpose, response_num)
+
+glimpse(temp_dt)
+
+#max_iter = 200
+results = data.frame()
+max_iter = 300
+
+for (i in 5:20) {
+  n_obs = i * 20 * 48
+  for (j in 1:max_iter) {
+    iter_dt = temp_dt %>% slice_sample(n = n_obs, replace = TRUE)
+    
+    temp_model = glm(response_num ~ congruency * block * (text + purpose), 
+                        iter_dt, 
+                        family = 'binomial') %>%
+      car::Anova()
+    
+    temp_model = temp_model %>% data.frame() %>%
+      mutate(sample_size = n_obs/48, iteration = j)
+    
+    results = rbind(results, temp_model)
+  }
+  cat("~ Finished ", n_obs/48, " ~ \n")
+}
+
+
+pwr_data = results %>%
+  mutate(term = gsub("[[:digit:]]", "", rownames(.))) %>%
+  group_by(term, sample_size) %>%
+  summarise(power = mean(Pr..Chisq. < .05), 
+            order = str_count(term, ":") + 1)
+
+
+power_fig = ggplot(pwr_data, aes(x = sample_size, y = power, color = term)) +
+  geom_point() +
+  geom_line() + facet_wrap(order ~ term) + 
+  annotate(geom = 'rect', ymin = .90, ymax = Inf, xmin = -Inf, xmax = Inf, 
+           alpha = .2, fill = "gold") +
+  geom_hline(yintercept = .95, color = 'firebrick', linetype = 2) +
+  theme_light() +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1)) +
+  theme(axis.ticks = element_blank(), 
+        strip.background = element_blank(), 
+        strip.text = element_text(color = 'black'),
+        axis.line = element_blank(),
+        legend.position = 'none',
+        panel.border = element_rect(color = 'black'))
+
+
+
+ggpubr::ggarrange(cong_effects, power_fig, align = 'h', labels = c('A', 'B'), 
+                  widths = c(1, 1.3))
+
+library(brms)
+
+model_bayes = brm(response_num ~ congruency * block * (text + purpose) + 
+                    (1 | PROLIFIC_PID) + (1 | rule), 
+                  temp_dt, 
+                  family = 'bernoulli', 
+                  prior = c(prior(normal(0, 1), class = "b"), 
+                            prior(cauchy(0, 1), class = "sd")), 
+                  iter = 4000, warmup = 1000, chains = 4, cores = 4,
+                  save_pars = save_pars(all = TRUE))
+
+model_bayes_null = brm(
+  response_num ~ congruency * block * (text + purpose)
+  - congruency:block:text +
+    (1 | PROLIFIC_PID) + (1 | rule),
+  temp_dt,
+  family = bernoulli(),
+  prior = c(
+    prior(normal(0, 1), class = "b"),
+    prior(cauchy(0, 1), class = "sd")
+  ),
+  iter = 4000, warmup = 1000, chains = 4, cores = 4,
+  save_pars = save_pars(all = TRUE)
+)
+summary(model_bayes)
+summary(model_bayes_null)
+
+hypothesis(
+  model_bayes,
+  "congruencyIncongruent:blockB2:text < 0"
+)
+
+hypothesis(
+  model_bayes,
+  "congruencyIncongruent:blockB2 = 0"
+)
+
+bayes_factor(model_bayes, model_bayes_null)
+
