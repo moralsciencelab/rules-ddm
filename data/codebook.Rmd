@@ -1,0 +1,320 @@
+---
+title: "Codebook: Rule Enforcement DDM"
+date: "2024-10-16"
+output: html_document
+---
+
+## 1. General Information
+- **Dataset Name**: rules_allstudies.csv
+- **Date Created**: 2024-09-25
+- **Date Last Modified**: 2024-10-16
+- **Creator**: Neele Engelmann
+- **Description**: Joint dataset of all six studies contained in this repository for facilitated analysis and comparisons across studies.
+- **Source**: Online Studies (conducted via prolific.com, between 2023-03 and 2024-09)
+
+---
+
+## 2. Variable Overview
+
+| #  | Variable Name               | Description                                                    | Type      |
+|:---|:----------------------------|:---------------------------------------------------------------|:----------|
+| 1  | `study`                     | Study identifier                                               | string    |
+| 2  | `subj_code`                 | Participant identifier                                         | string    |
+| 3  | `strata_age`                | Age strata                                                     | string    |
+| 4  | `trial_index`               | Index of the trial                                             | numeric   |
+| 5  | `task`                      | Name of the task performed                                     | string    |
+| 6  | `scen_number`               | Scenario number                                                | numeric   |
+| 7  | `block_number`              | Block number in the study                                      | numeric   |
+| 8  | `stimulus`                  | Stimulus presented to the participant                          | string    |
+| 9  | `case`                      | Case label                                                     | string    |
+| 10 | `rule`                      | Rule related to the scenario                                   | string    |
+| 11 | `behavior`                  | Behavior category associated with the rule                     | string    |
+| 12 | `text`                      | Indicates whether the behavior violates the rule's text        | numeric   |
+| 13 | `purpose`                   | Indicates whether the behavior violates the rule's purpose     | numeric   |
+| 14 | `condition`                 | Experimental condition                                         | string    |
+| 15 | `congruent`                 | Indicator for whether the trial was congruent                  | numeric   |
+| 16 | `dv`                        | Dependent variable                                             | string    |
+| 17 | `response`                  | Participants' response (rules task)                            | numeric   |
+| 18 | `response_stroop`           | Response for the Stroop task                                   | string    |
+| 19 | `response_flanker`          | Response for the Flanker task                                  | string    |
+| 20 | `stroopflanker_correct_resp`| Correct response option for Stroop or Flanker task             | string    |
+| 21 | `correct`                   | Indicator for correct response                                 | numeric   |
+| 22 | `rt`                        | Response time                                                  | numeric   |
+| 23 | `congprop`                  | Proportion of congruent trials                                 | string    |
+| 24 | `congprop_block_order`      | Block order for congruency proportion                          | string    |
+| 25 | `spd_acc_mode`              | Mode for speed-accuracy manipulation                           | string    |
+| 26 | `spd_acc_order`             | Order of blocks for speed-accuracy manipulation                | string    |
+| 27 | `theory_question_binary`     | Response to binary theory question                            | string    |
+| 28 | `theory_question_bipolar`    | Response to bipolar theory question                           | string    |
+| 29 | `theory_question_bipolar_num`| Numeric representation of the bipolar question                 | numeric   |
+| 30 | `age`                       | Participants' age                                              | numeric   |
+| 31 | `gender`                    | Participants' gender                                           | string    |
+| 32 | `handedness`                | Participants' handedness                                       | string    |
+| 33 | `comments`                  | Participants' comments                                         | string    |
+
+---
+
+## 3. Variable Details
+
+### 1. `study`
+- **Description**: Identifier for the study conducted.
+- **Type**: Categorical (string)
+- **Levels**:
+  - `violate`: rules task, dv asks whether rules were violated.
+  - `comply`: rules task, dv asks whether rules were complied with.
+  - `congruency_proportions`: rules task with a manipulation of the frequency of congruent vs. incongruent trials.
+  - `speed_accuracy`: rules task with a manipulation of whether people should prioritize speed vs. accuracy.
+  - `stroop_flanker`: rules task mixed with Stroop and Flanker tasks.
+  - `punishment`: rules task, dv asks whether someone should be punished.
+- **Missing Data**: None.
+
+
+### 2. `subj_code`
+- **Description**: Unique identifier assigned to each participant.
+- **Type**: Categorical (string)
+- **Missing Data**: None.
+
+### 3. `strata_age`
+- **Description**: Age strata for participants.
+- **Type**: Categorical (string)
+- **Levels**:
+  - `18-28`: Participants aged between 18 and 28 years.
+  - `29-39`: Participants aged between 29 and 39 years.
+  - `40-51`: Participants aged between 40 and 51 years.
+  - `52-63`: Participants aged between 52 and 63 years.
+  - `64-89`: Participants aged between 64 and 89 years.
+  - `all ages`: Represents participants across all age groups.
+- **Missing Data**: Stratified data collection was only done for the stroop_flanker study.
+- **Notes**: Actual demographics diverge from intended brackets in some cases, due to discrepancies between self-report in the study and profile demographics on prolific.com.
+
+### 4. `trial_index`
+- **Description**: Index of the trial for each participant.
+- **Type**: Numeric
+- **Missing Data**: None.
+
+### 5. `task`
+- **Description**: The task performed by the participant in the study.
+- **Type**: Categorical (string)
+- **Levels**:
+  - `rules`: rules task.
+  - `flanker`: flanker task (only in study stroop_flanker).
+  - `stroop`: stroop Task (only in study stroop_flanker).
+- **Missing Data**: None.
+
+
+### 6. `scen_number`
+- **Description**: Scenario number within the study.
+- **Type**: Numeric 
+- **Missing Data**: Yes, this information was not collected in all studies.
+
+### 7. `block_number`
+- **Description**: Block number within the study session.
+- **Type**: Numeric 
+- **Missing Data**: Yes, this information was not collected in all studies.
+
+### 8. `stimulus`
+- **Description**: Full information about the stimulus presented to the participant. For the rules task, this contains the full scenario text plus html formatting. For the stroop and flanker tasks, it contains the visual stimuli that were displayed plus html formatting.
+- **Type**: Categorical (string)
+- **Missing Data**: None.
+
+### 9. `case`
+- **Description**: Scenario label.
+- **Type**: Categorical (string)
+- **Missing Data**: This only applies to the rules task, not stroop or flanker.
+
+### 10. `rule`
+- **Description**: Rule described in the scenario.
+- **Type**: Categorical (string)
+- **Missing Data**: This only applies to the rules task, not stroop or flanker.
+
+### 11. `behavior`
+- **Description**: Behavior that participants are asked to evaluate.
+- **Type**: Categorical (string)
+- **Missing Data**: This only applies to the rules task, not stroop or flanker.
+
+### 12. `text`
+- **Description**: Indicates whether the behavior violates the rule's text.
+- **Type**: Numeric
+- **Levels**:
+  - `0`: no violation
+  - `1`: violation
+- **Missing Data**: This only applies to the rules task, not stroop or flanker.
+
+### 13. `purpose`
+- **Description**: Indicates whether the behavior violates the rule's purpose.
+- **Type**: Numeric
+- **Levels**:
+  - `0`: no violation
+  - `1`: violation
+- **Missing Data**: This only applies to the rules task, not stroop or flanker.
+
+### 14. `condition`
+- **Description**: Experimental condition (derived from the combination of text and purpose violation)..
+- **Type**: Categorical (string)
+- **Levels**:
+  - `no violation`: No rule violation.
+  - `text violation`: The behavior violated the rule's text.
+  - `full violation`: The behavior violated both the rule's text and purpose.
+  - `purpose violation`: The behavior violated the rule's purpose.
+- **Missing Data**: This only applies to the rules task, not stroop or flanker.
+
+
+### 15. `congruent`
+- **Description**: Whether the trial was congruent or incongruent.
+- **Type**: numeric
+- **Levels**:
+  - `0`: incongruent
+  - `1`: congruent
+- **Missing Data**: None.
+
+### 16. `dv`
+- **Description**: Dependent variable used in the rules task.
+- **Type**: Categorical (string)
+- **Levels**:
+  - `violate`: Participants were asked whether behavior violated a rule.
+  - `comply`: Participants were asked whether behavior complied with a rule.
+- **Missing Data**: This is currently coded for all tasks, but only applies to the rule task, not stroop and flanker.
+
+
+### 17. `response`
+- **Description**: Participant's response to the stimulus in the rules task.
+- **Levels**:
+  - `0`: no
+  - `1`: yes
+- **Missing Data**: This only applies to the rules task, not stroop or flanker.
+
+### 18. `response_stroop`
+- **Description**: Participants' response in the Stroop task.
+- **Type**: Categorical (string)
+- **Levels**:
+  - `r`: red.
+  - `g`: green.
+  - `b`: blue.
+  - `y`: yellow.
+- **Missing Data**: This only applies to the stroop task, not rules or flanker.
+
+
+### 19. `response_flanker`
+- **Description**: Participants' response in the Flanker task.
+- **Type**: Categorical (string)
+- **Levels**:
+  - `i`: right.
+  - `e`: left.
+- **Missing Data**: This only applies to the flanker task, not rules or stroop.
+
+
+### 20. `stroopflanker_correct_resp`
+- **Description**: The correct response option for the Stroop or Flanker task.
+- **Type**: Categorical (string)
+- **Missing Data**: This only applies to the stroop and flanker tasks.
+
+### 21. `correct`
+- **Description**: Indicates whether the response was correct. For the rules task, the textualist response is coded as correct.
+- **Type**: numeric
+- **Levels**:
+  - `0`: incorrect
+  - `1`: correct
+- **Missing Data**: None.
+
+### 22. `rt`
+- **Description**: Response time (in milliseconds).
+- **Type**: Numeric
+- **Missing Data**: None.
+
+### 23. `congprop`
+- **Description**: Proportion of congruent trials in the block (case).
+- **Type**: Categorical (string)
+- **Levels**:
+  - `low`: Low proportion of congruent trials (2 out of 12).
+  - `high`: High proportion of congruent trials (10 out of 12).
+- **Missing Data**: This only applies to the study congruency_proportions.
+
+### 24. `congprop_block_order`
+- **Description**: Presentation order of blocks for the congruency proportion manipulation.
+- **Type**: Categorical (string)
+- **Levels**:
+  - `low_high`: 4 blocks (cases) with low proportion first, then 4 blocks with high proportion.
+  - `high_low`: 4 blocks (cases) with high proportion first, then 4 blocks with low proportion.
+- **Missing Data**: This only applies to the study congruency_proportions.
+
+
+### 25. `spd_acc_mode`
+- **Description**: The mode of the speed-accuracy manipulation in the task.
+- **Type**: Categorical (string)
+- **Levels**:
+  - `acc`: Accuracy mode, where the participant is instructed to prioritize accuracy.
+  - `spd`: Speed mode, where the participant is instructed to prioritize speed.
+- **Missing Data**: This only applies to the study speed_accuracy.
+
+
+### 26. `spd_acc_order`
+- **Description**: The order of blocks for the speed-accuracy manipulation.
+- **Type**: Categorical (string)
+- **Levels**:
+  - `accuracy_speed`: 4 blocks (cases) in accuracy mode first, then 4 blocks in speed mode.
+  - `speed_accuracy`: 4 blocks (cases) in speed mode first, then 4 blocks in accuracy mode.
+- **Missing Data**: This only applies to the study speed_accuracy.
+
+
+### 27. `theory_question_binary`
+- **Description**: Response to the question: "Which of the following statements better captures your belief about what it means to violate or comply with a rule?".
+- **Type**: Categorical (string)
+- **Levels**:
+  - `spirit`: "To abide by the law, one must focus on the letter of the law. So, when someone acts in a way that conflicts with a rule's text (what it literally says), then that person has broken the rule."
+  - `letter`: "To abide by the law, one must focus on the spirit of the law. So, when someone acts in a way that conflicts with a rule's purpose (what it is ultimately for), then that person has broken the rule."
+- **Missing Data**: This was only asked in the study stroop_flanker.
+
+
+### 28. `theory_question_bipolar`
+- **Description**: Response to the question ""On the previous page, you were asked which of two ways of applying rules best reflects your own way of thinking. We are now interested in understanding to what extent you relied on each approach: The Letter approach and the Spirit approach. When deciding whether someone has violated a rule, my approach is _____  ."
+- **Type**: Categorical (string)
+- **Levels**:
+  - `only spirit`
+  - `mostly spirit`
+  - `more spirit than letter`
+  - `both equally`
+  - `more letter than spirit`
+  - `mostly letter`
+  - `only letter`
+- **Missing Data**: This was only asked in the study stroop_flanker.
+
+
+### 29. `theory_question_bipolar_num`
+- **Description**: Numeric representation of the bipolar theory question.
+- **Type**: Numeric (float)
+- **Levels**:
+  - `0`: only letter
+  - `1`: mostly letter
+  - `2`: more letter than spirit
+  - `3`: both equally
+  - `4`: more spirit than letter
+  - `5`: mostly spirit
+  - `6`: only spirit
+- **Missing Data**: This was only asked in the study stroop_flanker.
+
+
+### 30. `age`
+- **Description**: Participants' age.
+- **Type**: Numeric
+- **Missing Data**: Some participants in the violate study (n = 4) did not answer this question (but provided valid data for all other parts of the study).
+
+### 31. `gender`
+- **Description**: Participant's gender.
+- **Type**: Categorical (string)
+- **Levels**:
+  - `female`
+  - `male`
+  - `nonbinary`
+  - `no answer`
+  - `another identity`
+- **Missing Data**: Some participants in the violate study (n = 15) did not answer this question (but provided valid data for all other parts of the study).
+
+### 32. `handedness`
+- **Description**: Participant's handedness (e.g., left or right-handed).
+- **Type**: Categorical (string)
+- **Missing Data**: Some participants in the violate study (n = 34) did not answer this question (but provided valid data for all other parts of the study).
+
+### 33. `comments`
+- **Description**: Additional comments by the participant.
+- **Type**: Categorical (string)
+- **Missing Data**: Yes, this was an optional free text field.

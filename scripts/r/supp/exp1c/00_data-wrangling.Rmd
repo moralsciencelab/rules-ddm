@@ -1,0 +1,154 @@
+---
+title: "analysis punishment dv"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 3  
+    number_sections: true  
+    theme: united 
+    highlight: tango  
+date: "2023-01-26"
+---
+
+# settings
+
+```{r echo = F, include = F}
+knitr::opts_chunk$set(message=F,warning=F)
+```
+
+# packages and data import
+
+```{r import and cleaning}
+library(tidyverse)
+library(readr)
+library(reshape2)
+
+#raw data
+raw <- rbind(read.csv("raw_batch1.csv"),read.csv("raw_batch2.csv"),read.csv("raw_batch3.csv"))
+```
+
+
+# cleaning and reformatting
+
+anonymous ids
+
+```{r}
+library(stringi)
+
+unique_subjects <- unique(raw$subject_id)
+set.seed(42)
+
+# Generate a random string of 10 alphanumeric characters for each unique subject
+random_ids <- stri_rand_strings(length(unique_subjects), 10, pattern = "[A-Za-z0-9]")
+
+# Create a named vector to map old subject IDs to new random ones
+id_mapping <- setNames(random_ids, unique_subjects)
+
+# Replace the subject_id with the new random IDs
+raw$subj_code <- id_mapping[raw$subject_id]
+```
+
+# extract demographics
+
+```{r}
+demographics <- raw %>%
+  filter(str_detect(response, "age") | str_detect(response, "gender")) %>%
+  select(subj_code, response) %>%
+  separate(response, into = c("field", "value"), sep = ":", remove = TRUE) %>%
+  mutate(
+    field = gsub("[^A-Za-z0-9 ]", "", field),  # Keep only letters, numbers, and spaces in 'field'
+    value = gsub("[^A-Za-z0-9 ]", "", value)  # Keep only letters, numbers, and spaces in 'value'
+  ) %>%
+  # Correct handedness fields
+  mutate(field = ifelse(value %in% c("righthanded", "lefthanded", "ambidextrous"), "handedness", field)) |> 
+  mutate(field = ifelse(field=="age" & value == "","comments",field)) |> 
+  mutate(field = ifelse(field=="age"& !grepl("^\\d+\\s*$", value),"comments",field)) 
+
+#check for duplicates
+demographics %>%
+  group_by(subj_code, field) %>%
+  summarise(n = n()) %>%
+  filter(n > 1)
+
+#pivot
+demographics <- demographics %>%
+  pivot_wider(
+    names_from = field,  # The 'field' column will become the new column names
+    values_from = value  # The 'value' column contains the data for those new columns
+  )
+
+#export
+write.csv(demographics,"demographics.csv",row.names = F)
+
+```
+
+selecting and coding variables
+
+```{r}
+clean <- raw %>% 
+  select(subj_code,stimulus,task,rt,key_assignment,trial_index,response) %>% 
+  filter(task=="response") %>% 
+  mutate(case = ifelse(str_detect(stimulus,"dog"),"restaurant",
+                       ifelse(str_detect(stimulus,"shoes"),"shoes",
+                              ifelse(str_detect(stimulus,"dormitory"),"noise",
+                                     ifelse(str_detect(stimulus,"train station"),"trainstation",
+                                            ifelse(str_detect(stimulus,"parliament"),"deer",
+                                                   ifelse(str_detect(stimulus,"zero tolerance"),"alcohol",
+                                                          ifelse(str_detect(stimulus,"No cars are allowed"),"cars",
+                                                                 ifelse(str_detect(stimulus,"headmaster"),"phones","lab")))))))),
+         yeskey = ifelse(str_detect(key_assignment,"e for yes"),"e","i"),
+         response_num = ifelse(response==yeskey,1,0)) %>% 
+  select(-response) %>% 
+  rename(response = response_num)
+
+codingsheet <- read.csv("codingsheet.csv",sep=";") 
+
+library(fuzzyjoin)
+
+clean <- regex_left_join(clean, codingsheet, by = c("stimulus" = "question"))
+
+#delete practice trials
+clean <- clean |> filter(case!="noise")
+
+#check number of participants
+nlevels(factor(clean$subj_code))
+
+#check trials per participant
+clean %>% 
+  dplyr::group_by(subj_code) %>% 
+  dplyr::summarize(n = n()) |> 
+  arrange(n)
+
+#exclude noncompleters
+noncompleters <- clean %>% 
+  dplyr::group_by(subj_code) %>% 
+  dplyr::summarize(ntrials = n()) %>% 
+  filter(ntrials < 96)
+
+clean <- clean %>% dplyr::filter(!subj_code %in% noncompleters$subj_code)
+
+#exclude rts under 200 ms, over 800 ms, and invalid trials (no response given)
+
+clean <- clean %>% 
+  filter(rt!="null") %>% # exclude invalid responses
+  mutate(rt = as.numeric(rt)) %>% # convert to numeric
+  dplyr::filter(rt > 200 & rt < 8000) # exclude very fast and very slow responses
+
+#check distribution of rts after exclusions
+summary(clean$rt)
+
+#check new number of participants
+nlevels(factor(clean$subj_code))
+
+#check new number of trials per participant
+clean %>% 
+  dplyr::group_by(subj_code) %>% 
+  dplyr::summarize(ntrials = n()) %>% 
+  summary(ntrials)
+
+# add demographics
+clean <- left_join(clean,demographics,by="subj_code")
+
+#save final file
+write.csv(clean,"clean.csv",row.names = F)
+```

@@ -1,0 +1,79 @@
+---
+title: "demographics_allstudies"
+format: html
+editor: visual
+---
+
+```{r packages}
+library(tidyverse)
+```
+
+```{r data}
+dat <- read.csv("rules_allstudies.csv")
+```
+
+```{r}
+demo <- dat |> 
+  group_by(study) |> 
+  select(study,subj_code,age,gender,handedness) |> 
+  unique()
+```
+
+```{r}
+summary_table <- demo %>%
+  group_by(study) %>%
+  summarise(
+    n = n_distinct(subj_code),
+    n_female = sum(gender == "female",na.rm=T),
+    n_male = sum(gender == "male",na.rm=T),
+    n_nb_other = sum(gender=="nonbinary"|gender=="another identity"|gender=="noanswer"|gender=="no answer",na.rm=T),
+    n_NA = sum(is.na(gender)==T),
+    prop_female = round(n_female/n,2),
+    prop_male = round(n_male/n,2),
+    prop_nb_other = round((n_nb_other+n_NA)/n,2),
+    mean_age = round(mean(age, na.rm = TRUE),2),
+    sd_age = round(sd(age, na.rm = TRUE),2),
+    n_righthanded = sum(handedness == "righthanded", na.rm = TRUE),
+    n_lefthanded = sum(handedness == "lefthanded", na.rm = TRUE),
+    n_ambidextrous = sum(handedness == "ambidextrous", na.rm = TRUE),
+    prop_righthanded = round(n_righthanded/n,2),
+    prop_lefthanded = round(n_lefthanded/n,2),
+    prop_ambidextrous = round(n_ambidextrous/n,2)
+  )
+
+summary_table
+
+write.csv(summary_table,"demographics_allstudies.csv",row.names = F)
+```
+
+```{r strata info for stroop flanker}
+stroop_flanker_strata_info <- dat |> 
+  filter(study=="stroop_flanker") |> 
+  select(study,subj_code,strata_age,age,gender,handedness) |>
+  unique() |> 
+  group_by(strata_age) |> 
+  summarise(
+    n = n_distinct(subj_code),
+    n_female = sum(gender == "female",na.rm=T),
+    n_male = sum(gender == "male",na.rm=T),
+    n_nb_other = sum(gender=="nonbinary"|gender=="another identity"|gender=="noanswer"|gender=="no answer",na.rm=T),
+    n_NA = sum(is.na(gender)==T),
+    prop_female = round(n_female/n,2),
+    prop_male = round(n_male/n,2),
+    prop_nb_other = round((n_nb_other+n_NA)/n,2),
+    mean_age = round(mean(age, na.rm = TRUE),2),
+    sd_age = round(sd(age, na.rm = TRUE),2),
+    n_righthanded = sum(handedness == "righthanded", na.rm = TRUE),
+    n_lefthanded = sum(handedness == "lefthanded", na.rm = TRUE),
+    n_ambidextrous = sum(handedness == "ambidextrous", na.rm = TRUE),
+    prop_righthanded = round(n_righthanded/n,2),
+    prop_lefthanded = round(n_lefthanded/n,2),
+    prop_ambidextrous = round(n_ambidextrous/n,2)
+  )
+
+stroop_flanker_strata_info
+
+write.csv(stroop_flanker_strata_info,"demographics_stroopflanker_strata.csv",row.names = F)
+
+```
+

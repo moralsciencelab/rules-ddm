@@ -1,0 +1,13 @@
+"dv","iv","coefficient","lowerCI","upperCI","t.val.","d.f.","p"
+"violation","(Intercept)",7.73,7.65,7.81,189.33,11.63,0
+"violation","text",0.26,0.24,0.28,26.01,11191.03,0
+"violation","purpose",0.15,0.13,0.17,15.57,11191.01,0
+"violation","text:purpose",-0.41,-0.43,-0.38,-29.01,11191.02,0
+"compliance","(Intercept)",7.73,7.64,7.82,166.22,15.37,0
+"compliance","text",0.22,0.2,0.24,21.99,11529.99,0
+"compliance","purpose",0.15,0.13,0.17,14.78,11530.06,0
+"compliance","text:purpose",-0.38,-0.41,-0.36,-26.93,11530.03,0
+"punishment","(Intercept)",7.79,7.72,7.85,219.5,17.92,0
+"punishment","text",0.25,0.23,0.27,24.59,11332.98,0
+"punishment","purpose",0.18,0.16,0.2,18.02,11332.97,0
+"punishment","text:purpose",-0.42,-0.44,-0.39,-29.47,11332.99,0

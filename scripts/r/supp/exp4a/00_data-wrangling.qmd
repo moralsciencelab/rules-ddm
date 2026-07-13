@@ -1,0 +1,171 @@
+---
+title: "data wrangling"
+format: html
+editor: visual
+---
+
+```{r packages}
+library(tidyverse)
+library(here)
+```
+
+```{r data}
+raw <- read_csv(here("learning","data","learn1_raw.csv"))
+```
+
+```{r demographics}
+demographics <- raw |> 
+  filter(str_detect(response,"age")|str_detect(response,"gender")|str_detect(response,"handedness")|str_detect(response,"comments")) |> 
+  select(subj_code,response) |> 
+  separate(response, into = c("field", "value"), sep = ":", remove = TRUE) %>%
+  mutate(
+    field = gsub("[^A-Za-z0-9 ]", "", field),  # Keep only letters, numbers, and spaces in 'field'
+    value = gsub("[^A-Za-z0-9 ]", "", value)  # Keep only letters, numbers, and spaces in 'value'
+  ) 
+
+#pivot
+demographics <- demographics %>%
+  pivot_wider(
+    names_from = field,  # The 'field' column will become the new column names
+    values_from = value  # The 'value' column contains the data for those new columns
+  )
+
+#export
+write.csv(demographics,"demographics.csv",row.names = F)
+```
+
+```{r save post questions to separate df to be merged again later}
+theory <- raw |> 
+  filter(str_detect(response,"theory")) |> 
+  select(subj_code,response)
+
+#extract content
+theory$question_type <- sub('.*"([^"]+)":.*', '\\1', theory$response)
+theory$response_value <- ifelse(theory$question_type=="theory_question",sub('.*:"([^"]+)"}', '\\1', theory$response),
+                                ifelse(theory$question_type=="theory_question_bipolar",sub('.*:([0-9]+)}', '\\1', theory$response),NA
+))
+
+theory <- theory |> select(-response)
+
+theory <- theory %>%
+  pivot_wider(names_from = question_type, values_from = response_value)
+
+theory <- theory |> 
+  mutate(theory_question = ifelse(str_detect(theory_question,"spirit"),"spirit","letter")) |> 
+  rename(theory_question_binary = theory_question) |> 
+  mutate(
+    theory_question_bipolar_num = theory_question_bipolar,
+    theory_question_bipolar = case_when(
+    theory_question_bipolar==0 ~ "only letter",
+    theory_question_bipolar==1 ~ "mostly letter",
+    theory_question_bipolar==2 ~ "more letter than spirit",
+    theory_question_bipolar==3 ~ "both equally",
+    theory_question_bipolar==4 ~ "more spirit than letter",
+    theory_question_bipolar==5 ~ "mostly spirit",
+    theory_question_bipolar==6 ~ "only spirit"
+  ))
+
+write.csv(theory,"theory_question.csv",row.names = F)
+```
+
+```{r response trials only and checks}
+clean <- raw |> 
+  filter(task=="response"|task=="stroop_response"|task=="flanker_response") |> 
+  mutate(task = case_when(
+    task == "response" ~ "rules",
+    task == "stroop_response" ~ "stroop",
+    task == "flanker_response" ~ "flanker"
+  ))
+
+#half should have seen only rules, half all three tasks - checks out, save for 2 noncompleters in experimental
+clean |> 
+  group_by(subj_code,condition_assignment) |> 
+  summarize(n_tasks = n_distinct(task)) |> 
+  group_by(condition_assignment,n_tasks) |> 
+  summarize(n=n())
+
+#check trials per task: 48 per task in experimental, 96 total in control
+clean |> 
+  group_by(subj_code,condition_assignment,task) |> 
+  summarize(n_trials=n()) 
+
+#check that half of people got theory questions first vs. last
+clean |> 
+  group_by(order_assignment) |> 
+  summarize(n = n_distinct(subj_code)) 
+```
+
+```{r clean data}
+clean <- clean |> 
+  select(
+    subj_code,
+    condition_assignment,
+    order_assignment,
+    task,
+    trial_index,
+    stimulus,
+    flanker_stim_type,
+    direction,
+    color,
+    text,
+    key_assignment,
+    response,
+    correct_response,
+    correct,
+    rt
+  )
+```
+
+```{r text and purpose coding for the rules task}
+codingsheet <- read.csv("codingsheet.csv",sep=";")
+library(fuzzyjoin)
+clean <- regex_left_join(clean, codingsheet, by = c("stimulus" = "question"))
+```
+
+```{r key assignment for the rules task}
+# key assignment only shown where applicable (rules)
+clean <- clean |> 
+  mutate(key_assignment = ifelse(task=="rules",key_assignment,NA))
+
+#yes vs no coding for rules task
+clean <- clean |> 
+  mutate(rules_yeskey = ifelse(str_detect(key_assignment,"e for yes"),"e",
+                                    ifelse(str_detect(key_assignment,"i for yes"),"i",NA))) |> 
+  rename(response_input = response) |> 
+  mutate(rules_response_verbal = ifelse(task=="rules" & response_input == rules_yeskey,"yes",
+                           ifelse(task == "rules" & response_input != rules_yeskey,"no",NA)),
+         rules_response_num = ifelse(rules_response_verbal == "yes",1,
+                                     ifelse(rules_response_verbal == "no",0,NA)))
+```
+
+```{r add theory measures back in}
+clean <- clean |> left_join(theory,by="subj_code")
+```
+
+```{r add demographics back in}
+clean <- clean |> left_join(demographics,by="subj_code")
+```
+
+```{r apply preregistered exclusions}
+#noncompleters: fewer than 96 trials
+noncompleters <- clean |> 
+  group_by(subj_code) |> 
+  summarize(n=n()) |> 
+  arrange(n) |> 
+  filter(n<96)
+
+clean <- clean |> filter(!subj_code %in% noncompleters$subj_code)
+
+#rt-based: < 500ms or > 8000ms on the rules task
+clean <- clean |>
+  filter(!(task == "rules" & (rt < 500 | rt > 8000)))
+```
+
+```{r checks}
+
+```
+
+```{r export}
+write.csv(clean, here("learning", "data", "clean.csv"), row.names = FALSE)
+```
+

@@ -1,0 +1,4 @@
+"dv","coefficient","lowerCI","upperCI","t.val.","d.f.","p","iv"
+"violation",-260.629,-317.148,-204.11,-9.038,11214.44,0,"response"
+"compliance",245.328,190.141,300.514,8.713,11547.443,0,"response"
+"punishment",-232.355,-286.189,-178.521,-8.459,11357.202,0,"response"

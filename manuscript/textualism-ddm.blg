@@ -1,0 +1,47 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: textualism-ddm.aux
+The style file: sn-nature.bst
+Database file #1: textualism-ddm.bib
+sn-nature.bst [2024/07/19 v1.1 bibliography style]
+You've used 50 entries,
+            2732 wiz_defined-function locations,
+            1331 strings with 16868 characters,
+and the built_in function-call counts, 17405 in all, are:
+= -- 1209
+> -- 416
+< -- 0
++ -- 208
+- -- 104
+* -- 2146
+:= -- 1950
+add.period$ -- 147
+call.type$ -- 50
+change.case$ -- 50
+chr.to.int$ -- 0
+cite$ -- 50
+duplicate$ -- 1552
+empty$ -- 1646
+format.name$ -- 133
+if$ -- 3469
+int.to.chr$ -- 0
+int.to.str$ -- 50
+missing$ -- 392
+newline$ -- 257
+num.names$ -- 50
+pop$ -- 290
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 214
+stack$ -- 0
+substring$ -- 699
+swap$ -- 1625
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 1
+type$ -- 0
+warning$ -- 0
+while$ -- 104
+width$ -- 52
+write$ -- 540
