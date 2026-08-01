@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.2.4)  11 JUL 2026 10:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.2.4)  1 AUG 2026 12:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/Users/ivar/Documents/Claude/Projects/rule-ddm-effort/rules-ddm/manuscript/textualism-ddm.tex
-(/Users/ivar/Documents/Claude/Projects/rule-ddm-effort/rules-ddm/manuscript/textualism-ddm.tex
+**/Users/ivar/Documents/VSCode/rules-ddm/manuscript/textualism-ddm.tex
+(/Users/ivar/Documents/VSCode/rules-ddm/manuscript/textualism-ddm.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
 (./sn-jnl.cls
@@ -867,13 +867,14 @@ Package hyperref Warning: Difference (2) between bookmark levels is greater
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [16]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [17]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
 (hyperref)                than one, level fixed on input line 277.
 
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [17]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
 (hyperref)                than one, level fixed on input line 288.
@@ -921,7 +922,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [24
 
 ]
-<../figures/SuppFigure1.png, id=424, 511.9125pt x 426.6339pt>
+<../figures/SuppFigure1.png, id=423, 511.9125pt x 426.6339pt>
 File: ../figures/SuppFigure1.png Graphic file (type png)
 <use ../figures/SuppFigure1.png>
 Package pdftex.def Info: ../figures/SuppFigure1.png  used on input line 415.
@@ -960,7 +961,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has 
                                                   \__shipout_drop_firstpage_...
 l.480 \clearpage
                 ]
-<../figures/SuppFigure2.png, id=443, 455.0601pt x 341.3553pt>
+<../figures/SuppFigure2.png, id=442, 455.0601pt x 341.3553pt>
 File: ../figures/SuppFigure2.png Graphic file (type png)
 <use ../figures/SuppFigure2.png>
 Package pdftex.def Info: ../figures/SuppFigure2.png  used on input line 534.
@@ -1148,17 +1149,17 @@ Package rerunfilecheck Info: File `textualism-ddm.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  14973 strings out of 469005
- 230182 string characters out of 5454799
- 666598 words of memory out of 5000000
+ 230107 string characters out of 5454799
+ 665598 words of memory out of 5000000
  43255 multiletter control sequences out of 15000+600000
  663218 words of font info for 175 fonts, out of 8000000 for 9000
  329 hyphenation exceptions out of 8191
- 90i,16n,93p,1723b,752s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,16n,93p,1698b,752s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmti8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on textualism-ddm.pdf (41 pages, 6310761 bytes).
+Output written on textualism-ddm.pdf (41 pages, 6310624 bytes).
 PDF statistics:
- 677 PDF objects out of 1000 (max. 8388607)
- 569 compressed objects within 6 object streams
+ 676 PDF objects out of 1000 (max. 8388607)
+ 568 compressed objects within 6 object streams
  165 named destinations out of 1000 (max. 500000)
  289 words of extra memory for PDF output out of 10000 (max. 10000000)
 
