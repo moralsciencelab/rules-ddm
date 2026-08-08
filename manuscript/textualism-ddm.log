@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.2.4)  1 AUG 2026 12:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.2.4)  8 AUG 2026 12:57
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -733,7 +733,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
-<../figures/Figure1.png, id=171, 858.8085pt x 353.4003pt>
+<../figures/Figure1.png, id=175, 858.8085pt x 353.4003pt>
 File: ../figures/Figure1.png Graphic file (type png)
 <use ../figures/Figure1.png>
 Package pdftex.def Info: ../figures/Figure1.png  used on input line 81.
@@ -750,12 +750,12 @@ l.87
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [4]
-<../figures/Figure2.png, id=204, 682.7106pt x 398.2077pt>
+<../figures/Figure2.png, id=207, 682.7106pt x 398.2077pt>
 File: ../figures/Figure2.png Graphic file (type png)
 <use ../figures/Figure2.png>
 Package pdftex.def Info: ../figures/Figure2.png  used on input line 100.
 (pdftex.def)             Requested size: 372.0pt x 216.9794pt.
-<../figures/Figure3.png, id=205, 711.1368pt x 569.0058pt>
+<../figures/Figure3.png, id=208, 711.1368pt x 569.0058pt>
 File: ../figures/Figure3.png Graphic file (type png)
 <use ../figures/Figure3.png>
 Package pdftex.def Info: ../figures/Figure3.png  used on input line 109.
@@ -798,9 +798,9 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.165 
-      ]
-<../figures/Figure4.png, id=261, 739.563pt x 341.3553pt>
+l.166 \subsection
+                 {The adaptation model: Does textualism develop with experie...]
+<../figures/Figure4.png, id=263, 739.563pt x 341.3553pt>
 File: ../figures/Figure4.png Graphic file (type png)
 <use ../figures/Figure4.png>
 Package pdftex.def Info: ../figures/Figure4.png  used on input line 172.
@@ -814,54 +814,59 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) has
                                                   \__shipout_drop_firstpage_...
 l.180 
        <../figures/Figure4.png>]
-<../figures/Figure5.png, id=275, 739.68346pt x 369.7815pt>
+<../figures/Figure5.png, id=276, 739.68346pt x 369.7815pt>
 File: ../figures/Figure5.png Graphic file (type png)
 <use ../figures/Figure5.png>
-Package pdftex.def Info: ../figures/Figure5.png  used on input line 189.
+Package pdftex.def Info: ../figures/Figure5.png  used on input line 187.
 (pdftex.def)             Requested size: 372.0pt x 185.97362pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [10]
-<../figures/Figure6.png, id=283, 666.8112pt x 485.4135pt>
+ [10
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.193 
+       <../figures/Figure5.png>]
+<../figures/Figure6.png, id=284, 666.8112pt x 485.4135pt>
 File: ../figures/Figure6.png Graphic file (type png)
 <use ../figures/Figure6.png>
-Package pdftex.def Info: ../figures/Figure6.png  used on input line 202.
+Package pdftex.def Info: ../figures/Figure6.png  used on input line 198.
 (pdftex.def)             Requested size: 372.0pt x 270.80756pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [11
-pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.210 \section
-              {Discussion}\label{sec:discussion} <../figures/Figure5.png>]
+ [11]
+Underfull \hbox (badness 1009) in paragraph at lines 215--216
+[]\OT1/cmr/m/n/10 The delib-er-a-tion hypoth-e-sis posited that reflec-tion pro-motes tex-tu-al-ism by
+ []
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [12
 pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.214 
+l.216 
        <../figures/Figure6.png>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [13]
+
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 235.
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [14{/usr/local/texlive/2025basic/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 237.
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [15]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 254.
+(hyperref)                than one, level fixed on input line 252.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -869,7 +874,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [16]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 277.
+(hyperref)                than one, level fixed on input line 275.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -877,11 +882,11 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [17]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 288.
+(hyperref)                than one, level fixed on input line 286.
 
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 299.
+(hyperref)                than one, level fixed on input line 297.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -889,12 +894,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [18]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 310.
+(hyperref)                than one, level fixed on input line 308.
 
-
+(./textualism-ddm.bbl
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [19] (./textualism-ddm.bbl
+ [19]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [20]
@@ -910,33 +915,33 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.349 \caption
+l.347 \caption
               {Logistic regression models of choice (Studies 1a--c).}
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.351 \begin{tabular*}{\textwidth}
+l.349 \begin{tabular*}{\textwidth}
                                   {@{\extracolsep{\fill}}lrrrrl}
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [24
 
 ]
-<../figures/SuppFigure1.png, id=423, 511.9125pt x 426.6339pt>
+<../figures/SuppFigure1.png, id=425, 511.9125pt x 426.6339pt>
 File: ../figures/SuppFigure1.png Graphic file (type png)
 <use ../figures/SuppFigure1.png>
-Package pdftex.def Info: ../figures/SuppFigure1.png  used on input line 415.
+Package pdftex.def Info: ../figures/SuppFigure1.png  used on input line 413.
 (pdftex.def)             Requested size: 372.0pt x 310.0275pt.
 
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.416   \caption
+l.414   \caption
                 {Grouped histograms of reaction times by condition (rows) an...
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.416 ...by condition (rows) and study (columns).}
+l.414 ...by condition (rows) and study (columns).}
                                                   
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -946,11 +951,27 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.420 \clearpage
+l.418 \clearpage
                 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [26 <../figures/SuppFigure1.png>]
+<../figures/SuppFigure2.png, id=438, 455.0601pt x 341.3553pt>
+File: ../figures/SuppFigure2.png Graphic file (type png)
+<use ../figures/SuppFigure2.png>
+Package pdftex.def Info: ../figures/SuppFigure2.png  used on input line 472.
+(pdftex.def)             Requested size: 372.0pt x 279.06413pt.
+
+pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.473   \caption
+                {Observed reaction times (black) and 95\% confidence bands (...
+pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.473 ... erroneous responses in congruent cases.}
+                                                  
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [27
@@ -959,37 +980,21 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.480 \clearpage
+l.477 \clearpage
                 ]
-<../figures/SuppFigure2.png, id=442, 455.0601pt x 341.3553pt>
-File: ../figures/SuppFigure2.png Graphic file (type png)
-<use ../figures/SuppFigure2.png>
-Package pdftex.def Info: ../figures/SuppFigure2.png  used on input line 534.
-(pdftex.def)             Requested size: 372.0pt x 279.06413pt.
-
-pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.535   \caption
-                {Observed reaction times (black) and 95\% confidence bands (...
-pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.535 ... erroneous responses in congruent cases.}
-                                                  
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [28
+ [28 <../figures/SuppFigure2.png>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [29
 
 
 pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.539 \clearpage
+l.537 \clearpage
                 ]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [29 <../figures/SuppFigure2.png>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [30
@@ -998,7 +1003,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.5}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.571 \clearpage
+l.569 \clearpage
                 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1008,12 +1013,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.6}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.618 \clearpage
+l.616 \clearpage
                 
 pdfTeX warning (ext4): destination with the same identifier (name{table.7}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.618 \clearpage
+l.616 \clearpage
                 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1023,7 +1028,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.8}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.671 \clearpage
+l.669 \clearpage
                 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1031,7 +1036,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.9}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.671 \clearpage
+l.669 \clearpage
                 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1041,16 +1046,16 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.10}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.736 \clearpage
+l.734 \clearpage
                 
 pdfTeX warning (ext4): destination with the same identifier (name{table.11}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.736 \clearpage
+l.734 \clearpage
                 ]
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 748.
+               Default added (so using `tbp') on input line 746.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1064,7 +1069,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.12}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.786 \clearpage
+l.784 \clearpage
                 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1074,12 +1079,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.13}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.908 \clearpage
+l.906 \clearpage
                 
 pdfTeX warning (ext4): destination with the same identifier (name{table.14}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.908 \clearpage
+l.906 \clearpage
                 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1087,17 +1092,17 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.15}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.908 \clearpage
+l.906 \clearpage
                 
 pdfTeX warning (ext4): destination with the same identifier (name{table.16}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.908 \clearpage
+l.906 \clearpage
                 
 pdfTeX warning (ext4): destination with the same identifier (name{table.17}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.908 \clearpage
+l.906 \clearpage
                 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1105,7 +1110,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.18}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.908 \clearpage
+l.906 \clearpage
                 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1115,12 +1120,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.19}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1026 \end{document}
+l.1024 \end{document}
                      
 pdfTeX warning (ext4): destination with the same identifier (name{table.20}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1026 \end{document}
+l.1024 \end{document}
                      ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1128,12 +1133,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{table.21}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1026 \end{document}
+l.1024 \end{document}
                      
 pdfTeX warning (ext4): destination with the same identifier (name{table.22}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1026 \end{document}
+l.1024 \end{document}
                      ] (./textualism-ddm.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1149,17 +1154,17 @@ Package rerunfilecheck Info: File `textualism-ddm.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  14973 strings out of 469005
- 230107 string characters out of 5454799
- 665598 words of memory out of 5000000
+ 230155 string characters out of 5454799
+ 665622 words of memory out of 5000000
  43255 multiletter control sequences out of 15000+600000
  663218 words of font info for 175 fonts, out of 8000000 for 9000
  329 hyphenation exceptions out of 8191
- 90i,16n,93p,1698b,752s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,16n,93p,1696b,770s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmti8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on textualism-ddm.pdf (41 pages, 6310624 bytes).
+Output written on textualism-ddm.pdf (41 pages, 6310691 bytes).
 PDF statistics:
- 676 PDF objects out of 1000 (max. 8388607)
- 568 compressed objects within 6 object streams
+ 678 PDF objects out of 1000 (max. 8388607)
+ 570 compressed objects within 6 object streams
  165 named destinations out of 1000 (max. 500000)
  289 words of extra memory for PDF output out of 10000 (max. 10000000)
 

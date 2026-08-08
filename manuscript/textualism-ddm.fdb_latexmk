@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex textualism-ddm"] 1785581324.03682 "textualism-ddm.aux" "textualism-ddm.bbl" "textualism-ddm" 1785581330.31434 0
+["bibtex textualism-ddm"] 1786186634.16557 "textualism-ddm.aux" "textualism-ddm.bbl" "textualism-ddm" 1786186640.07245 0
   "./sn-nature.bst" 1785581276.5631 39056 ff8d69fcba2fd64efd831bdf8f2900cb ""
-  "./textualism-ddm.bib" 1785581276.56385 13283 aa102cb5e38ff0bedd0985fb4868dfa9 ""
-  "textualism-ddm.aux" 1785581330.08302 26191 4d56983a4ffd05c831e1790e853f4d38 "pdflatex"
+  "./textualism-ddm.bib" 1786186633.97459 15163 cff3438800c10bb9d1bc5cdf5d25982b ""
+  "textualism-ddm.aux" 1786186639.86534 26311 ce8a08e69c75fdc1319cf192dae7bbf7 "pdflatex"
   (generated)
   "textualism-ddm.bbl"
   "textualism-ddm.blg"
   (rewritten before read)
-["pdflatex"] 1785581324.16384 "/Users/ivar/Documents/VSCode/rules-ddm/manuscript/textualism-ddm.tex" "textualism-ddm.pdf" "textualism-ddm" 1785581330.31454 0
+["pdflatex"] 1786186634.24767 "/Users/ivar/Documents/VSCode/rules-ddm/manuscript/textualism-ddm.tex" "textualism-ddm.pdf" "textualism-ddm" 1786186640.0727 0
   "../figures/Figure1.png" 1785581276.42406 741219 720f0f63dc5b4b5c4df76f4d9adb902a ""
   "../figures/Figure2.png" 1785581276.42937 1003944 4e0686a723c6c8e3df35fc236ac1c2dd ""
   "../figures/Figure3.png" 1785581276.45794 1675723 d2dc32cf41386b40527be42ce09da0c3 ""
@@ -16,7 +16,7 @@
   "../figures/Figure6.png" 1785581276.52829 633204 058367c348c392112931247961e9a748 ""
   "../figures/SuppFigure1.png" 1785581276.53032 195480 d8ad6fb1d9a67218d400574c69162f45 ""
   "../figures/SuppFigure2.png" 1785581276.53165 271167 ba47e53244c4a3e1bb6306fe8ce9042d ""
-  "/Users/ivar/Documents/VSCode/rules-ddm/manuscript/textualism-ddm.tex" 1785581317.64775 100702 3f0ba1fdc1e743493dded3ec1ae0ca6a ""
+  "/Users/ivar/Documents/VSCode/rules-ddm/manuscript/textualism-ddm.tex" 1786185436.69385 100153 9e52109468bcf29c6eb1e3ac37306351 ""
   "/usr/local/texlive/2025basic/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2025basic/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
   "/usr/local/texlive/2025basic/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1246382020 1120 1e8878807317373affa7f7bba4cf2f6a ""
@@ -175,10 +175,10 @@
   "/usr/local/texlive/2025basic/texmf-var/web2c/pdftex/pdflatex.fmt" 1770223603 2966375 2ad9639178d872ad3e48516c04f286e3 ""
   "/usr/local/texlive/2025basic/texmf.cnf" 1741448314 628 81d1ada0f601fb1ffa62f1323192d946 ""
   "sn-jnl.cls" 1785581276.56271 57660 11511be133676fc8961e11d94adf86e9 ""
-  "textualism-ddm.aux" 1785581330.08302 26191 4d56983a4ffd05c831e1790e853f4d38 "pdflatex"
-  "textualism-ddm.bbl" 1785581324.16085 16219 b4e8602c7ba7e4dd0a41d6a888bc00b0 "bibtex textualism-ddm"
-  "textualism-ddm.out" 1785581330.08499 6014 c205b8b5754228d8e83c988f9321362a "pdflatex"
-  "textualism-ddm.tex" 1785581317.64775 100702 3f0ba1fdc1e743493dded3ec1ae0ca6a ""
+  "textualism-ddm.aux" 1786186639.86534 26311 ce8a08e69c75fdc1319cf192dae7bbf7 "pdflatex"
+  "textualism-ddm.bbl" 1786186634.23028 16280 6b350995de01ef5d1383cb5c2348102f "bibtex textualism-ddm"
+  "textualism-ddm.out" 1786186639.86719 6014 c205b8b5754228d8e83c988f9321362a "pdflatex"
+  "textualism-ddm.tex" 1786185436.69385 100153 9e52109468bcf29c6eb1e3ac37306351 ""
   (generated)
   "textualism-ddm.aux"
   "textualism-ddm.log"
